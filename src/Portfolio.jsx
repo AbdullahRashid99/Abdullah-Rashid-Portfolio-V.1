@@ -148,17 +148,28 @@ const ContactForm = () => {
         setTimeout(() => setStatus('idle'), 4000);
     };
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto">
+        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto" id="contact">
             <input type="text" name="name" placeholder="Your Name" required className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
             <input type="email" name="email" placeholder="Your Email" required className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
             <textarea name="message" placeholder="Your Message" required rows={5} className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
-            <div className="text-center">
-                <Button type="submit" disabled={status === 'sending'} className="bg-teal-500 hover:bg-teal-600 text-white w-full md:w-auto disabled:bg-neutral-600 flex items-center justify-center gap-2">
+
+            <div className="flex flex-col items-center gap-4">
+                <Button type="submit" disabled={status === 'sending'} className="bg-teal-500 hover:bg-teal-600 text-white w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 disabled:bg-neutral-600 transition">
                     {status === 'sending' ? 'Sending...' : 'Send Message'} <Send size={18} />
                 </Button>
+                {/* زرار Let’s Work Together تحت نموذج الاتصال */}
+                <a
+                  href="https://docs.google.com/forms/d/10VnJVDvM4agvJ2y_M5MfC4-87tTYQNe30F4faxpGkVA/edit?ts=687cefe4"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-6 py-3 font-semibold rounded-lg bg-gradient-to-r from-teal-300 to-sky-400 text-transparent bg-clip-text border border-transparent hover:underline cursor-pointer select-none transition"
+                >
+                  Let’s Work Together
+                </a>
             </div>
+
             <AnimatePresence>
-                {status === 'success' && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center text-green-400">Message sent successfully! Thank you.</motion.p>}
+                {status === 'success' && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center text-green-400 mt-2">Message sent successfully! Thank you.</motion.p>}
             </AnimatePresence>
         </form>
     );
@@ -201,8 +212,8 @@ export default function Portfolio() {
                         transition={{ duration: 0.8, delay: 0.1 }}
                         className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
                         onError={(e) => {
-                          e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
-                          e.target.alt = "Placeholder image with initials AR";
+                            e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
+                            e.target.alt = "Placeholder image with initials AR";
                         }}
                     />
                     <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
