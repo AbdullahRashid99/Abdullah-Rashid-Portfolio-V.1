@@ -40,218 +40,6 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    // قسم Contact تم حذفه
-];
-
-const experienceData = [
-    { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
-    { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
-    { icon: <Target />, title: "Media Buyer ", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
-    { icon: <ShoppingCart />, title: "E-commerce & Dropshipping Expert", company: "Freelance", description: "Created high-converting Shopify stores, specializing in pricing, competitor analysis, and product development." },
-    { icon: <UserCheck />, title: "One-to-One Digital Marketing Coach", company: "Freelance", description: "Delivered personalized training sessions, simplifying complex concepts to help clients execute real-world campaigns." },
-    { icon: <Briefcase />, title: "Account Manager", company: "Business Empire", description: "Managed key accounts across diverse niches including fashion, cosmetics & real estate." },
-    { icon: <Building />, title: "Real Estate Campaigns", company: "OFQ, Royal City", description: "Led successful digital marketing campaigns for major real estate developers." },
-    { icon: <LineChart />, title: "Stock Market & Financial Analyst", company: "Self-Directed", description: "Specialized in economic, political, and technical analysis of financial markets." },
-];
-
-const skillsData = [
-    "Analytical & Creative Thinker", "Content Strategy", "Google Ads", "Meta Ads", "TikTok Ads", "Snapchat Ads", "Email Marketing", "Lead Generation", "Shopify Development", "KPI Tracking", "A/B Testing", "Communication", "Presentation Skills", "Media Strategy", "Budget Management"
-];
-
-const projectsData = [
-    { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fEZhc2hpb24lMjAlMjYlMjBBcHBhcmVsfGVufDB8fDB8fHww" },
-    { title: "Cosmetics & Beauty", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
-    { title: "Real Estate", image: "https://www.agentadvice.com/wp-content/uploads/2020/12/shutterstock_1247473441-scaled.jpg" },
-    { title: "Medical & Healthcare", image: "https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8TWVkaWNhbHxlbnwwfHwwfHx8MA%3D%3D" },
-    { title: "Restaurants & Cafés", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8UmVzdGF1cmFudHN8ZW58MHx8MHx8fDA%3D" },
-    { title: "Furniture & Interiors", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8UmVhbCUyMEVzdGF0ZXxlbnwwfHwwfHx8MA%3D%3D" },
-    { title: "SaaS", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8U2FhU3xlbnwwfHwwfHx8MA%3D%3D" },
-    { title: "Tech", image: "https://www.eurokidsindia.com/blog/wp-content/uploads/2023/12/names-of-electronic-devices-in-english.jpg" },
-];
-
-// --- REUSABLE COMPONENTS ---
-
-const AnimatedCounter = ({ value }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true });
-    const motionValue = useSpring(0, { stiffness: 50, damping: 30 });
-
-    const formattedValue = useTransform(
-        motionValue,
-        (latest) => `£${Math.round(latest).toLocaleString()}+`
-    );
-
-    useEffect(() => {
-        if (isInView) {
-            motionValue.set(value);
-        }
-    }, [isInView, value, motionValue]);
-
-    return <motion.span ref={ref}>{formattedValue}</motion.span>;
-};
-
-const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
-  <motion.section
-    ref={ref}
-    id={id}
-    className={`py-20 md:py-28 ${className}`}
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
-    transition={{ duration: 0.7, ease: "easeOut" }}
-  >
-    <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">{title}</span>
-    </h2>
-    {children}
-  </motion.section>
-));
-
-const Navbar = ({ activeSection }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    return (
-        <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
-            <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-                <a href="#home" className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors">{personalInfo.name}</a>
-                <div className="hidden md:flex gap-8 items-center">
-                    {sections.map((sec) => (
-                        <a key={sec.id} href={`#${sec.id}`} className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>{sec.title}</a>
-                    ))}
-                </div>
-                <div className="md:hidden">
-                    <Button onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-transparent text-white p-2">{isMenuOpen ? <X /> : <Menu />}</Button>
-                </div>
-            </div>
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-neutral-900">
-                        <div className="flex flex-col items-center gap-4 py-4">
-                            {sections.map((sec) => (
-                                <a key={sec.id} href={`#${sec.id}`} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>{sec.title}</a>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </nav>
-    );
-};
-
-// Scroll To Top Button
-function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const toggleVisibility = () => {
-      setVisible(window.pageYOffset > 300);
-    };
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  };
-
-  if (!visible) return null;
-
-  return (
-    <button
-      onClick={scrollToTop}
-      className="fixed bottom-5 right-5 bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full shadow-lg transition opacity-80 hover:opacity-100 z-50"
-      aria-label="Scroll to top"
-    >
-      <ArrowUp size={24} />
-    </button>
-  );
-}
-
-export default function Portfolio() {
-    const [activeSection, setActiveSection] = useState('home');
-    const sectionRefs = {
-        home: useRef(null),
-        about: useRef(null),
-        experience: useRef(null),
-        skills: useRef(null),
-        projects: useRef(null),
-        // contact محذوف
-    };
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
-            { rootMargin: '-30% 0px -70% 0px' }
-        );
-        Object.values(sectionRefs).forEach(ref => ref.current && observer.observe(ref.current));
-        return () => observer.disconnect();
-    }, []);
-
-    return (
-        <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative">
-            <Navbar activeSection={activeSection} />
-
-            <main className="max-w-5xl mx-auto px-4 pb-24">
-                {/* Hero Section */}
-                <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
-                    <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]"></div>
-                    <motion.img
-                        src={personalInfo.profileImage}
-                        alt="Profile Picture of Abdullah Rashid"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, delay: 0.1 }}
-                        className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-                        onError={(e) => {
-                            e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
-                            e.target.alt = "Placeholder image with initials AR";
-                        }}
-                    />
-                    <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
-                      Abdullah Rashid<br/>Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Digital Growth</span> Partner.
-                    </motion.h1>
-                    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition```
-import React, { useState, useEffect, useRef } from 'react';
-import {
-    Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-    Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
-    Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-    Tiktok, Instagram, Dribbble, Twitter, ArrowUp
-} from 'lucide-react';
-import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
-
-// --- MOCK UI COMPONENTS ---
-const Button = ({ children, className, ...props }) => (
-  <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
-    {children}
-  </button>
-);
-
-const Card = ({ children, className, ...props }) => (
-  <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
-    {children}
-  </div>
-);
-
-const CardContent = ({ children, className, ...props }) => (
-  <div className={`p-6 ${className}`} {...props}>
-    {children}
-  </div>
-);
-
-// --- DATA CONFIGURATION ---
-const personalInfo = {
-    name: "Abdullah Rashid",
-    title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
-    linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
-    whatsapp: "http://wa.me/+201025030220",
-    profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
-};
-
-const sections = [
-    { id: "about", title: "About" },
-    { id: "experience", title: "Experience" },
-    { id: "skills", title: "Skills" },
-    { id: "projects", title: "Projects" },
     // تم حذف قسم الاتصال Contact
 ];
 
@@ -378,7 +166,6 @@ function ScrollToTopButton() {
   );
 }
 
-
 export default function Portfolio() {
     const [activeSection, setActiveSection] = useState('home');
     const sectionRefs = {
@@ -387,7 +174,7 @@ export default function Portfolio() {
         experience: useRef(null),
         skills: useRef(null),
         projects: useRef(null),
-        // contact تم الحذف
+        // contact removed
     };
 
     useEffect(() => {
@@ -492,7 +279,7 @@ export default function Portfolio() {
                         ))}
                     </div>
                 </SectionWrapper>
-                
+
                 {/* Industries */}
                 <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -517,22 +304,21 @@ export default function Portfolio() {
                     <SectionWrapper id="content-production" title="Content Production">
                         <div className="text-center max-w-md mx-auto">
                             <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
+                            <p className="text-neutral-300 leading-relaxed">
+                                Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
+                            </p>
                         </div>
                     </SectionWrapper>
                     <SectionWrapper id="education" title="Education">
-                           <div className="text-center max-w-md mx-auto">
+                        <div className="text-center max-w-md mx-auto">
                             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
                             <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-                            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
+                            <p className="text-neutral-300 leading-relaxed">
+                                Bachelor of Business Administration From Ain Shams University
+                            </p>
                         </div>
                     </SectionWrapper>
                 </div>
-
-                {/* Contact */}
-                <SectionWrapper ref={sectionRefs.contact} id="contact" title="Let's Get In Touch">
-                    <ContactForm />
-                </SectionWrapper>
             </main>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
@@ -545,7 +331,33 @@ export default function Portfolio() {
                 </p>
             </footer>
 
+            {/* Scroll To Top Button */}
             <ScrollToTopButton />
         </div>
     );
+}
+
+// Scroll To Top Button component
+function ScrollToTopButton() {
+  const [visible, setVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    const toggle = () => setVisible(window.pageYOffset > 300);
+    window.addEventListener('scroll', toggle);
+    return () => window.removeEventListener('scroll', toggle);
+  }, []);
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (!visible) return null;
+
+  return (
+    <button
+      aria-label="Scroll to top"
+      onClick={scrollTop}
+      className="fixed bottom-5 right-5 p-3 rounded-full bg-teal-500 hover:bg-teal-600 text-white shadow-lg transition opacity-80 hover:opacity-100 z-50"
+    >
+      <ArrowUp size={24} />
+    </button>
+  );
 }
