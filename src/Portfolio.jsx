@@ -3,7 +3,7 @@ import {
     Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
     Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
     Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-    Tiktok, Instagram, Dribbble, Twitter
+    Tiktok, Instagram, Dribbble, Twitter, ArrowUp
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
@@ -40,7 +40,7 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    { id: "contact", title: "Contact" },
+    // تم حذف قسم الاتصال
 ];
 
 const experienceData = [
@@ -137,45 +137,35 @@ const Navbar = ({ activeSection }) => {
     );
 };
 
-const ContactForm = () => {
-    const [status, setStatus] = useState('idle');
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setStatus('sending');
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setStatus('success');
-        e.target.reset();
-        setTimeout(() => setStatus('idle'), 4000);
+// Scroll To Top Button
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      setVisible(window.pageYOffset > 300);
     };
-    return (
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto" id="contact">
-            <input type="text" name="name" placeholder="Your Name" required className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
-            <input type="email" name="email" placeholder="Your Email" required className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
-            <textarea name="message" placeholder="Your Message" required rows={5} className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
 
-            <div className="flex flex-col items-center gap-4">
-                <Button type="submit" disabled={status === 'sending'} className="bg-teal-500 hover:bg-teal-600 text-white w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 disabled:bg-neutral-600 transition">
-                    {status === 'sending' ? 'Sending...' : 'Send Message'} <Send size={18} />
-                </Button>
-                {/* زرار Let’s Work Together تحت نموذج الاتصال */}
-                <a
-                  href="https://docs.google.com/forms/d/10VnJVDvM4agvJ2y_M5MfC4-87tTYQNe30F4faxpGkVA/edit?ts=687cefe4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block px-6 py-3 font-semibold rounded-lg bg-gradient-to-r from-teal-300 to-sky-400 text-transparent bg-clip-text border border-transparent hover:underline cursor-pointer select-none transition"
-                >
-                  Let’s Work Together
-                </a>
-            </div>
+  const scrollToTop = () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
 
-            <AnimatePresence>
-                {status === 'success' && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center text-green-400 mt-2">Message sent successfully! Thank you.</motion.p>}
-            </AnimatePresence>
-        </form>
-    );
-};
+  if (!visible) return null;
 
-// --- MAIN APP COMPONENT ---
+  return (
+    <button
+      onClick={scrollToTop}
+      className="fixed bottom-5 right-5 bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full shadow-lg transition opacity-80 hover:opacity-100 z-50"
+      aria-label="Scroll to top"
+    >
+      <ArrowUp size={24} />
+    </button>
+  );
+}
+
 export default function Portfolio() {
     const [activeSection, setActiveSection] = useState('home');
     const sectionRefs = {
@@ -184,7 +174,7 @@ export default function Portfolio() {
         experience: useRef(null),
         skills: useRef(null),
         projects: useRef(null),
-        contact: useRef(null),
+        // contact محذوف
     };
 
     useEffect(() => {
@@ -197,10 +187,10 @@ export default function Portfolio() {
     }, []);
 
     return (
-        <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased">
+        <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative">
             <Navbar activeSection={activeSection} />
 
-            <main className="max-w-5xl mx-auto px-4">
+            <main className="max-w-5xl mx-auto px-4 pb-24">
                 {/* Hero Section */}
                 <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
                     <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]"></div>
@@ -221,8 +211,10 @@ export default function Portfolio() {
                     </motion.h1>
                     <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</motion.p>
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-                        <a href="https://docs.google.com/forms/d/10VnJVDvM4agvJ2y_M5MfC4-87tTYQNe30F4faxpGkVA/edit?ts=687cefe4" target="_blank" rel="noopener noreferrer">
-                          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30">Let’s Work Together</Button>
+                        <a href="/services">
+                          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30">
+                            Let’s Work Together
+                          </Button>
                         </a>
                     </motion.div>
                 </section>
@@ -256,7 +248,7 @@ export default function Portfolio() {
                         ))}
                     </div>
                 </SectionWrapper>
-                
+
                 {/* Achievements Visualization */}
                 <SectionWrapper id="achievements" title="Key Achievements">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
@@ -287,7 +279,7 @@ export default function Portfolio() {
                         ))}
                     </div>
                 </SectionWrapper>
-                
+
                 {/* Industries */}
                 <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -306,28 +298,7 @@ export default function Portfolio() {
                         ))}
                     </div>
                 </SectionWrapper>
-                
-                {/* Content & Education */}
-                <div className="grid md:grid-cols-2 gap-8">
-                    <SectionWrapper id="content-production" title="Content Production">
-                        <div className="text-center max-w-md mx-auto">
-                            <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
-                        </div>
-                    </SectionWrapper>
-                    <SectionWrapper id="education" title="Education">
-                           <div className="text-center max-w-md mx-auto">
-                            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-                            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
-                        </div>
-                    </SectionWrapper>
-                </div>
 
-                {/* Contact */}
-                <SectionWrapper ref={sectionRefs.contact} id="contact" title="Let's Get In Touch">
-                    <ContactForm />
-                </SectionWrapper>
             </main>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
@@ -339,6 +310,11 @@ export default function Portfolio() {
                     © {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
                 </p>
             </footer>
+
+            {/* زر Scroll to Top يظهر في كل الصفحات */}
+            <ScrollToTopButton />
         </div>
     );
 }
+
+
