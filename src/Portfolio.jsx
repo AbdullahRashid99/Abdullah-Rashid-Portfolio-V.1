@@ -3,7 +3,7 @@ import {
     Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
     Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
     Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-    Tiktok, Instagram, Dribbble, Twitter
+    Tiktok, Instagram, Dribbble, Twitter, ArrowUp
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
@@ -40,7 +40,7 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    { id: "contact", title: "Contact" },
+    { id: "contact", title: "Contact" }, // يبقى ظاهر في المنيو
 ];
 
 const experienceData = [
@@ -137,34 +137,35 @@ const Navbar = ({ activeSection }) => {
     );
 };
 
-const ContactForm = () => {
-    const [status, setStatus] = useState('idle');
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setStatus('sending');
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setStatus('success');
-        e.target.reset();
-        setTimeout(() => setStatus('idle'), 4000);
-    };
-    return (
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto">
-            <input type="text" name="name" placeholder="Your Name" required className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
-            <input type="email" name="email" placeholder="Your Email" required className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
-            <textarea name="message" placeholder="Your Message" required rows={5} className="w-full p-3 bg-neutral-800/50 border border-neutral-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition" />
-            <div className="text-center">
-                <Button type="submit" disabled={status === 'sending'} className="bg-teal-500 hover:bg-teal-600 text-white w-full md:w-auto disabled:bg-neutral-600 flex items-center justify-center gap-2">
-                    {status === 'sending' ? 'Sending...' : 'Send Message'} <Send size={18} />
-                </Button>
-            </div>
-            <AnimatePresence>
-                {status === 'success' && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center text-green-400">Message sent successfully! Thank you.</motion.p>}
-            </AnimatePresence>
-        </form>
-    );
-};
+// Scroll To Top Button
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
 
-// --- MAIN APP COMPONENT ---
+  useEffect(() => {
+    const toggleVisibility = () => {
+      setVisible(window.pageYOffset > 300);
+    };
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  if (!visible) return null;
+
+  return (
+    <button
+      onClick={scrollToTop}
+      className="fixed bottom-5 right-5 bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full shadow-lg transition opacity-80 hover:opacity-100 z-50"
+      aria-label="Scroll to top"
+    >
+      <ArrowUp size={24} />
+    </button>
+  );
+}
+
 export default function Portfolio() {
     const [activeSection, setActiveSection] = useState('home');
     const sectionRefs = {
@@ -186,10 +187,10 @@ export default function Portfolio() {
     }, []);
 
     return (
-        <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased">
+        <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative">
             <Navbar activeSection={activeSection} />
 
-            <main className="max-w-5xl mx-auto px-4">
+            <main className="max-w-5xl mx-auto px-4 pb-24">
                 {/* Hero Section */}
                 <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
                     <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]"></div>
@@ -295,28 +296,23 @@ export default function Portfolio() {
                         ))}
                     </div>
                 </SectionWrapper>
-                
-                {/* Content & Education */}
-                <div className="grid md:grid-cols-2 gap-8">
-                    <SectionWrapper id="content-production" title="Content Production">
-                        <div className="text-center max-w-md mx-auto">
-                            <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
-                        </div>
-                    </SectionWrapper>
-                    <SectionWrapper id="education" title="Education">
-                           <div className="text-center max-w-md mx-auto">
-                            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-                            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
-                        </div>
-                    </SectionWrapper>
-                </div>
 
-                {/* Contact */}
-                <SectionWrapper ref={sectionRefs.contact} id="contact" title="Let's Get In Touch">
-                    <ContactForm />
-                </SectionWrapper>
+                {/* Content & Education below projects, no Contact Section*/}
+                <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
+                    <div className="text-center max-w-md mx-auto">
+                        <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
+                        <p className="text-neutral-300 leading-relaxed">
+                            Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
+                        </p>
+                    </div>
+                    
+                    <div className="text-center max-w-md mx-auto">
+                        <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
+                        <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
+                        <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration From Ain Shams University</p>
+                    </div>
+                </div>
+                
             </main>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
@@ -324,10 +320,36 @@ export default function Portfolio() {
                     <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
                     <a href={personalInfo.whatsapp} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
                 </div>
-                <p className="text-neutral-500 text-sm">
-                    © {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
-                </p>
+                <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
             </footer>
+
+            {/* Scroll To Top Button */}
+            <ScrollToTopButton />
         </div>
+    );
+}
+
+// Scroll To Top Button component
+function ScrollToTopButton() {
+    const [visible, setVisible] = React.useState(false);
+
+    React.useEffect(() => {
+        const toggle = () => setVisible(window.pageYOffset > 300);
+        window.addEventListener("scroll", toggle);
+        return () => window.removeEventListener("scroll", toggle);
+    }, []);
+
+    const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (!visible) return null;
+
+    return (
+        <button
+            aria-label="Scroll to top"
+            onClick={scrollTop}
+            className="fixed bottom-5 right-5 p-3 rounded-full bg-teal-500 hover:bg-teal-600 text-white shadow-lg transition opacity-80 hover:opacity-100 z-50"
+        >
+            <ArrowUp size={24} />
+        </button>
     );
 }
