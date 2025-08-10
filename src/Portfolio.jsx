@@ -362,7 +362,7 @@ export default function Portfolio() {
                     className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <CardContent>
-                    <h3 className="text-xl font-semibold text-white flex items-center justify-between">
+                    <h3 className="text-xl font-semibold text-white flex items-center justify-between"
                       {project.title}
                       <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-teal-400" />
                     </h3>
@@ -383,8 +383,8 @@ export default function Portfolio() {
           </div>
           <div className="text-center max-w-md mx-auto">
             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration From Ain Shams University</p>
+            <h4 className="font-semibold text-lg text-white"></h4>
+            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration From Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
           </div>
         </div>
       </main>
