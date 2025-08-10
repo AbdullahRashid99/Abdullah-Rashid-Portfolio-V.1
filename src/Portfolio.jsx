@@ -353,4 +353,3 @@ function ScrollToTopButton() {
         </button>
     );
 }
-
