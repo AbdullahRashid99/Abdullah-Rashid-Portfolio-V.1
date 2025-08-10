@@ -299,27 +299,38 @@ export default function Portfolio() {
                     </div>
                 </SectionWrapper>
                 
-                {/* Content & Education */}
-                <div className="grid md:grid-cols-2 gap-8">
-                    <SectionWrapper id="content-production" title="Content Production">
-                        <div className="text-center max-w-md mx-auto">
-                            <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <p className="text-neutral-300 leading-relaxed">
-                                Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-                            </p>
-                        </div>
-                    </SectionWrapper>
-                    <SectionWrapper id="education" title="Education">
-                        <div className="text-center max-w-md mx-auto">
-                            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-                            <p className="text-neutral-300 leading-relaxed">
-                                Bachelor of Business Administration From Ain Shams University
-                            </p>
-                        </div>
-                    </SectionWrapper>
-                </div>
-            </main>
+                {/* Contact Section */}
+<SectionWrapper id="contact" title="Let's Get In Touch">
+  {/* محتوى Content Production و Education فقط */}
+  <div className="grid md:grid-cols-2 gap-8">
+    <div className="text-center max-w-md mx-auto">
+      <Camera className="mx-auto text-amber-400 mb-4" size={40} />
+      <p className="text-neutral-300 leading-relaxed">
+        Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
+      </p>
+    </div>
+    <div className="text-center max-w-md mx-auto">
+      <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
+      <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
+      <p className="text-neutral-300 leading-relaxed">
+        Bachelor of Business Administration From Ain Shams University
+      </p>
+    </div>
+  </div>
+  
+  {/* زر Let’s Work Together تحت المحتوى */}
+  <div className="mt-12 flex justify-center">
+    <a
+      href="https://docs.google.com/forms/d/10VnJVDvM4agvJ2y_M5MfC4-87tTYQNe30F4faxpGkVA/edit?ts=687cefe4"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30 px-8 py-3 rounded-lg font-semibold transition">
+        Let’s Work Together
+      </Button>
+    </a>
+  </div>
+</SectionWrapper>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
                 <div className="flex justify-center gap-6 mb-4">
