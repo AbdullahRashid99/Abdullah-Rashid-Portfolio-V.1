@@ -379,13 +379,15 @@ export default function Portfolio() {
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
             <p className="text-neutral-300 leading-relaxed">
               Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-            </p>
+         </p>
           </div>
-            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration From Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
+          <div className="text-center max-w-md mx-auto">
+            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
+            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
+            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
           </div>
         </div>
       </main>
-
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
