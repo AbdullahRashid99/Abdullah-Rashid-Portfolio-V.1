@@ -40,7 +40,7 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    // تم حذف قسم الاتصال Contact
+    { id: "contact", title: "Contact" },
 ];
 
 const experienceData = [
@@ -174,7 +174,7 @@ export default function Portfolio() {
         experience: useRef(null),
         skills: useRef(null),
         projects: useRef(null),
-        // contact removed
+        contact: useRef(null),
     };
 
     useEffect(() => {
@@ -202,8 +202,8 @@ export default function Portfolio() {
                         transition={{ duration: 0.8, delay: 0.1 }}
                         className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
                         onError={(e) => {
-                            e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
-                            e.target.alt = "Placeholder image with initials AR";
+                          e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
+                          e.target.alt = "Placeholder image with initials AR";
                         }}
                     />
                     <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
@@ -298,39 +298,33 @@ export default function Portfolio() {
                         ))}
                     </div>
                 </SectionWrapper>
-                
-                {/* Contact Section */}
-<SectionWrapper id="contact" title="Let's Get In Touch">
-  {/* محتوى Content Production و Education فقط */}
-  <div className="grid md:grid-cols-2 gap-8">
-    <div className="text-center max-w-md mx-auto">
-      <Camera className="mx-auto text-amber-400 mb-4" size={40} />
-      <p className="text-neutral-300 leading-relaxed">
-        Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-      </p>
-    </div>
-    <div className="text-center max-w-md mx-auto">
-      <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-      <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-      <p className="text-neutral-300 leading-relaxed">
-        Bachelor of Business Administration From Ain Shams University
-      </p>
-    </div>
-  </div>
-  
-  {/* زر Let’s Work Together تحت المحتوى */}
-  <div className="mt-12 flex justify-center">
-    <a
-      href="https://docs.google.com/forms/d/10VnJVDvM4agvJ2y_M5MfC4-87tTYQNe30F4faxpGkVA/edit?ts=687cefe4"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30 px-8 py-3 rounded-lg font-semibold transition">
-        Let’s Work Together
-      </Button>
-    </a>
-  </div>
-</SectionWrapper>
+
+                {/* Contact: Content Production & Education with Let’s Work Together button */}
+                <SectionWrapper ref={sectionRefs.contact} id="contact" title="Let's Get In Touch">
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="text-center max-w-md mx-auto">
+                            <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
+                            <p className="text-neutral-300 leading-relaxed">
+                              Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
+                            </p>
+                        </div>
+                        <div className="text-center max-w-md mx-auto">
+                            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
+                            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
+                            <p className="text-neutral-300 leading-relaxed">
+                              Bachelor of Business Administration From Ain Shams University
+                            </p>
+                        </div>
+                    </div>
+                    <div className="mt-12 flex justify-center">
+                      <a href="https://docs.google.com/forms/d/10VnJVDvM4agvJ2y_M5MfC4-87tTYQNe30F4faxpGkVA/edit?ts=687cefe4" target="_blank" rel="noopener noreferrer">
+                        <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30 px-8 py-3 rounded-lg font-semibold transition">
+                          Let’s Work Together
+                        </Button>
+                      </a>
+                    </div>
+                </SectionWrapper>
+            </main>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
                 <div className="flex justify-center gap-6 mb-4">
@@ -348,7 +342,7 @@ export default function Portfolio() {
     );
 }
 
-// Scroll To Top Button component
+// Scroll To Top Button
 function ScrollToTopButton() {
   const [visible, setVisible] = React.useState(false);
 
