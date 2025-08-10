@@ -40,7 +40,7 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    { id: "contact", title: "Contact" },  // يبقى ظاهر بالمنيو عادي
+    { id: "contact", title: "Contact" },
 ];
 
 const experienceData = [
@@ -71,7 +71,7 @@ const projectsData = [
     { title: "Tech", image: "https://www.eurokidsindia.com/blog/wp-content/uploads/2023/12/names-of-electronic-devices-in-english.jpg" },
 ];
 
-// --- COMPONENTS ---
+// --- Components ---
 
 const AnimatedCounter = ({ value }) => {
   const ref = useRef(null);
@@ -120,7 +120,7 @@ const Navbar = ({ activeSection }) => {
             <a
               key={sec.id}
               href={`#${sec.id}`}
-              className={`font-medium transition-colors ${activeSection === sec.id ? "text-teal-400" : "text-neutral-300 hover:text-teal-400"}`}
+              className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}
             >
               {sec.title}
             </a>
@@ -146,7 +146,7 @@ const Navbar = ({ activeSection }) => {
                   key={sec.id}
                   href={`#${sec.id}`}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`text-lg font-medium transition-colors ${activeSection === sec.id ? "text-teal-400" : "text-neutral-300 hover:text-teal-400"}`}
+                  className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}
                 >
                   {sec.title}
                 </a>
@@ -165,11 +165,11 @@ function ScrollToTopButton() {
 
   useEffect(() => {
     const toggleVisibility = () => setVisible(window.pageYOffset > 300);
-    window.addEventListener("scroll", toggleVisibility);
-    return () => window.removeEventListener("scroll", toggleVisibility);
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   if (!visible) return null;
 
@@ -185,22 +185,22 @@ function ScrollToTopButton() {
 }
 
 export default function Portfolio() {
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState('home');
   const sectionRefs = {
     home: useRef(null),
     about: useRef(null),
     experience: useRef(null),
     skills: useRef(null),
     projects: useRef(null),
-    contact: useRef(null), // <--- حتى نجعل المنيو والscroll تعمل صح لقسم Contact
+    contact: useRef(null),
   };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && setActiveSection(entry.target.id)),
-      { rootMargin: "-30% 0px -70% 0px" }
+      entries => entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
+      { rootMargin: '-30% 0px -70% 0px' }
     );
-    Object.values(sectionRefs).forEach((ref) => ref.current && observer.observe(ref.current));
+    Object.values(sectionRefs).forEach(ref => ref.current && observer.observe(ref.current));
     return () => observer.disconnect();
   }, []);
 
@@ -211,7 +211,7 @@ export default function Portfolio() {
       <main className="max-w-5xl mx-auto px-4 pb-24">
         {/* Hero Section */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
-          <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]"></div>
+          <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
           <motion.img
             src={personalInfo.profileImage}
             alt="Profile Picture of Abdullah Rashid"
@@ -219,7 +219,7 @@ export default function Portfolio() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-            onError={(e) => {
+            onError={e => {
               e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
               e.target.alt = "Placeholder image with initials AR";
             }}
@@ -244,30 +244,23 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
-            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns
-            to new heights, and coach businesses to success. My diverse background in trading, economic analysis,
-            and content production gives me a unique, data-driven yet creative approach to every challenge.
+            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
           </p>
         </SectionWrapper>
 
         {/* Experience Timeline */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
-            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2"></div>
+            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
             {experienceData.map((item, index) => (
-              <motion.div
-                key={index}
-                className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
+              <motion.div key={index} className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="hidden md:block w-1/2"></div>
+                transition={{ duration: 0.6 }}>
+                <div className="hidden md:block w-1/2" />
                 <div className="relative w-full md:w-1/2">
-                  <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">
-                    {item.icon}
-                  </div>
+                  <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
                   <Card className="hover:border-teal-500/50 transition-colors">
                     <CardContent>
                       <p className="text-xs text-amber-400 mb-1">{item.date}</p>
@@ -288,35 +281,16 @@ export default function Portfolio() {
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-                <p className="text-5xl font-mono font-bold text-white flex justify-center">
-                  <AnimatedCounter value={750000} />
-                </p>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
               </CardContent>
             </Card>
-
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROI Generated</h3>
                 <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
                 <div className="flex justify-center items-end gap-2 mt-4 h-16">
-                  <motion.div
-                    initial={{ height: 0 }}
-                    whileInView={{ height: "25%" }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"
-                  >
-                    <span className="text-xs -mb-5">Spend</span>
-                  </motion.div>
-                  <motion.div
-                    initial={{ height: 0 }}
-                    whileInView={{ height: "100%" }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
-                    className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"
-                  >
-                    <span className="text-xs -mb-5">Return</span>
-                  </motion.div>
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
                 </div>
               </CardContent>
             </Card>
@@ -327,16 +301,7 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium"
-              >
-                {skill}
-              </motion.div>
+              <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
             ))}
           </div>
         </SectionWrapper>
@@ -345,24 +310,11 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
-              <motion.a
-                key={index}
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
                 <Card className="group overflow-hidden h-full">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
                   <CardContent>
-                    <h3 className="text-xl font-semibold text-white flex items-center justify-between"
+                    <h3 className="text-xl font-semibold text-white flex items-center justify-between">
                       {project.title}
                       <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-teal-400" />
                     </h3>
@@ -373,22 +325,21 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Content Production & Education (Content & Education section unchanged) */}
+        {/* Content Production & Education */}
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
-            <p className="text-neutral-300 leading-relaxed">
-              Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-         </p>
+            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
           </div>
           <div className="text-center max-w-md mx-auto">
             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-           <p className="text-neutral-300 leading-relaxed">
-  Bachelor of Business Administration from Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
-</p>
+            <p className="text-neutral-300 leading-relaxed">
+              Bachelor of Business Administration from Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
+            </p>
           </div>
         </div>
       </main>
+
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
@@ -406,3 +357,4 @@ export default function Portfolio() {
     </div>
   );
 }
+
