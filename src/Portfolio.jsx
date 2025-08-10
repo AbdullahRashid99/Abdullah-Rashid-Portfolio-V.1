@@ -517,21 +517,22 @@ export default function Portfolio() {
                     <SectionWrapper id="content-production" title="Content Production">
                         <div className="text-center max-w-md mx-auto">
                             <Camera className="mx-auto text-amber-400 mb-4" size={40}/>
-                            <p className="text-neutral-300 leading-relaxed">
-                              Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-                            </p>
+                            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
                         </div>
                     </SectionWrapper>
                     <SectionWrapper id="education" title="Education">
                            <div className="text-center max-w-md mx-auto">
                             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40}/>
                             <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-                            <p className="text-neutral-300 leading-relaxed">
-                              Ain Shams University Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
-                            </p>
+                            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
                         </div>
                     </SectionWrapper>
                 </div>
+
+                {/* Contact */}
+                <SectionWrapper ref={sectionRefs.contact} id="contact" title="Let's Get In Touch">
+                    <ContactForm />
+                </SectionWrapper>
             </main>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
