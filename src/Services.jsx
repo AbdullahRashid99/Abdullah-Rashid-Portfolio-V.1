@@ -1,11 +1,12 @@
 import React from 'react';
-import { Laptop, HelpCircle, ShoppingCart, Users, Layers, MoreHorizontal } from 'lucide-react';
+import { Laptop, HelpCircle, ShoppingCart, Users, Layers, BarChart2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Button = ({ children, className, ...props }) => (
-  <button 
-    className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out bg-sky-500 hover:bg-sky-600 text-white ${className}`} 
-    {...props}>
+  <button
+    className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out bg-sky-500 hover:bg-sky-600 text-white ${className}`}
+    {...props}
+  >
     {children}
   </button>
 );
@@ -13,7 +14,7 @@ const Button = ({ children, className, ...props }) => (
 const services = [
   {
     title: 'Build Shopify Store',
-    icon: <Shopify size={48} />,
+    icon: <ShoppingCart size={48} />,
     link: 'https://forms.gle/SfkP6rgmFm2oVPs79',
   },
   {
@@ -23,7 +24,7 @@ const services = [
   },
   {
     title: 'E-Commerce Brand? Scale or Startup',
-    icon: <group size={48} />,
+    icon: <Users size={48} />,
     link: 'https://forms.gle/CzZKmtHBNmXWeKDHA',
   },
   {
@@ -33,12 +34,12 @@ const services = [
   },
   {
     title: 'Multi-Brand Management',
-    icon: <fa fa-line-chart size={48} />,
+    icon: <BarChart2 size={48} />,
     link: 'https://docs.google.com/forms/d/e/1FAIpQLSfw9dkRCOMLaoN2FwDmcG6iCpyjQq5kQFnr4SZVo0h0gLYqiA/viewform',
   },
   {
     title: 'Others',
-    icon: <Database size={48} />,
+    icon: <Laptop size={48} />,
     link: 'https://docs.google.com/forms/d/e/1FAIpQLSciaASGQ9zYjllG3gXcZVq5Z_1pu-mSh8dtCqgJeyIRswTExw/viewform',
   },
 ];
@@ -78,9 +79,7 @@ export default function Services() {
             <div className="mb-4 text-sky-400">{icon}</div>
             <h2 className="text-xl font-semibold mb-6">{title}</h2>
             <a href={link} target="_blank" rel="noopener noreferrer" style={{ width: 'fit-content' }}>
-              <Button>
-                Choose Service
-              </Button>
+              <Button>Choose Service</Button>
             </a>
           </motion.div>
         ))}
