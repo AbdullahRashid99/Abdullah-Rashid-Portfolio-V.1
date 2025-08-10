@@ -40,7 +40,6 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    { id: "contact", title: "Contact" },
 ];
 
 const experienceData = [
