@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';  // استيراد Link من react-router-dom
 import {
     Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
     Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
@@ -40,6 +41,7 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
+    { id: "contact", title: "Contact" },
 ];
 
 const experienceData = [
@@ -231,14 +233,16 @@ export default function Portfolio() {
             {personalInfo.title}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-            <a href="/services">
+            {/* تعديل هنا: استبدال <a href="/services"> بـ <Link to="/services"> */}
+            <Link to="/services">
               <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30">
                 Let’s Work Together
               </Button>
-            </a>
+            </Link>
           </motion.div>
         </section>
 
+        {/* بقية الأقسام ... كما هي */}
         {/* About Me */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
@@ -252,11 +256,14 @@ export default function Portfolio() {
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
             {experienceData.map((item, index) => (
-              <motion.div key={index} className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+              <motion.div
+                key={index}
+                className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}>
+                transition={{ duration: 0.6 }}
+              >
                 <div className="hidden md:block w-1/2" />
                 <div className="relative w-full md:w-1/2">
                   <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
@@ -356,4 +363,3 @@ export default function Portfolio() {
     </div>
   );
 }
-
