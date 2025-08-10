@@ -40,7 +40,7 @@ const sections = [
     { id: "experience", title: "Experience" },
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
-    { id: "contact", title: "Contact" },
+    { id: "contact", title: "Contact" }, // Contact موجود بالمنيو
 ];
 
 const experienceData = [
@@ -202,8 +202,8 @@ export default function Portfolio() {
                         transition={{ duration: 0.8, delay: 0.1 }}
                         className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
                         onError={(e) => {
-                          e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
-                          e.target.alt = "Placeholder image with initials AR";
+                            e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
+                            e.target.alt = "Placeholder image with initials AR";
                         }}
                     />
                     <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
@@ -299,7 +299,7 @@ export default function Portfolio() {
                     </div>
                 </SectionWrapper>
 
-                {/* Contact: Content Production & Education with Let’s Work Together button */}
+                {/* Contact Section */}
                 <SectionWrapper ref={sectionRefs.contact} id="contact" title="Let's Get In Touch">
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="text-center max-w-md mx-auto">
@@ -324,6 +324,7 @@ export default function Portfolio() {
                       </a>
                     </div>
                 </SectionWrapper>
+
             </main>
 
             <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
@@ -342,7 +343,7 @@ export default function Portfolio() {
     );
 }
 
-// Scroll To Top Button
+// Scroll To Top Button component
 function ScrollToTopButton() {
   const [visible, setVisible] = React.useState(false);
 
