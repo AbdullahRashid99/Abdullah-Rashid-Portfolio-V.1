@@ -383,8 +383,9 @@ export default function Portfolio() {
           </div>
           <div className="text-center max-w-md mx-auto">
             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-            <h4 className="font-semibold text-lg text-white">Ain Shams University</h4>
-            <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.</p>
+           <p className="text-neutral-300 leading-relaxed">
+  Bachelor of Business Administration from Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
+</p>
           </div>
         </div>
       </main>
