@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد أيقونات منصات التواصل من react-icons
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from "react-icons/fa";
+// استيراد أيقونات المنصات الاجتماعية من react-icons -- استوردها فقط مرة واحدة هنا
+import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from 'react-icons/fa';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -260,9 +260,7 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- مكون أيقونات منصات التواصل الاجتماعي بشكل مثلث ---
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from "react-icons/fa";
-
+// --- مكون أيقونات منصات التواصل بشكل مثلث ---
 function SocialMediaIcons() {
   const icons = [
     { icon: <FaFacebookF size={30} color="#fff" />, name: "Facebook", ads: "Facebook Ads", colorClass: "from-[#1877f2] to-[#4364f7]", hoverShadow: "rgba(33,207,239,0.3)" },
@@ -292,15 +290,15 @@ function SocialMediaIcons() {
 
   return (
     <div className="mt-12 flex flex-col items-center gap-8">
-      {/* صف 1 - 3 أيقونات */}
+      {/* Row 1 - 3 icons */}
       <div className="flex gap-8 justify-center w-full max-w-lg">
         {icons.slice(0, 3).map((icon, idx) => renderIcon(icon, idx))}
       </div>
-      {/* صف 2 - 2 أيقونة */}
+      {/* Row 2 - 2 icons */}
       <div className="flex gap-8 justify-center w-full max-w-md">
         {icons.slice(3, 5).map((icon, idx) => renderIcon(icon, idx+3))}
       </div>
-      {/* صف 3 - 1 أيقونة */}
+      {/* Row 3 - 1 icon */}
       <div className="flex justify-center w-full max-w-xs">
         {renderIcon(icons[5], 5)}
       </div>
@@ -308,7 +306,8 @@ function SocialMediaIcons() {
   );
 }
 
-// في ملف Portfolio نضيف بين زر Let’s Work Together وقسم About Me
+// --- ملف Portfolio الرئيسي مع إضافة SocialMediaIcons ---
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
@@ -388,7 +387,7 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* هنا المكون الجديد لأيقونات السوشيال ميديا بالترتيب المثلث */}
+        {/* إضافة Social Media Icons هنا */}
         <SocialMediaIcons />
 
         {/* قسم About Me */}
@@ -399,8 +398,7 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام كما هي */}
-
+        {/* باقي الأقسام كما هي ... */}
       </main>
 
       {/* Footer */}
