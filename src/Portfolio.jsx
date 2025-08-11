@@ -4,10 +4,10 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
-  HelpCircle,
-  Users,
-  Layers,
+  Store,
+  ChartPie,
+  ShoppingCart,
+  LayoutPanelLeft,
   BarChart2,
   MoreHorizontal
 } from 'lucide-react';
@@ -221,8 +221,6 @@ const ModalBackdrop = ({ children, onClose }) => (
     </motion.div>
   </motion.div>
 );
-
-import { Store, ChartPie, ShoppingCart, LayoutPanelLeft, BarChart2, MoreHorizontal } from 'lucide-react';
 
 const servicesList = [
   { title: 'Build Shopify Store', icon: <Store size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
