@@ -222,6 +222,8 @@ const ModalBackdrop = ({ children, onClose }) => (
   </motion.div>
 );
 
+import { Store, ChartPie, ShoppingCart, LayoutPanelLeft, BarChart2, MoreHorizontal } from 'lucide-react';
+
 const servicesList = [
   { title: 'Build Shopify Store', icon: <Store size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
   { title: 'Consultations', icon: <ChartPie size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
