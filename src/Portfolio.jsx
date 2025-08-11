@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد أيقونات المنصات الأصلية من مكتبة react-icons/fa
+// أيقونات المنصات الرسمية من react-icons
 import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn } from 'react-icons/fa';
 
 // --- UI Components ---
@@ -335,7 +335,7 @@ export default function Portfolio() {
             </Button>
           </motion.div>
 
-          {/* صف أيقونات المنصات الأصلية */}
+          {/* صف أيقونات المنصات الرسمية */}
           <div className="flex justify-center py-10 mb-5">
             <div className="flex gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-lg mx-auto">
               {[
@@ -390,7 +390,8 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام كما هي */}
+        {/* باقي الأقسام والصفحات كما هي */}
+        {/* Experience */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -420,6 +421,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Achievements */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -441,6 +443,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Skills */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -449,6 +452,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Projects */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
