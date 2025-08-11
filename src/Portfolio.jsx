@@ -14,7 +14,7 @@ import {
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
 // أيقونات المنصات الرسمية من react-icons
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from 'react-icons/fa';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -340,7 +340,7 @@ export default function Portfolio() {
             <div className="flex gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-lg mx-auto">
               {[
                 {
-                  icon: <FaFacebookF size={30} color="#1877F2" />,
+                  icon: <FaFacebookF size={30} color="#fff" />,
                   name: "Facebook",
                   colorClass: "from-[#1877f2] to-[#4364f7]",
                   hoverShadow: "rgba(33,207,239,0.3)"
@@ -356,6 +356,12 @@ export default function Portfolio() {
                   name: "Google",
                   colorClass: "from-[#34a853] via-[#fbbc05] to-[#ea4335]",
                   hoverShadow: "rgba(52,168,83,0.12)"
+                },
+                {
+                  icon: <FaTiktok size={30} color="#fff" />, 
+                  name: "TikTok",
+                  colorClass: "from-[#69C9D0] to-[#EE1D52]", 
+                  hoverShadow: "rgba(105,201,208,0.3)"
                 },
                 {
                   icon: <FaSnapchatGhost size={30} color="#222" />,
