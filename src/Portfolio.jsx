@@ -13,8 +13,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد أيقونات أصلية من react-icons
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaGoogle, FaSnapchatGhost } from 'react-icons/fa';
+// استيراد أيقونات المنصات الأصلية من مكتبة react-icons/fa
+import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn } from 'react-icons/fa';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -335,67 +335,49 @@ export default function Portfolio() {
             </Button>
           </motion.div>
 
-          {/* صف أيقونات منصات الإعلانات */}
+          {/* صف أيقونات المنصات الأصلية */}
           <div className="flex justify-center py-10 mb-5">
-            <div
-              className="flex flex-row gap-7 sm:gap-10 bg-neutral-900/80 px-7 py-5 rounded-2xl shadow-xl border border-neutral-800"
-              style={{ margin: "0 auto" }}
-            >
-              {/* Facebook */}
-              <div className="flex flex-col items-center">
-                <div
-                  className="bg-gradient-to-br from-[#1877f2] to-[#4364f7] rounded-full p-3 transition duration-300
-                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(33,207,239,0.3)]"
-                >
-                  <FaFacebookF size={30} color="#fff" />
+            <div className="flex gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-lg mx-auto">
+              {[
+                {
+                  icon: <FaFacebookF size={30} color="#1877F2" />,
+                  name: "Facebook",
+                  colorClass: "from-[#1877f2] to-[#4364f7]",
+                  hoverShadow: "rgba(33,207,239,0.3)"
+                },
+                {
+                  icon: <FaInstagram size={30} color="#fff" />,
+                  name: "Instagram",
+                  colorClass: "from-pink-500 via-[#fccc63] to-purple-500",
+                  hoverShadow: "rgba(236,72,153,0.14)"
+                },
+                {
+                  icon: <FaGoogle size={30} color="#fff" />,
+                  name: "Google",
+                  colorClass: "from-[#34a853] via-[#fbbc05] to-[#ea4335]",
+                  hoverShadow: "rgba(52,168,83,0.12)"
+                },
+                {
+                  icon: <FaSnapchatGhost size={30} color="#222" />,
+                  name: "Snapchat",
+                  colorClass: "from-yellow-300 to-yellow-500",
+                  hoverShadow: "rgba(255,234,0,0.10)"
+                },
+                {
+                  icon: <FaLinkedinIn size={30} color="#fff" />,
+                  name: "LinkedIn",
+                  colorClass: "from-[#00aaff] to-[#283e63]",
+                  hoverShadow: "rgba(0,170,255,0.11)"
+                }
+              ].map(({ icon, name, colorClass, hoverShadow }) => (
+                <div key={name} className="flex flex-col items-center cursor-pointer transition duration-300 hover:scale-110">
+                  <div className={`bg-gradient-to-br ${colorClass} rounded-full p-3 shadow-md`} style={{ boxShadow: `0 6px 20px -2px ${hoverShadow}` }}>
+                    {icon}
+                  </div>
+                  <span className="mt-2 font-medium text-sm text-neutral-300">{name}</span>
+                  <span className="text-xs text-neutral-400">Ads</span>
                 </div>
-                <span className="mt-2 font-medium text-sm text-blue-300">Facebook</span>
-                <span className="text-xs text-neutral-400">Ads</span>
-              </div>
-              {/* Instagram */}
-              <div className="flex flex-col items-center">
-                <div
-                  className="bg-gradient-to-br from-pink-500 via-[#fccc63] to-purple-500 rounded-full p-3 transition duration-300
-                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(236,72,153,0.14)]"
-                >
-                  <FaInstagram size={30} color="#fff" />
-                </div>
-                <span className="mt-2 font-medium text-sm text-pink-300">Instagram</span>
-                <span className="text-xs text-neutral-400">Ads</span>
-              </div>
-              {/* Google */}
-              <div className="flex flex-col items-center">
-                <div
-                  className="bg-gradient-to-br from-[#34a853] via-[#fbbc05] to-[#ea4335] rounded-full p-3 transition duration-300
-                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(52,168,83,0.12)]"
-                >
-                  <FaGoogle size={30} color="#fff" />
-                </div>
-                <span className="mt-2 font-medium text-sm text-[#fbbc05]">Google</span>
-                <span className="text-xs text-neutral-400">Ads</span>
-              </div>
-              {/* LinkedIn */}
-              <div className="flex flex-col items-center">
-                <div
-                  className="bg-gradient-to-br from-[#00aaff] to-[#283e63] rounded-full p-3 transition duration-300
-                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(0,170,255,0.11)]"
-                >
-                  <FaLinkedinIn size={30} color="#fff" />
-                </div>
-                <span className="mt-2 font-medium text-sm text-sky-300">LinkedIn</span>
-                <span className="text-xs text-neutral-400">Ads</span>
-              </div>
-              {/* Snapchat */}
-              <div className="flex flex-col items-center">
-                <div
-                  className="bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full p-3 transition duration-300
-                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(255,234,0,0.10)]"
-                >
-                  <FaSnapchatGhost size={30} color="#222" />
-                </div>
-                <span className="mt-2 font-medium text-sm text-yellow-300">Snapchat</span>
-                <span className="text-xs text-neutral-400">Ads</span>
-              </div>
+              ))}
             </div>
           </div>
         </section>
@@ -409,7 +391,6 @@ export default function Portfolio() {
         </SectionWrapper>
 
         {/* باقي الأقسام كما هي */}
-        {/* Experience Section */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -439,7 +420,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -461,7 +441,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -470,7 +449,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Projects Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
