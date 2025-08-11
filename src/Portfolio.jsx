@@ -360,7 +360,7 @@ export default function Portfolio() {
                 {
                   icon: <FaTiktok size={30} color="#fff" />, 
                   name: "TikTok",
-                  colorClass: "from-[#69C9D0] to-[#EE1D52]", 
+                  colorClass: "from-[#222] to-[#222]", 
                   hoverShadow: "rgba(105,201,208,0.3)"
                 },
                 {
