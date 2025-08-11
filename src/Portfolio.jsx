@@ -13,9 +13,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد أيقونات المنصات الاجتماعية من react-icons -- استوردها فقط مرة واحدة هنا
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from 'react-icons/fa';
-
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
@@ -122,7 +119,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
   </motion.section>
 ));
 
-// --- Navbar ---
+// --- الناف بار ---
 const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -260,53 +257,7 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- مكون أيقونات منصات التواصل بشكل مثلث ---
-function SocialMediaIcons() {
-  const icons = [
-    { icon: <FaFacebookF size={30} color="#fff" />, name: "Facebook", ads: "Facebook Ads", colorClass: "from-[#1877f2] to-[#4364f7]", hoverShadow: "rgba(33,207,239,0.3)" },
-    { icon: <FaInstagram size={30} color="#fff" />, name: "Instagram", ads: "Instagram Ads", colorClass: "from-pink-500 via-[#fccc63] to-purple-500", hoverShadow: "rgba(236,72,153,0.14)" },
-    { icon: <FaGoogle size={30} color="#fff" />, name: "Google", ads: "Google Ads", colorClass: "from-[#34a853] via-[#fbbc05] to-[#ea4335]", hoverShadow: "rgba(52,168,83,0.12)" },
-    { icon: <FaTiktok size={30} color="#fff" />, name: "TikTok", ads: "TikTok Ads", colorClass: "from-[#222] to-[#222]", hoverShadow: "rgba(105,201,208,0.3)" },
-    { icon: <FaSnapchatGhost size={30} color="#222" />, name: "Snapchat", ads: "Snapchat Ads", colorClass: "from-yellow-300 to-yellow-500", hoverShadow: "rgba(255,234,0,0.10)" },
-    { icon: <FaLinkedinIn size={30} color="#fff" />, name: "LinkedIn", ads: "LinkedIn Ads", colorClass: "from-[#00aaff] to-[#283e63]", hoverShadow: "rgba(0,170,255,0.11)" },
-  ];
-
-  const renderIcon = ({ icon, name, ads, colorClass, hoverShadow }, key) => (
-    <motion.div
-      key={key}
-      className="flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-110"
-      whileHover={{ scale: 1.1 }}
-    >
-      <div 
-        className={`bg-gradient-to-br ${colorClass} rounded-full p-3 shadow-md`}
-        style={{ boxShadow: `0 6px 20px -2px ${hoverShadow}` }}
-      >
-        {icon}
-      </div>
-      <span className="mt-2 font-medium text-sm text-neutral-300 select-none">{name}</span>
-      <span className="text-xs text-neutral-400 select-none">{ads}</span>
-    </motion.div>
-  );
-
-  return (
-    <div className="mt-12 flex flex-col items-center gap-8">
-      {/* Row 1 - 3 icons */}
-      <div className="flex gap-8 justify-center w-full max-w-lg">
-        {icons.slice(0, 3).map((icon, idx) => renderIcon(icon, idx))}
-      </div>
-      {/* Row 2 - 2 icons */}
-      <div className="flex gap-8 justify-center w-full max-w-md">
-        {icons.slice(3, 5).map((icon, idx) => renderIcon(icon, idx+3))}
-      </div>
-      {/* Row 3 - 1 icon */}
-      <div className="flex justify-center w-full max-w-xs">
-        {renderIcon(icons[5], 5)}
-      </div>
-    </div>
-  );
-}
-
-// --- ملف Portfolio الرئيسي مع إضافة SocialMediaIcons ---
+// --- ملف Portfolio الرئيسي ---
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
@@ -341,10 +292,7 @@ export default function Portfolio() {
           id="home"
           className="min-h-screen flex flex-col justify-center items-center text-center relative"
         >
-          {/* background */}
           <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
-
-          {/* صورة ونص */}
           <motion.img
             src={personalInfo.profileImage}
             alt="Profile Picture of Abdullah Rashid"
@@ -374,9 +322,8 @@ export default function Portfolio() {
           >
             {personalInfo.title}
           </motion.p>
-
-          {/* زر Let’s Work Together */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            {/* زرار Let’s Work Together */}
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
@@ -387,10 +334,8 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* إضافة Social Media Icons هنا */}
-        <SocialMediaIcons />
+        {/* الأقسام الباقية كما في الكود الأصلي */}
 
-        {/* قسم About Me */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -398,10 +343,96 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام كما هي ... */}
+        <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
+          <div className="max-w-3xl mx-auto relative">
+            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
+            {experienceData.map((item, index) => (
+              <motion.div
+                key={index}
+                className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="hidden md:block w-1/2" />
+                <div className="relative w-full md:w-1/2">
+                  <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
+                  <Card className="hover:border-teal-500/50 transition-colors">
+                    <CardContent>
+                      <p className="text-xs text-amber-400 mb-1">{item.date}</p>
+                      <h3 className="text-xl font-semibold text-white mb-1">{item.title}</h3>
+                      <p className="text-sm text-neutral-400 font-medium mb-3">{item.company}</p>
+                      <p className="text-neutral-400">{item.description}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper id="achievements" title="Key Achievements">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROI Generated</h3>
+                <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
+                <div className="flex justify-center items-end gap-2 mt-4 h-16">
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
+          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+            {skillsData.map((skill, index) => (
+              <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
+            ))}
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            {projectsData.map((project, index) => (
+              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
+                <Card className="group overflow-hidden h-full">
+                  <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <CardContent>
+                    <h3 className="text-xl font-semibold text-white flex items-center justify-between">
+                      {project.title}
+                      <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-teal-400" />
+                    </h3>
+                  </CardContent>
+                </Card>
+              </motion.a>
+            ))}
+          </div>
+        </SectionWrapper>
+
+        <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
+          <div className="text-center max-w-md mx-auto">
+            <Camera className="mx-auto text-amber-400 mb-4" size={40} />
+            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
+          </div>
+          <div className="text-center max-w-md mx-auto">
+            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
+            <p className="text-neutral-300 leading-relaxed">
+              Bachelor of Business Administration from Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
+            </p>
+          </div>
+        </div>
       </main>
 
-      {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
