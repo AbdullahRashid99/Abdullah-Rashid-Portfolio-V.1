@@ -41,7 +41,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- بيانات شخصية ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
+  title: "Senior Performance Marketer1 | E-commerce Expert | Certified by Google",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
