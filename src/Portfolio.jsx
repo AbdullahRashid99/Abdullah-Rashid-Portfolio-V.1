@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';  // استيراد Link من react-router-dom
 import {
-    Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-    Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
-    Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-    Tiktok, Instagram, Dribbble, Twitter, ArrowUp
+  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
+  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
+  Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
+  Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
+  ShoppingCart as IconShopify,
+  HelpCircle,
+  Users,
+  Layers,
+  BarChart2,
+  MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
@@ -27,53 +32,56 @@ const CardContent = ({ children, className, ...props }) => (
   </div>
 );
 
-// --- Data ---
+// --- بيانات شخصية ---
 const personalInfo = {
-    name: "Abdullah Rashid",
-    title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
-    linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
-    whatsapp: "http://wa.me/+201025030220",
-    profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
+  name: "Abdullah Rashid",
+  title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
+  linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
+  whatsapp: "http://wa.me/+201025030220",
+  profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
 };
 
+// --- أقسام الصفحة ---
 const sections = [
-    { id: "about", title: "About" },
-    { id: "experience", title: "Experience" },
-    { id: "skills", title: "Skills" },
-    { id: "projects", title: "Projects" },
-    { id: "contact", title: "Contact" },
+  { id: "about", title: "About" },
+  { id: "experience", title: "Experience" },
+  { id: "skills", title: "Skills" },
+  { id: "projects", title: "Projects" },
+  { id: "contact", title: "Contact" },
 ];
 
+// --- خبرات ---
 const experienceData = [
-    { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
-    { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
-    { icon: <Target />, title: "Media Buyer ", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
-    { icon: <ShoppingCart />, title: "E-commerce & Dropshipping Expert", company: "Freelance", description: "Created high-converting Shopify stores, specializing in pricing, competitor analysis, and product development." },
-    { icon: <UserCheck />, title: "One-to-One Digital Marketing Coach", company: "Freelance", description: "Delivered personalized training sessions, simplifying complex concepts to help clients execute real-world campaigns." },
-    { icon: <Briefcase />, title: "Account Manager", company: "Business Empire", description: "Managed key accounts across diverse niches including fashion, cosmetics & real estate." },
-    { icon: <Building />, title: "Real Estate Campaigns", company: "OFQ, Royal City", description: "Led successful digital marketing campaigns for major real estate developers." },
-    { icon: <LineChart />, title: "Stock Market & Financial Analyst", company: "Self-Directed", description: "Specialized in economic, political, and technical analysis of financial markets." },
+  { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
+  { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
+  { icon: <Target />, title: "Media Buyer ", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
+  { icon: <ShoppingCart />, title: "E-commerce & Dropshipping Expert", company: "Freelance", description: "Created high-converting Shopify stores, specializing in pricing, competitor analysis, and product development." },
+  { icon: <UserCheck />, title: "One-to-One Digital Marketing Coach", company: "Freelance", description: "Delivered personalized training sessions, simplifying complex concepts to help clients execute real-world campaigns." },
+  { icon: <Briefcase />, title: "Account Manager", company: "Business Empire", description: "Managed key accounts across diverse niches including fashion, cosmetics & real estate." },
+  { icon: <Building />, title: "Real Estate Campaigns", company: "OFQ, Royal City", description: "Led successful digital marketing campaigns for major real estate developers." },
+  { icon: <LineChart />, title: "Stock Market & Financial Analyst", company: "Self-Directed", description: "Specialized in economic, political, and technical analysis of financial markets." },
 ];
 
+// --- مهارات ---
 const skillsData = [
-    "Analytical & Creative Thinker", "Content Strategy", "Google Ads", "Meta Ads", "TikTok Ads",
-    "Snapchat Ads", "Email Marketing", "Lead Generation", "Shopify Development",
-    "KPI Tracking", "A/B Testing", "Communication", "Presentation Skills", "Media Strategy", "Budget Management"
+  "Analytical & Creative Thinker", "Content Strategy", "Google Ads", "Meta Ads", "TikTok Ads",
+  "Snapchat Ads", "Email Marketing", "Lead Generation", "Shopify Development",
+  "KPI Tracking", "A/B Testing", "Communication", "Presentation Skills", "Media Strategy", "Budget Management"
 ];
 
+// --- مشاريع ---
 const projectsData = [
-    { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fEZhc2hpb24lMjAlMjYlMjBBcHBhcmVsfGVufDB8fDB8fHww" },
-    { title: "Cosmetics & Beauty", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
-    { title: "Real Estate", image: "https://www.agentadvice.com/wp-content/uploads/2020/12/shutterstock_1247473441-scaled.jpg" },
-    { title: "Medical & Healthcare", image: "https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8TWVkaWNhbHxlbnwwfHwwfHx8MA%3D%3D" },
-    { title: "Restaurants & Cafés", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8UmVzdGF1cmFudHN8ZW58MHx8MHx8fDA%3D" },
-    { title: "Furniture & Interiors", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8UmVhbCUyMEVzdGF0ZXxlbnwwfHwwfHx8MA%3D%3D" },
-    { title: "SaaS", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8U2FhU3xlbnwwfHwwfHx8MA%3D%3D" },
-    { title: "Tech", image: "https://www.eurokidsindia.com/blog/wp-content/uploads/2023/12/names-of-electronic-devices-in-english.jpg" },
+  { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
+  { title: "Cosmetics & Beauty", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
+  { title: "Real Estate", image: "https://www.agentadvice.com/wp-content/uploads/2020/12/shutterstock_1247473441-scaled.jpg" },
+  { title: "Medical & Healthcare", image: "https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?w=500&auto=format&fit=crop&q=60" },
+  { title: "Restaurants & Cafés", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&auto=format&fit=crop&q=60" },
+  { title: "Furniture & Interiors", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&auto=format&fit=crop&q=60" },
+  { title: "SaaS", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&auto=format&fit=crop&q=60" },
+  { title: "Tech", image: "https://www.eurokidsindia.com/blog/wp-content/uploads/2023/12/names-of-electronic-devices-in-english.jpg" },
 ];
 
-// --- Components ---
-
+// --- العدّاد المتحرك ---
 const AnimatedCounter = ({ value }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
@@ -93,6 +101,7 @@ const AnimatedCounter = ({ value }) => {
   return <motion.span ref={ref}>{formattedValue}</motion.span>;
 };
 
+// --- التفاف الأقسام (لنفس الهيكل) ---
 const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
@@ -110,6 +119,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
   </motion.section>
 ));
 
+// --- الناف بار ---
 const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -160,7 +170,7 @@ const Navbar = ({ activeSection }) => {
   );
 };
 
-// Scroll To Top Button
+// --- زر العودة للأعلى ---
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
 
@@ -185,8 +195,74 @@ function ScrollToTopButton() {
   );
 }
 
+// --- مودال الخدمات ---
+const ModalBackdrop = ({ children, onClose }) => (
+  <motion.div
+    className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={onClose}
+  >
+    <motion.div
+      className="bg-neutral-900 rounded-lg shadow-xl max-w-4xl w-full max-h-full overflow-auto p-6 relative"
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.8, opacity: 0 }}
+      onClick={e => e.stopPropagation()}
+    >
+      {children}
+      <button
+        aria-label="Close modal"
+        onClick={onClose}
+        className="absolute top-3 right-3 text-neutral-400 hover:text-white transition"
+      >
+        <X size={28} />
+      </button>
+    </motion.div>
+  </motion.div>
+);
+
+const servicesList = [
+  { title: 'Build Shopify Store', icon: <IconShopify size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
+  { title: 'Consultation', icon: <HelpCircle size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
+  { title: 'E-Commerce Brand? Scale or Startup', icon: <Users size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
+  { title: 'Lead-Gen / Digital-Products', icon: <Layers size={48} />, link: 'https://forms.gle/KP7VhseUnEmmBmz49' },
+  { title: 'Multi-Brand Management', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfw9dkRCOMLaoN2FwDmcG6iCpyjQq5kQFnr4SZVo0h0gLYqiA/viewform' },
+  { title: 'Others', icon: <MoreHorizontal size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSciaASGQ9zYjllG3gXcZVq5Z_1pu-mSh8dtCqgJeyIRswTExw/viewform' },
+];
+
+function ServicesModal({ onClose }) {
+  return (
+    <ModalBackdrop onClose={onClose}>
+      <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">Our Services</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {servicesList.map(({ title, icon, link }, index) => (
+          <motion.div
+            key={index}
+            className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500 transition-shadow cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="text-teal-400 mb-4">{icon}</div>
+            <h3 className="text-xl font-semibold mb-4">{title}</h3>
+            <a href={link} target="_blank" rel="noopener noreferrer" className="mt-auto w-full">
+              <Button className="bg-teal-500 w-full text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-600 transition">
+                Start
+              </Button>
+            </a>
+          </motion.div>
+        ))}
+      </div>
+    </ModalBackdrop>
+  );
+}
+
+// --- ملف Portfolio الرئيسي ---
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
+  const [showServices, setShowServices] = useState(false);
+
   const sectionRefs = {
     home: useRef(null),
     about: useRef(null),
@@ -211,7 +287,11 @@ export default function Portfolio() {
 
       <main className="max-w-5xl mx-auto px-4 pb-24">
         {/* Hero Section */}
-        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
+        <section
+          ref={sectionRefs.home}
+          id="home"
+          className="min-h-screen flex flex-col justify-center items-center text-center relative"
+        >
           <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
           <motion.img
             src={personalInfo.profileImage}
@@ -225,25 +305,37 @@ export default function Portfolio() {
               e.target.alt = "Placeholder image with initials AR";
             }}
           />
-          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
+          >
             Abdullah Rashid<br />
             Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Digital Growth</span> Partner.
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-lg md:text-xl text-neutral-300 mb-8">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-lg md:text-xl text-neutral-300 mb-8"
+          >
             {personalInfo.title}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-            {/* تعديل هنا: استبدال <a href="/services"> بـ <Link to="/services"> */}
-            <Link to="/services">
-              <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30">
-                Let’s Work Together
-              </Button>
-            </Link>
+            {/* الزرار الجديد لفتح مودال الخدمات */}
+            <Button
+              className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
+              onClick={() => setShowServices(true)}
+              type="button"
+            >
+              Let’s Work Together
+            </Button>
           </motion.div>
         </section>
 
-        {/* بقية الأقسام ... كما هي */}
-        {/* About Me */}
+        {/* الأقسام الأخرى كما هي، لم نغير */}
+
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -251,7 +343,6 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* Experience Timeline */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -281,7 +372,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Achievements Visualization */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -303,7 +393,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Skills & Expertise */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -312,7 +401,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Industries */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
@@ -331,7 +419,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Content Production & Education */}
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
@@ -358,8 +445,15 @@ export default function Portfolio() {
         <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
       </footer>
 
-      {/* Scroll To Top Button */}
+      {/* زر العودة لأعلى */}
       <ScrollToTopButton />
+
+      {/* مودال الخدمات */}
+      <AnimatePresence>
+        {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
+      </AnimatePresence>
     </div>
   );
+}
+
 }
