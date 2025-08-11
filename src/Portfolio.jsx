@@ -6,7 +6,7 @@ import {
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
   Store,
   ChartPie,
-  ShoppingCart,
+  ShoppingCart as IconShopify,
   LayoutPanelLeft,
   BarChart2,
   MoreHorizontal
