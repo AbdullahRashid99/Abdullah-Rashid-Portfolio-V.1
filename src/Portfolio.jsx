@@ -13,12 +13,15 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد أيقونات المنصات الاجتماعية من react-icons -- استوردها فقط مرة واحدة هنا
+// استيراد أيقونات منصات التواصل من react-icons - استوردها مرة واحدة في أعلى الملف
 import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from 'react-icons/fa';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
-  <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
+  <button
+    className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`}
+    {...props}
+  >
     {children}
   </button>
 );
@@ -260,7 +263,8 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- مكون أيقونات منصات التواصل بشكل مثلث ---
+// --- مكون أيقونات منصات التواصل بشكل مثلث مع مثلث خلفي أحمر شفاف وحركة تدريجية ---
+
 function SocialMediaIcons() {
   const icons = [
     { icon: <FaFacebookF size={30} color="#fff" />, name: "Facebook", ads: "Facebook Ads", colorClass: "from-[#1877f2] to-[#4364f7]", hoverShadow: "rgba(33,207,239,0.3)" },
@@ -271,13 +275,28 @@ function SocialMediaIcons() {
     { icon: <FaLinkedinIn size={30} color="#fff" />, name: "LinkedIn", ads: "LinkedIn Ads", colorClass: "from-[#00aaff] to-[#283e63]", hoverShadow: "rgba(0,170,255,0.11)" },
   ];
 
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const iconVariants = {
+    hidden: { opacity: 0, x: 30 },
+    visible: { opacity: 1, x: 0 },
+  };
+
   const renderIcon = ({ icon, name, ads, colorClass, hoverShadow }, key) => (
     <motion.div
       key={key}
+      variants={iconVariants}
       className="flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-110"
       whileHover={{ scale: 1.1 }}
     >
-      <div 
+      <div
         className={`bg-gradient-to-br ${colorClass} rounded-full p-3 shadow-md`}
         style={{ boxShadow: `0 6px 20px -2px ${hoverShadow}` }}
       >
@@ -289,24 +308,51 @@ function SocialMediaIcons() {
   );
 
   return (
-    <div className="mt-12 flex flex-col items-center gap-8">
-      {/* Row 1 - 3 icons */}
-      <div className="flex gap-8 justify-center w-full max-w-lg">
-        {icons.slice(0, 3).map((icon, idx) => renderIcon(icon, idx))}
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="relative mt-12 md:mt-0 flex flex-col items-center gap-8 md:gap-10"
+      style={{ minHeight: 240 }} // لضبط الارتفاع لمنع تداخل مع المحتوى
+    >
+      {/* مثلث في الخلفية */}
+      <svg
+        className="hidden md:block absolute -top-24 w-[360px] h-[310px] left-1/2 -translate-x-1/2 pointer-events-none select-none"
+        viewBox="0 0 360 310"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ opacity: 0.1 }}
+      >
+        <path
+          d="M10 300 L350 300 L180 10 Z"
+          fill="none"
+          stroke="rgba(255,0,0,0.3)"
+          strokeWidth="2"
+        />
+      </svg>
+
+      {/* الأيقونات بشكل مثلث */}
+      <div className="flex flex-col items-center gap-8">
+        {/* Row 1 - 3 icons */}
+        <div className="flex gap-8 justify-center w-full max-w-lg">
+          {icons.slice(0, 3).map((icon, idx) => renderIcon(icon, idx))}
+        </div>
+
+        {/* Row 2 - 2 icons */}
+        <div className="flex gap-8 justify-center w-full max-w-md">
+          {icons.slice(3, 5).map((icon, idx) => renderIcon(icon, idx + 3))}
+        </div>
+
+        {/* Row 3 - 1 icon */}
+        <div className="flex justify-center w-full max-w-xs">
+          {renderIcon(icons[5], 5)}
+        </div>
       </div>
-      {/* Row 2 - 2 icons */}
-      <div className="flex gap-8 justify-center w-full max-w-md">
-        {icons.slice(3, 5).map((icon, idx) => renderIcon(icon, idx+3))}
-      </div>
-      {/* Row 3 - 1 icon */}
-      <div className="flex justify-center w-full max-w-xs">
-        {renderIcon(icons[5], 5)}
-      </div>
-    </div>
+    </motion.div>
   );
 }
 
-// --- ملف Portfolio الرئيسي مع إضافة SocialMediaIcons ---
+// --- ملف Portfolio الرئيسي مع دمج SocialMediaIcons ---
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
@@ -323,7 +369,8 @@ export default function Portfolio() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
+      entries =>
+        entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
       { rootMargin: '-30% 0px -70% 0px' }
     );
     Object.values(sectionRefs).forEach(ref => ref.current && observer.observe(ref.current));
@@ -363,8 +410,13 @@ export default function Portfolio() {
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
           >
-            Abdullah Rashid<br />
-            Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Digital Growth</span> Partner.
+            Abdullah Rashid
+            <br />
+            Your{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">
+              Digital Growth
+            </span>{" "}
+            Partner.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -376,7 +428,11 @@ export default function Portfolio() {
           </motion.p>
 
           {/* زر Let’s Work Together */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
@@ -387,31 +443,45 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* إضافة Social Media Icons هنا */}
+        {/* أيقونات منصات التواصل بشكل مثلث مع المثلث الهندسي الأحمر الخافت */}
         <SocialMediaIcons />
 
         {/* قسم About Me */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
-            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
+            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights,
+            and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me
+            a unique, data-driven yet creative approach to every challenge.
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام كما هي ... */}
+        {/* الأقسام الأخرى كما هي بدون تغيير */}
+
       </main>
 
-      {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
-          <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
+          <a
+            href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-neutral-500 hover:text-teal-400 transition-colors"
+          >
             <Linkedin />
           </a>
-          <a href={personalInfo.whatsapp} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-green-500 transition-colors">
+          <a
+            href={personalInfo.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-neutral-500 hover:text-green-500 transition-colors"
+          >
             <Phone />
           </a>
         </div>
-        <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
+        <p className="text-neutral-500 text-sm">
+          © {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
+        </p>
       </footer>
 
       {/* زر العودة لأعلى */}
