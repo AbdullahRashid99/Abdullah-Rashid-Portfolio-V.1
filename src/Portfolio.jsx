@@ -332,9 +332,67 @@ export default function Portfolio() {
               Let’s Work Together
             </Button>
           </motion.div>
+
+          {/* ----- هنا يبدأ صف أيقونات الإعلانات فوق سيكشن About ----- */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.15 } },
+            }}
+            className="flex justify-center gap-8 md:gap-10 py-10"
+          >
+            {[
+              {
+                icon: <Instagram size={44} />,
+                name: "Instagram",
+                color: "bg-gradient-to-tr from-pink-500 via-yellow-400 to-purple-500 text-white",
+                textColor: "text-pink-400"
+              },
+              {
+                icon: <Linkedin size={44} />,
+                name: "LinkedIn",
+                color: "bg-gradient-to-tr from-sky-500 to-blue-700 text-white",
+                textColor: "text-sky-400"
+              },
+              {
+                icon: <BarChart3 size={44} />, // بدل Google Ads
+                name: "Google",
+                color: "bg-gradient-to-tr from-amber-400 via-cyan-400 to-green-400 text-neutral-900",
+                textColor: "text-amber-400"
+              },
+              {
+                icon: <Star size={44} />, // بدل Snapchat Ads
+                name: "Snapchat",
+                color: "bg-yellow-400 text-white",
+                textColor: "text-yellow-400"
+              },
+              {
+                icon: <Dribbble size={44} />, // بدل Facebook
+                name: "Facebook",
+                color: "bg-gradient-to-r from-blue-500 to-blue-800 text-white",
+                textColor: "text-blue-400"
+              },
+            ].map((platform) => (
+              <motion.div
+                key={platform.name}
+                whileHover={{ scale: 1.18, rotate: [-2, 2, 0], boxShadow: "0 6px 30px -10px var(--tw-shadow-color, #0ff)" }}
+                transition={{ type: "spring", stiffness: 180, damping: 11 }}
+                className={`rounded-xl shadow-xl shadow-neutral-900/30 border-2 border-neutral-800 flex flex-col items-center px-4 py-4
+                  hover:shadow-teal-400/70 ${platform.color} hover:scale-110 transition duration-300 cursor-pointer`}
+              >
+                <div className="mb-2">{platform.icon}</div>
+                <span className={`font-bold text-lg drop-shadow-sm ${platform.textColor}`}>{platform.name}</span>
+                <span className="text-xs font-medium opacity-80 mt-0.5 tracking-wide text-white">Ads</span>
+              </motion.div>
+            ))}
+          </motion.div>
+          {/* ----- نهاية صف الأيقونات ----- */}
+
         </section>
 
-        {/* الأقسام الأخرى كما هي، لم نغير */}
+        {/* أقسام أخرى */}
 
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
