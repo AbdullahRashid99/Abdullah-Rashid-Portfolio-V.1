@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد أيقونات منصات التواصل من react-icons - استوردها مرة واحدة في أعلى الملف
+// استيراد أيقونات منصات التواصل من react-icons - استوردها مرة واحدة فقط في الأعلى
 import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from 'react-icons/fa';
 
 // --- UI Components ---
@@ -41,7 +41,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- بيانات شخصية ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "Senior Performance Marketer1 | E-commerce Expert | Certified by Google",
+  title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
@@ -263,16 +263,17 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- مكون أيقونات منصات التواصل بشكل مثلث مع مثلث خلفي أحمر شفاف وحركة تدريجية ---
+
+// --- مكون أيقونات السوشيال ميديا بشكل مثلث مع المثلث الهندسي الأحمر ---
 
 function SocialMediaIcons() {
   const icons = [
-    { icon: <FaFacebookF size={30} color="#fff" />, name: "Facebook", ads: "Facebook Ads", colorClass: "from-[#1877f2] to-[#4364f7]", hoverShadow: "rgba(33,207,239,0.3)" },
-    { icon: <FaInstagram size={30} color="#fff" />, name: "Instagram", ads: "Instagram Ads", colorClass: "from-pink-500 via-[#fccc63] to-purple-500", hoverShadow: "rgba(236,72,153,0.14)" },
-    { icon: <FaGoogle size={30} color="#fff" />, name: "Google", ads: "Google Ads", colorClass: "from-[#34a853] via-[#fbbc05] to-[#ea4335]", hoverShadow: "rgba(52,168,83,0.12)" },
-    { icon: <FaTiktok size={30} color="#fff" />, name: "TikTok", ads: "TikTok Ads", colorClass: "from-[#222] to-[#222]", hoverShadow: "rgba(105,201,208,0.3)" },
-    { icon: <FaSnapchatGhost size={30} color="#222" />, name: "Snapchat", ads: "Snapchat Ads", colorClass: "from-yellow-300 to-yellow-500", hoverShadow: "rgba(255,234,0,0.10)" },
-    { icon: <FaLinkedinIn size={30} color="#fff" />, name: "LinkedIn", ads: "LinkedIn Ads", colorClass: "from-[#00aaff] to-[#283e63]", hoverShadow: "rgba(0,170,255,0.11)" },
+    { icon: <FaFacebookF size={32} color="#fff" />, name: "Facebook", ads: "Facebook Ads", colorClass: "from-[#1877f2] to-[#4364f7]", hoverShadow: "rgba(33,207,239,0.3)" },
+    { icon: <FaInstagram size={32} color="#fff" />, name: "Instagram", ads: "Instagram Ads", colorClass: "from-pink-500 via-[#fccc63] to-purple-500", hoverShadow: "rgba(236,72,153,0.14)" },
+    { icon: <FaGoogle size={32} color="#fff" />, name: "Google", ads: "Google Ads", colorClass: "from-[#34a853] via-[#fbbc05] to-[#ea4335]", hoverShadow: "rgba(52,168,83,0.12)" },
+    { icon: <FaTiktok size={32} color="#fff" />, name: "TikTok", ads: "TikTok Ads", colorClass: "from-[#222] to-[#222]", hoverShadow: "rgba(105,201,208,0.3)" },
+    { icon: <FaSnapchatGhost size={32} color="#222" />, name: "Snapchat", ads: "Snapchat Ads", colorClass: "from-yellow-300 to-yellow-500", hoverShadow: "rgba(255,234,0,0.10)" },
+    { icon: <FaLinkedinIn size={32} color="#fff" />, name: "LinkedIn", ads: "LinkedIn Ads", colorClass: "from-[#00aaff] to-[#283e63]", hoverShadow: "rgba(0,170,255,0.11)" },
   ];
 
   const containerVariants = {
@@ -313,11 +314,11 @@ function SocialMediaIcons() {
       initial="hidden"
       animate="visible"
       className="relative mt-12 md:mt-0 flex flex-col items-center gap-8 md:gap-10"
-      style={{ minHeight: 240 }} // لضبط الارتفاع لمنع تداخل مع المحتوى
+      style={{ minHeight: 240 }}
     >
-      {/* مثلث في الخلفية */}
+      {/* مثلث هندسي خلفي */}
       <svg
-        className="hidden md:block absolute -top-24 w-[360px] h-[310px] left-1/2 -translate-x-1/2 pointer-events-none select-none"
+        className="hidden md:block absolute -top-28 w-[360px] h-[310px] left-1/2 -translate-x-1/2 pointer-events-none select-none"
         viewBox="0 0 360 310"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -331,19 +332,19 @@ function SocialMediaIcons() {
         />
       </svg>
 
-      {/* الأيقونات بشكل مثلث */}
+      {/* الأيقونات في شكل مثلث */}
       <div className="flex flex-col items-center gap-8">
-        {/* Row 1 - 3 icons */}
+        {/* الصف الأول : 3 أيقونات */}
         <div className="flex gap-8 justify-center w-full max-w-lg">
           {icons.slice(0, 3).map((icon, idx) => renderIcon(icon, idx))}
         </div>
 
-        {/* Row 2 - 2 icons */}
+        {/* الصف الثاني : 2 أيقونة */}
         <div className="flex gap-8 justify-center w-full max-w-md">
           {icons.slice(3, 5).map((icon, idx) => renderIcon(icon, idx + 3))}
         </div>
 
-        {/* Row 3 - 1 icon */}
+        {/* الصف الثالث : 1 أيقونة */}
         <div className="flex justify-center w-full max-w-xs">
           {renderIcon(icons[5], 5)}
         </div>
@@ -352,7 +353,8 @@ function SocialMediaIcons() {
   );
 }
 
-// --- ملف Portfolio الرئيسي مع دمج SocialMediaIcons ---
+
+// --- ملف Portfolio الرئيسي مع مكون SocialMediaIcons ---
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
@@ -410,13 +412,8 @@ export default function Portfolio() {
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
           >
-            Abdullah Rashid
-            <br />
-            Your{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">
-              Digital Growth
-            </span>{" "}
-            Partner.
+            Abdullah Rashid<br />
+            Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Digital Growth</span> Partner.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -443,7 +440,7 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* أيقونات منصات التواصل بشكل مثلث مع المثلث الهندسي الأحمر الخافت */}
+        {/* إدراج مكون أيقونات السوشيال بشكل مثلث مع المثلث الأحمر */}
         <SocialMediaIcons />
 
         {/* قسم About Me */}
@@ -456,7 +453,7 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* الأقسام الأخرى كما هي بدون تغيير */}
+        {/* الأقسام الأخرى كما هي */}
 
       </main>
 
