@@ -4,7 +4,7 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
+  ShoppingCart as IconShopify,   // تجنب تكرار اسم ShoppingCart
   HelpCircle,
   Users,
   Layers,
@@ -12,9 +12,6 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
-
-// أيقونات المنصات الرسمية من react-icons
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaTiktok } from 'react-icons/fa';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -260,6 +257,8 @@ function ServicesModal({ onClose }) {
   );
 }
 
+// --- ملف Portfolio الرئيسي ---
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
@@ -323,9 +322,8 @@ export default function Portfolio() {
           >
             {personalInfo.title}
           </motion.p>
-
-          {/* زرار Let’s Work Together */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            {/* زرار Let’s Work Together */}
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
@@ -334,61 +332,10 @@ export default function Portfolio() {
               Let’s Work Together
             </Button>
           </motion.div>
-
-          {/* صف أيقونات المنصات الرسمية */}
-          <div className="flex justify-center py-10 mb-5">
-            <div className="flex gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-lg mx-auto">
-              {[
-                {
-                  icon: <FaFacebookF size={30} color="#fff" />,
-                  name: "Facebook",
-                  colorClass: "from-[#1877f2] to-[#4364f7]",
-                  hoverShadow: "rgba(33,207,239,0.3)"
-                },
-                {
-                  icon: <FaInstagram size={30} color="#fff" />,
-                  name: "Instagram",
-                  colorClass: "from-pink-500 via-[#fccc63] to-purple-500",
-                  hoverShadow: "rgba(236,72,153,0.14)"
-                },
-                {
-                  icon: <FaGoogle size={30} color="#fff" />,
-                  name: "Google",
-                  colorClass: "from-[#34a853] via-[#fbbc05] to-[#ea4335]",
-                  hoverShadow: "rgba(52,168,83,0.12)"
-                },
-                {
-                  icon: <FaTiktok size={30} color="#fff" />, 
-                  name: "TikTok",
-                  colorClass: "from-[#222] to-[#222]", 
-                  hoverShadow: "rgba(105,201,208,0.3)"
-                },
-                {
-                  icon: <FaSnapchatGhost size={30} color="#222" />,
-                  name: "Snapchat",
-                  colorClass: "from-yellow-300 to-yellow-500",
-                  hoverShadow: "rgba(255,234,0,0.10)"
-                },
-                {
-                  icon: <FaLinkedinIn size={30} color="#fff" />,
-                  name: "LinkedIn",
-                  colorClass: "from-[#00aaff] to-[#283e63]",
-                  hoverShadow: "rgba(0,170,255,0.11)"
-                }
-              ].map(({ icon, name, colorClass, hoverShadow }) => (
-                <div key={name} className="flex flex-col items-center cursor-pointer transition duration-300 hover:scale-110">
-                  <div className={`bg-gradient-to-br ${colorClass} rounded-full p-3 shadow-md`} style={{ boxShadow: `0 6px 20px -2px ${hoverShadow}` }}>
-                    {icon}
-                  </div>
-                  <span className="mt-2 font-medium text-sm text-neutral-300">{name}</span>
-                  <span className="text-xs text-neutral-400">Ads</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </section>
 
-        {/* قسم About */}
+        {/* الأقسام الباقية كما في الكود الأصلي */}
+
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -396,8 +343,6 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام والصفحات كما هي */}
-        {/* Experience */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -427,7 +372,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Achievements */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -449,7 +393,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Skills */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -458,7 +401,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Projects */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
