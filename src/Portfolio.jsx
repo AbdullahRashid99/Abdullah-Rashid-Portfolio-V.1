@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
+// استيراد أيقونات أصلية من react-icons
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaGoogle, FaSnapchatGhost } from 'react-icons/fa';
+
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
@@ -257,8 +260,6 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- ملف Portfolio الرئيسي ---
-
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
@@ -322,8 +323,9 @@ export default function Portfolio() {
           >
             {personalInfo.title}
           </motion.p>
+
+          {/* زرار Let’s Work Together */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-            {/* الزرار الجديد لفتح مودال الخدمات */}
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
@@ -333,67 +335,72 @@ export default function Portfolio() {
             </Button>
           </motion.div>
 
-          {/* ----- هنا يبدأ صف أيقونات الإعلانات فوق سيكشن About ----- */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.15 } },
-            }}
-            className="flex justify-center gap-8 md:gap-10 py-10"
-          >
-            {[
-              {
-                icon: <Instagram size={44} />,
-                name: "Instagram",
-                color: "bg-gradient-to-tr from-pink-500 via-yellow-400 to-purple-500 text-white",
-                textColor: "text-pink-400"
-              },
-              {
-                icon: <Linkedin size={44} />,
-                name: "LinkedIn",
-                color: "bg-gradient-to-tr from-sky-500 to-blue-700 text-white",
-                textColor: "text-sky-400"
-              },
-              {
-                icon: <BarChart3 size={44} />, // بدل Google Ads
-                name: "Google",
-                color: "bg-gradient-to-tr from-amber-400 via-cyan-400 to-green-400 text-neutral-900",
-                textColor: "text-amber-400"
-              },
-              {
-                icon: <Star size={44} />, // بدل Snapchat Ads
-                name: "Snapchat",
-                color: "bg-yellow-400 text-white",
-                textColor: "text-yellow-400"
-              },
-              {
-                icon: <Dribbble size={44} />, // بدل Facebook
-                name: "Facebook",
-                color: "bg-gradient-to-r from-blue-500 to-blue-800 text-white",
-                textColor: "text-blue-400"
-              },
-            ].map((platform) => (
-              <motion.div
-                key={platform.name}
-                whileHover={{ scale: 1.18, rotate: [-2, 2, 0], boxShadow: "0 6px 30px -10px var(--tw-shadow-color, #0ff)" }}
-                transition={{ type: "spring", stiffness: 180, damping: 11 }}
-                className={`rounded-xl shadow-xl shadow-neutral-900/30 border-2 border-neutral-800 flex flex-col items-center px-4 py-4
-                  hover:shadow-teal-400/70 ${platform.color} hover:scale-110 transition duration-300 cursor-pointer`}
-              >
-                <div className="mb-2">{platform.icon}</div>
-                <span className={`font-bold text-lg drop-shadow-sm ${platform.textColor}`}>{platform.name}</span>
-                <span className="text-xs font-medium opacity-80 mt-0.5 tracking-wide text-white">Ads</span>
-              </motion.div>
-            ))}
-          </motion.div>
-          {/* ----- نهاية صف الأيقونات ----- */}
-
+          {/* صف أيقونات منصات الإعلانات */}
+          <div className="flex justify-center py-10 mb-5">
+            <div
+              className="flex flex-row gap-7 sm:gap-10 bg-neutral-900/80 px-7 py-5 rounded-2xl shadow-xl border border-neutral-800"
+              style={{ margin: "0 auto" }}
+            >
+              {/* Facebook */}
+              <div className="flex flex-col items-center">
+                <div
+                  className="bg-gradient-to-br from-[#1877f2] to-[#4364f7] rounded-full p-3 transition duration-300
+                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(33,207,239,0.3)]"
+                >
+                  <FaFacebookF size={30} color="#fff" />
+                </div>
+                <span className="mt-2 font-medium text-sm text-blue-300">Facebook</span>
+                <span className="text-xs text-neutral-400">Ads</span>
+              </div>
+              {/* Instagram */}
+              <div className="flex flex-col items-center">
+                <div
+                  className="bg-gradient-to-br from-pink-500 via-[#fccc63] to-purple-500 rounded-full p-3 transition duration-300
+                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(236,72,153,0.14)]"
+                >
+                  <FaInstagram size={30} color="#fff" />
+                </div>
+                <span className="mt-2 font-medium text-sm text-pink-300">Instagram</span>
+                <span className="text-xs text-neutral-400">Ads</span>
+              </div>
+              {/* Google */}
+              <div className="flex flex-col items-center">
+                <div
+                  className="bg-gradient-to-br from-[#34a853] via-[#fbbc05] to-[#ea4335] rounded-full p-3 transition duration-300
+                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(52,168,83,0.12)]"
+                >
+                  <FaGoogle size={30} color="#fff" />
+                </div>
+                <span className="mt-2 font-medium text-sm text-[#fbbc05]">Google</span>
+                <span className="text-xs text-neutral-400">Ads</span>
+              </div>
+              {/* LinkedIn */}
+              <div className="flex flex-col items-center">
+                <div
+                  className="bg-gradient-to-br from-[#00aaff] to-[#283e63] rounded-full p-3 transition duration-300
+                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(0,170,255,0.11)]"
+                >
+                  <FaLinkedinIn size={30} color="#fff" />
+                </div>
+                <span className="mt-2 font-medium text-sm text-sky-300">LinkedIn</span>
+                <span className="text-xs text-neutral-400">Ads</span>
+              </div>
+              {/* Snapchat */}
+              <div className="flex flex-col items-center">
+                <div
+                  className="bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full p-3 transition duration-300
+                  hover:scale-110 hover:shadow-[0_6px_20px_-2px_rgba(255,234,0,0.10)]"
+                >
+                  <FaSnapchatGhost size={30} color="#222" />
+                </div>
+                <span className="mt-2 font-medium text-sm text-yellow-300">Snapchat</span>
+                <span className="text-xs text-neutral-400">Ads</span>
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* أقسام أخرى */}
-
+        {/* قسم About */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -401,6 +408,8 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
+        {/* باقي الأقسام كما هي */}
+        {/* Experience Section */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -430,6 +439,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -451,6 +461,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -459,6 +470,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Projects Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
