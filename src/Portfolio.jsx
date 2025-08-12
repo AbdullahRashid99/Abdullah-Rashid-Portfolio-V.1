@@ -4,12 +4,14 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
-  HelpCircle, Users, Layers, BarChart2, MoreHorizontal,
+  ShoppingCart as IconShopify,   // تجنب تكرار اسم ShoppingCart
+  HelpCircle,
+  Users,
+  Layers,
+  BarChart2,
+  MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP } from 'react-icons/fa';
-import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -98,12 +100,12 @@ const AnimatedCounter = ({ value }) => {
   return <motion.span ref={ref}>{formattedValue}</motion.span>;
 };
 
-// --- التفاف الأقسام ---
+// --- التفاف الأقسام (لنفس الهيكل) ---
 const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
     id={id}
-    className={`py-20 md:py-28 ${className || ''}`}
+    className={`py-20 md:py-28 ${className}`}
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, amount: 0.2 }}
@@ -116,7 +118,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
   </motion.section>
 ));
 
-// --- Navbar ---
+// --- الناف بار ---
 const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -229,109 +231,28 @@ const servicesList = [
   { title: 'Others', icon: <MoreHorizontal size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSciaASGQ9zYjllG3gXcZVq5Z_1pu-mSh8dtCqgJeyIRswTExw/viewform' },
 ];
 
-// === مكون SocialCircle داخل الملف نفسه مع التعديلات المطلوبة ===
-
-const platforms = [
-  { name: 'Facebook', Icon: FaFacebookF, color: '#1877F2' },
-  { name: 'Instagram', Icon: FaInstagram, color: '#E1306C' },
-  { name: 'Google', Icon: FaGoogle, color: '#4285F4' },
-  { name: 'Snapchat', Icon: FaSnapchatGhost, color: '#FFFC00', iconColor: '#000' },
-  { name: 'LinkedIn', Icon: FaLinkedinIn, color: '#0077B5' },
-  { name: 'YouTube', Icon: FaYoutube, color: '#FF0000' },
-  { name: 'X', Icon: FaXTwitter, color: '#1DA1F2' },
-  { name: 'TikTok', Icon: FaTiktok, color: '#000000' },
-  { name: 'Pinterest', Icon: FaPinterestP, color: '#E60023' },
-];
-
-function SocialCircle() {
-  const circleRef = useRef(null);
-  const [angle, setAngle] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
-
-  // دوران تلقائي ببطء إلى اليمين (زاوية تزداد)
-  useEffect(() => {
-    let animationId;
-    function animate() {
-      if (!isHovering) {
-        setAngle((a) => (a + 0.008) % (2 * Math.PI));
-      }
-      animationId = requestAnimationFrame(animate);
-    }
-    animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
-  }, [isHovering]);
-
-  const size = window.innerWidth < 600 ? 220 : 320;
-  const radius = size / 2 - 35;
-
+function ServicesModal({ onClose }) {
   return (
-    <section className="py-16 flex justify-center items-center relative select-none pointer-events-auto">
-      <div
-        ref={circleRef}
-        className="relative"
-        style={{ width: size, height: size }}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        title="Social Media Platforms"
-      >
-        {/* دائرة خارجية */}
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
-          style={{
-            width: size,
-            height: size,
-            border: '2px solid rgba(150, 150, 150, 0.3)',
-            boxShadow: '0 0 20px 4px rgba(150, 150, 150, 0.1) inset',
-            zIndex: 0,
-          }}
-        />
-        {/* الأيقونات */}
-        {platforms.map(({ name, Icon, color, iconColor }, idx) => {
-          const theta = (idx / platforms.length) * 2 * Math.PI + angle;
-          const x = radius * Math.cos(theta) + size / 2 - 28;
-          const y = radius * Math.sin(theta) + size / 2 - 28;
-          const iconDisplayColor = iconColor || '#fff';
-          return (
-            <motion.div
-              key={name}
-              style={{ position: 'absolute', left: x, top: y, zIndex: 10 }}
-              whileHover={{ scale: 1.25, zIndex: 20 }}
-              className="cursor-pointer flex flex-col items-center"
-              tabIndex={0}
-              aria-label={name}
-              role="button"
-            >
-              <div
-                className="rounded-full shadow-md flex items-center justify-center p-3"
-                style={{
-                  backgroundColor: color,
-                  boxShadow: `0 0 14px 3px ${color}90`,
-                  width: 56,
-                  height: 56,
-                }}
-              >
-                <Icon size={28} color={iconDisplayColor} />
-              </div>
-              <span className="mt-2 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                {isHovering ? name : ''}
-              </span>
-            </motion.div>
-          );
-        })}
-        {/* كلمة Ads في المنتصف */}
-        <div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-20 select-none"
-          style={{ userSelect: 'none' }}
-        >
-          <span
-            className="text-3xl font-extrabold text-white tracking-widest"
-            style={{ letterSpacing: '0.25em', textShadow: '0 1px 10px rgba(255, 255, 255, 0.5)' }}
+    <ModalBackdrop onClose={onClose}>
+      <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">Our Services</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {servicesList.map(({ title, icon, link }, index) => (
+          <motion.div
+            key={index}
+            className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500 transition-shadow cursor-pointer"
+            whileHover={{ scale: 1.05 }}
           >
-            Ads
-          </span>
-        </div>
+            <div className="text-teal-400 mb-4">{icon}</div>
+            <h3 className="text-xl font-semibold mb-4">{title}</h3>
+            <a href={link} target="_blank" rel="noopener noreferrer" className="mt-auto w-full">
+              <Button className="bg-teal-500 w-full text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-600 transition">
+                Start
+              </Button>
+            </a>
+          </motion.div>
+        ))}
       </div>
-    </section>
+    </ModalBackdrop>
   );
 }
 
@@ -364,7 +285,7 @@ export default function Portfolio() {
       <Navbar activeSection={activeSection} />
 
       <main className="max-w-5xl mx-auto px-4 pb-24">
-        {/* Section Hero */}
+        {/* Hero Section */}
         <section
           ref={sectionRefs.home}
           id="home"
@@ -378,7 +299,7 @@ export default function Portfolio() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-            onError={(e) => {
+            onError={e => {
               e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
               e.target.alt = "Placeholder image with initials AR";
             }}
@@ -400,11 +321,8 @@ export default function Portfolio() {
           >
             {personalInfo.title}
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            {/* زرار Let’s Work Together */}
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
@@ -415,21 +333,14 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* دمج مكون SocialCircle - الدائرة الدوارة بين زر Let’s Work Together و قسم About */}
-        <SocialCircle />
+        {/* الأقسام الباقية كما في الكود الأصلي */}
 
-        {/* قسم About Me */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
-            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights,
-            and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me
-            a unique, data-driven yet creative approach to every challenge.
+            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
           </p>
         </SectionWrapper>
-
-        {/* باقي الأقسام... (Experience, Skills, Projects...) */}
-        {/* نسختك الأصلية بدون تغيير */}
 
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
@@ -448,6 +359,7 @@ export default function Portfolio() {
                   <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
                   <Card className="hover:border-teal-500/50 transition-colors">
                     <CardContent>
+                      <p className="text-xs text-amber-400 mb-1">{item.date}</p>
                       <h3 className="text-xl font-semibold text-white mb-1">{item.title}</h3>
                       <p className="text-sm text-neutral-400 font-medium mb-3">{item.company}</p>
                       <p className="text-neutral-400">{item.description}</p>
@@ -456,6 +368,27 @@ export default function Portfolio() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper id="achievements" title="Key Achievements">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROI Generated</h3>
+                <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
+                <div className="flex justify-center items-end gap-2 mt-4 h-16">
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </SectionWrapper>
 
@@ -470,8 +403,8 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
-              <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-                <Card className="group overflow-hidden h-full hover:border-teal-500/50 transition-colors">
+              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
+                <Card className="group overflow-hidden h-full">
                   <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
                   <CardContent>
                     <h3 className="text-xl font-semibold text-white flex items-center justify-between">
@@ -480,12 +413,10 @@ export default function Portfolio() {
                     </h3>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </motion.a>
             ))}
           </div>
         </SectionWrapper>
-
-        {/* Additional Sections as in your original code */}
 
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
@@ -501,7 +432,6 @@ export default function Portfolio() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
