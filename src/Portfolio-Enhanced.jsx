@@ -4,7 +4,7 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
+  ShoppingCart as IconShopify,   // تجنب تكرار اسم ShoppingCart
   HelpCircle,
   Users,
   Layers,
@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// **اضافة الاستيراد لمكون SocialCircle**
 import SocialCircle from './components/SocialCircle';
 
 // --- UI Components ---
@@ -336,10 +335,8 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* **هنا نضيف مكون SocialCircle بين الهيرو وقسم About Me** */}
-        <SocialCircle />
+        {/* الأقسام الباقية كما في الكود الأصلي */}
 
-        {/* About Me Section */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -347,7 +344,6 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام كما كانت */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -455,8 +451,4 @@ export default function Portfolio() {
 
       {/* مودال الخدمات */}
       <AnimatePresence>
-        {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
-      </AnimatePresence>
-    </div>
-  );
-}
+        {showServices &&
