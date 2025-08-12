@@ -13,9 +13,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// استيراد المكونات الجديدة
+// **اضافة الاستيراد لمكون SocialCircle**
 import SocialCircle from './components/SocialCircle';
-import AnimatedBackground from './components/AnimatedBackground';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -35,46 +34,6 @@ const CardContent = ({ children, className, ...props }) => (
     {children}
   </div>
 );
-
-// زر "Let's Work Together" المتوهج
-const GlowingWorkButton = ({ onClick }) => {
-  return (
-    <motion.button
-      onClick={onClick}
-      className="relative px-8 py-4 bg-gradient-to-r from-teal-500 to-sky-500 text-white font-bold rounded-lg overflow-hidden group"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      {/* التوهج الأساسي */}
-      <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-sky-400 opacity-75 blur-lg animate-glass-shine"></div>
-      
-      {/* الخلفية الأساسية */}
-      <div className="relative z-10">
-        Let's Work Together
-      </div>
-      
-      {/* تأثير الزجاج المتحرك */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-      
-      <style jsx>{`
-        @keyframes glass-shine {
-          0%, 100% { 
-            opacity: 0.75;
-            transform: scale(1);
-          }
-          50% { 
-            opacity: 1;
-            transform: scale(1.05);
-          }
-        }
-        
-        .animate-glass-shine {
-          animation: glass-shine 4s ease-in-out infinite;
-        }
-      `}</style>
-    </motion.button>
-  );
-};
 
 // --- بيانات شخصية ---
 const personalInfo = {
@@ -144,7 +103,7 @@ const AnimatedCounter = ({ value }) => {
   return <motion.span ref={ref}>{formattedValue}</motion.span>;
 };
 
-// --- التفاف الأقسام مع تحسين توقيت الظهور ---
+// --- التفاف الأقسام (لنفس الهيكل) ---
 const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
@@ -152,8 +111,8 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
     className={`py-20 md:py-28 ${className}`}
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.1 }} // تقليل amount لظهور أسرع
-    transition={{ duration: 0.6, ease: "easeOut" }}
+    viewport={{ once: true, amount: 0.2 }}
+    transition={{ duration: 0.7, ease: "easeOut" }}
   >
     <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
       <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">{title}</span>
@@ -301,6 +260,7 @@ function ServicesModal({ onClose }) {
 }
 
 // --- ملف Portfolio الرئيسي ---
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
@@ -324,282 +284,179 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <>
-      {/* CSS للتحكم في التمرير والزوم */}
-      <style jsx global>{`
-        html, body {
-          overflow-x: hidden;
-          -webkit-text-size-adjust: 100%;
-          -ms-text-size-adjust: 100%;
-          text-size-adjust: 100%;
-          width: 100%;
-          max-width: 100vw;
-        }
-        
-        * {
-          touch-action: manipulation;
-          -webkit-tap-highlight-color: transparent;
-          box-sizing: border-box;
-        }
-        
-        body {
-          position: relative;
-          -webkit-overflow-scrolling: touch;
-        }
-        
-        /* منع التمرير الأفقي */
-        .container, .max-w-7xl, .max-w-6xl, .max-w-4xl {
-          max-width: 100%;
-          overflow-x: hidden;
-        }
-        
-        /* تحسين Industries section */
-        #projects {
-          scroll-margin-top: 100px;
-        }
-      `}</style>
+    <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative">
+      <Navbar activeSection={activeSection} />
 
-      {/* الخلفية المتحركة */}
-      <AnimatedBackground />
-      
-      <div className="min-h-screen bg-neutral-950 text-white relative">
-        <Navbar activeSection={activeSection} />
-        
+      <main className="max-w-5xl mx-auto px-4 pb-24">
         {/* Hero Section */}
-        <section ref={sectionRefs.home} id="home" className="relative min-h-screen flex items-center justify-center text-center px-4 overflow-hidden">
-          <div className="max-w-4xl mx-auto z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-8"
+        <section
+          ref={sectionRefs.home}
+          id="home"
+          className="min-h-screen flex flex-col justify-center items-center text-center relative"
+        >
+          <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
+          <motion.img
+            src={personalInfo.profileImage}
+            alt="Profile Picture of Abdullah Rashid"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
+            onError={e => {
+              e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
+              e.target.alt = "Placeholder image with initials AR";
+            }}
+          />
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
+          >
+            Abdullah Rashid<br />
+            Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Digital Growth</span> Partner.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-lg md:text-xl text-neutral-300 mb-8"
+          >
+            {personalInfo.title}
+          </motion.p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            {/* زرار Let’s Work Together */}
+            <Button
+              className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
+              onClick={() => setShowServices(true)}
+              type="button"
             >
-              <motion.img
-                src={personalInfo.profileImage}
-                alt={personalInfo.name}
-                className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto mb-6 border-4 border-teal-400 shadow-xl"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              />
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">
-                {personalInfo.name}
-              </h1>
-              <p className="text-xl md:text-2xl text-neutral-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-                {personalInfo.title}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <GlowingWorkButton onClick={() => setShowServices(true)} />
-                <div className="flex gap-4">
-                  <motion.a
-                    href={personalInfo.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Linkedin size={20} />
-                    LinkedIn
-                  </motion.a>
-                  <motion.a
-                    href={personalInfo.whatsapp}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Phone size={20} />
-                    WhatsApp
-                  </motion.a>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-          
-          {/* العجلة الاجتماعية */}
-          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
-            <SocialCircle />
-          </div>
+              Let’s Work Together
+            </Button>
+          </motion.div>
         </section>
 
-        {/* About Section */}
-        <SectionWrapper ref={sectionRefs.about} id="about" title="About Me" className="px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
-              <p className="text-lg md:text-xl leading-relaxed text-neutral-300 mb-8">
-                I'm a results-driven Senior Performance Marketer with extensive experience in E-commerce, 
-                Google Ads, Meta Ads, and comprehensive digital marketing strategies. With 8+ Google 
-                certifications and a proven track record of ROI optimization, I help businesses scale 
-                through data-driven marketing approaches.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                <Card className="text-center p-6">
-                  <Award className="mx-auto mb-4 text-teal-400" size={48} />
-                  <h3 className="text-xl font-semibold mb-2">8+ Certifications</h3>
-                  <p className="text-neutral-400">Google certified across multiple marketing disciplines</p>
-                </Card>
-                <Card className="text-center p-6">
-                  <Target className="mx-auto mb-4 text-teal-400" size={48} />
-                  <h3 className="text-xl font-semibold mb-2">ROI Focused</h3>
-                  <p className="text-neutral-400">Proven track record of campaign optimization</p>
-                </Card>
-                <Card className="text-center p-6">
-                  <LineChart className="mx-auto mb-4 text-teal-400" size={48} />
-                  <h3 className="text-xl font-semibold mb-2"><AnimatedCounter value={500000} /></h3>
-                  <p className="text-neutral-400">Revenue generated for clients</p>
-                </Card>
-              </div>
-            </motion.div>
-          </div>
+        {/* **هنا نضيف مكون SocialCircle بين الهيرو وقسم About Me** */}
+        <SocialCircle />
+
+        {/* About Me Section */}
+        <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
+          <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
+            With over 4 years in digital marketing, performance media buying, and e-commerce growth,
+            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
+          </p>
         </SectionWrapper>
 
-        {/* Experience Section */}
-        <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience" className="px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid gap-6">
-              {experienceData.map((exp, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Card className="p-6 hover:shadow-xl transition-shadow">
-                    <div className="flex items-start gap-4">
-                      <div className="text-teal-400 mt-1 flex-shrink-0">
-                        {exp.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold mb-1">{exp.title}</h3>
-                        <p className="text-teal-400 font-medium mb-3">{exp.company}</p>
-                        <p className="text-neutral-300 leading-relaxed">{exp.description}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </SectionWrapper>
-
-        {/* Skills Section */}
-        <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise" className="px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {skillsData.map((skill, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-neutral-900/80 border border-neutral-800 rounded-lg p-4 text-center hover:border-teal-400 transition-colors"
-                >
-                  <span className="text-sm md:text-base font-medium">{skill}</span>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </SectionWrapper>
-
-        {/* Projects/Industries Section - محسن للظهور الأسرع */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries" className="px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {projectsData.map((project, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }} // تقليل amount للظهور الأسرع
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="group cursor-pointer"
-                >
-                  <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-                    <div className="aspect-video overflow-hidden">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
+        {/* باقي الأقسام كما كانت */}
+        <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
+          <div className="max-w-3xl mx-auto relative">
+            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
+            {experienceData.map((item, index) => (
+              <motion.div
+                key={index}
+                className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="hidden md:block w-1/2" />
+                <div className="relative w-full md:w-1/2">
+                  <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
+                  <Card className="hover:border-teal-500/50 transition-colors">
                     <CardContent>
-                      <h3 className="font-semibold text-center">{project.title}</h3>
+                      <p className="text-xs text-amber-400 mb-1">{item.date}</p>
+                      <h3 className="text-xl font-semibold text-white mb-1">{item.title}</h3>
+                      <p className="text-sm text-neutral-400 font-medium mb-3">{item.company}</p>
+                      <p className="text-neutral-400">{item.description}</p>
                     </CardContent>
                   </Card>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </SectionWrapper>
 
-        {/* Contact Section */}
-        <SectionWrapper ref={sectionRefs.contact} id="contact" title="Get In Touch" className="px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6 }}
-              className="text-lg text-neutral-300 mb-8"
-            >
-              Ready to scale your business with performance marketing? 
-              Let's discuss how I can help you achieve your goals.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <a
-                href={personalInfo.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold transition flex items-center justify-center gap-2"
-              >
-                <Linkedin size={20} />
-                Connect on LinkedIn
-              </a>
-              <a
-                href={personalInfo.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-lg font-semibold transition flex items-center justify-center gap-2"
-              >
-                <Phone size={20} />
-                Chat on WhatsApp
-              </a>
-            </motion.div>
+        <SectionWrapper id="achievements" title="Key Achievements">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROI Generated</h3>
+                <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
+                <div className="flex justify-center items-end gap-2 mt-4 h-16">
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </SectionWrapper>
 
-        {/* Footer */}
-        <footer className="bg-neutral-900 py-8 px-4 border-t border-neutral-800">
-          <div className="max-w-7xl mx-auto text-center">
-            <p className="text-neutral-400">
-              © 2024 {personalInfo.name}. All rights reserved.
+        <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
+          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+            {skillsData.map((skill, index) => (
+              <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
+            ))}
+          </div>
+        </SectionWrapper>
+
+        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            {projectsData.map((project, index) => (
+              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
+                <Card className="group overflow-hidden h-full">
+                  <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <CardContent>
+                    <h3 className="text-xl font-semibold text-white flex items-center justify-between">
+                      {project.title}
+                      <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-teal-400" />
+                    </h3>
+                  </CardContent>
+                </Card>
+              </motion.a>
+            ))}
+          </div>
+        </SectionWrapper>
+
+        <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
+          <div className="text-center max-w-md mx-auto">
+            <Camera className="mx-auto text-amber-400 mb-4" size={40} />
+            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
+          </div>
+          <div className="text-center max-w-md mx-auto">
+            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
+            <p className="text-neutral-300 leading-relaxed">
+              Bachelor of Business Administration from Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
             </p>
           </div>
-        </footer>
+        </div>
+      </main>
 
-        <ScrollToTopButton />
-        
-        <AnimatePresence>
-          {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
-        </AnimatePresence>
-      </div>
-    </>
+      <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
+        <div className="flex justify-center gap-6 mb-4">
+          <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
+            <Linkedin />
+          </a>
+          <a href={personalInfo.whatsapp} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-green-500 transition-colors">
+            <Phone />
+          </a>
+        </div>
+        <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
+      </footer>
+
+      {/* زر العودة لأعلى */}
+      <ScrollToTopButton />
+
+      {/* مودال الخدمات */}
+      <AnimatePresence>
+        {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
+      </AnimatePresence>
+    </div>
   );
 }
