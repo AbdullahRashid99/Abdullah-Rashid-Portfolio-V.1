@@ -1,6 +1,15 @@
 // src/components/SocialIcons.jsx
 import React from 'react';
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn } from 'react-icons/fa';
+import { 
+  FaFacebookF, 
+  FaInstagram, 
+  FaGoogle, 
+  FaSnapchatGhost, 
+  FaLinkedinIn, 
+  FaYoutube, 
+  FaPinterestP
+} from 'react-icons/fa';
+import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
 
 const platforms = [
   {
@@ -33,12 +42,36 @@ const platforms = [
     gradient: 'from-[#00aaff] to-[#283e63]',
     shadow: 'rgba(0,170,255,0.11)'
   },
+  {
+    name: 'YouTube',
+    icon: <FaYoutube size={30} color="#fff" />,
+    gradient: 'from-red-600 to-red-800',
+    shadow: 'rgba(255,0,0,0.15)'
+  },
+  {
+    name: 'X',
+    icon: <FaXTwitter size={30} color="#fff" />,
+    gradient: 'from-black to-gray-800',
+    shadow: 'rgba(0,0,0,0.15)'
+  },
+  {
+    name: 'TikTok',
+    icon: <FaTiktok size={30} color="#fff" />,
+    gradient: 'from-black via-[#25F4EE] to-[#FE2C55]',
+    shadow: 'rgba(0,0,0,0.15)'
+  },
+  {
+    name: 'Pinterest',
+    icon: <FaPinterestP size={30} color="#fff" />,
+    gradient: 'from-red-500 to-red-700',
+    shadow: 'rgba(189,8,28,0.15)'
+  }
 ];
 
 export default function SocialIcons() {
   return (
     <div className="flex justify-center py-10 mb-5">
-      <div className="flex gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-lg mx-auto">
+      <div className="flex flex-wrap gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-4xl mx-auto">
         {platforms.map(({ name, icon, gradient, shadow }) => (
           <div key={name} className="flex flex-col items-center cursor-pointer transition duration-300 hover:scale-110">
             <div
