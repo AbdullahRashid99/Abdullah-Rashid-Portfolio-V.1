@@ -14,7 +14,7 @@ import {
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
 // Import SocialCircle component
-import SocialCircle from '../components/SocialCircle';
+import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
