@@ -4,14 +4,14 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
-  HelpCircle, Users, Layers, BarChart2, MoreHorizontal
+  ShoppingCart as IconShopify,   // تجنب تكرار اسم ShoppingCart
+  HelpCircle,
+  Users,
+  Layers,
+  BarChart2,
+  MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
-
-// استيراد أيقونات من react-icons لمكون SocialCircle
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP } from 'react-icons/fa';
-import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -118,7 +118,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
   </motion.section>
 ));
 
-// --- Navbar ---
+// --- الناف بار ---
 const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -256,169 +256,7 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// ===== مكون SocialCircle: دائرة أيقونات السوشيال المتحركة والديناميكية ====
-
-const platforms = [
-  { name: 'Facebook', icon: <FaFacebookF size={28} color="#1877F2" /> },
-  { name: 'Instagram', icon: <FaInstagram size={28} color="#fff" /> },
-  { name: 'Google', icon: <FaGoogle size={28} color="#fff" /> },
-  { name: 'Snapchat', icon: <FaSnapchatGhost size={28} color="#222" /> },
-  { name: 'LinkedIn', icon: <FaLinkedinIn size={28} color="#fff" /> },
-  { name: 'YouTube', icon: <FaYoutube size={28} color="#fff" /> },
-  { name: 'X', icon: <FaXTwitter size={28} color="#fff" /> },
-  { name: 'TikTok', icon: <FaTiktok size={28} color="#fff" /> },
-  { name: 'Pinterest', icon: <FaPinterestP size={28} color="#fff" /> }
-];
-
-function SocialCircle() {
-  const circleRef = useRef(null);
-  const [angle, setAngle] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [velocity, setVelocity] = useState(0.02); // سرعة الدوران الافتراضية
-  const [dragLastX, setDragLastX] = useState(null);
-  const [iconBump, setIconBump] = useState(Array(platforms.length).fill(false));
-  const animReq = useRef();
-
-  // الدوران الاوتوماتيكي
-  useEffect(() => {
-    function animate(ts) {
-      if (!dragging) setAngle(a => a + velocity);
-      animReq.current = requestAnimationFrame(animate);
-    }
-    animReq.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animReq.current);
-  }, [dragging, velocity]);
-
-  // تعامل مع السحب
-  function handlePointerDown(e) {
-    setDragging(true);
-    setDragLastX(e.type.includes('touch') ? e.touches[0].clientX : e.clientX);
-  }
-  function handlePointerUp() {
-    setDragging(false);
-    setDragLastX(null);
-    // اهتزاز عند ترك السحب
-    setVelocity(Math.max(Math.min(velocity, 0.06), -0.06));
-    setTimeout(() => setVelocity(0.02), 600);
-  }
-  function handlePointerMove(e) {
-    if (!dragging) return;
-    const posX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-    const dx = posX - dragLastX;
-    setAngle(a => a + dx * 0.01);
-    setVelocity(dx * 0.003);
-    setDragLastX(posX);
-  }
-
-  // فرقعة أو أنيميشن الأيقونة عند الضغط
-  function boomIcon(idx) {
-    setIconBump(b => {
-      let res = [...b];
-      res[idx] = true;
-      return res;
-    });
-    setTimeout(() => {
-      setIconBump(b => {
-        let res = [...b];
-        res[idx] = false;
-        return res;
-      });
-    }, 250);
-  }
-
-  // حجم الدائرة بناءً على عرض الشاشة
-  const size = typeof window !== "undefined" && window.innerWidth < 600 ? 220 : 330;
-  const radius = size / 2 - 38;
-
-  return (
-    <div
-      ref={circleRef}
-      className="relative w-[220px] h-[220px] sm:w-[330px] sm:h-[330px] mx-auto my-16 select-none touch-none"
-      style={{
-        userSelect: 'none',
-        touchAction: 'none',
-        WebkitTapHighlightColor: 'transparent',
-        cursor: dragging ? 'grabbing' : 'grab',
-        marginTop: '56px',
-        marginBottom: '30px',
-      }}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerUp}
-      onTouchStart={handlePointerDown}
-      onTouchEnd={handlePointerUp}
-      onTouchMove={handlePointerMove}
-      title="اسحب أو لف الدائرة للعب!"
-    >
-      {/* دائرة خارجية خفيفة محيطية */}
-      <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{
-          width: size,
-          height: size,
-          borderRadius: "50%",
-          border: "3px solid rgba(255,0,0,0.13)",
-          boxShadow: "0 0 32px 2px rgba(255,0,0,0.13) inset"
-        }}
-      />
-
-      {/* الأيقونات موزعة بشكل دائري */}
-      {platforms.map((platform, idx) => {
-        const θ = ((2 * Math.PI) / platforms.length) * idx + angle;
-        const x = radius * Math.cos(θ) + size / 2 - 28;
-        const y = radius * Math.sin(θ) + size / 2 - 28;
-        return (
-          <motion.div
-            key={platform.name}
-            style={{ position: "absolute", left: x, top: y, zIndex: 10 }}
-            animate={{
-              scale: iconBump[idx] ? [1, 1.7, 0.8, 1.2, 1] : 1,
-              rotate: iconBump[idx] ? [0, 22, -16, 8, 0] : 0,
-            }}
-            transition={{ type: "spring", stiffness: 340, damping: 16, duration: 0.35 }}
-            whileHover={{ scale: 1.24 }}
-            onPointerDown={e => { e.stopPropagation(); boomIcon(idx); }}
-            onTouchStart={e => { e.stopPropagation(); boomIcon(idx); }}
-            className="transition-transform pointer-events-auto hover:shadow-2xl"
-            tabIndex={0}
-            title={platform.name}
-          >
-            <div
-              className="bg-neutral-950 border border-neutral-800/80 p-3 rounded-full shadow-md select-none"
-              style={{ boxShadow: "0 8px 26px -2px rgba(255,0,0,0.08)" }}
-            >
-              {platform.icon}
-            </div>
-            <span className="block mt-2 text-xs text-neutral-400 text-center font-semibold pointer-events-none">
-              {platform.name} <span className="text-red-500 font-bold">Ads</span>
-            </span>
-          </motion.div>
-        );
-      })}
-
-      {/* النص في المركز */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center z-20 select-none pointer-events-none"
-        initial={{ scale: 0.76, opacity: 0 }}
-        animate={{ scale: 1.0, opacity: 1 }}
-        transition={{ duration: 0.6, type: 'spring' }}
-      >
-        <div
-          className="text-3xl font-extrabold text-neutral-100 tracking-tight"
-          style={{
-            letterSpacing: '0.14em',
-            textShadow: '0 1px 16px rgba(255,0,0,0.09), 0 1px 8px rgba(20,180,190,0.14)'
-          }}
-        >
-          Ads
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-// --- ملف Portfolio الرئيسي مع دمج SocialCircle ---
+// --- ملف Portfolio الرئيسي ---
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
@@ -435,8 +273,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries =>
-        entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
+      entries => entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
       { rootMargin: '-30% 0px -70% 0px' }
     );
     Object.values(sectionRefs).forEach(ref => ref.current && observer.observe(ref.current));
@@ -484,13 +321,8 @@ export default function Portfolio() {
           >
             {personalInfo.title}
           </motion.p>
-
-          {/* زرار Let’s Work Together */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            {/* زرار Let’s Work Together */}
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
@@ -501,20 +333,15 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* هنا نضيف مكون SocialCircle بين زر Let’s Work Together وقسم About Me */}
-        <SocialCircle />
+        {/* الأقسام الباقية كما في الكود الأصلي */}
 
-        {/* قسم About Me */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
-            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights,
-            and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me
-            a unique, data-driven yet creative approach to every challenge.
+            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
           </p>
         </SectionWrapper>
 
-        {/* باقي الأقسام كما هي */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -544,6 +371,27 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        <SectionWrapper id="achievements" title="Key Achievements">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROI Generated</h3>
+                <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
+                <div className="flex justify-center items-end gap-2 mt-4 h-16">
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
+                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </SectionWrapper>
+
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -570,13 +418,10 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* تاريخ التعليم والخبرات الإضافية */}
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
-            <p className="text-neutral-300 leading-relaxed">
-              Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-            </p>
+            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
           </div>
           <div className="text-center max-w-md mx-auto">
             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
@@ -587,7 +432,6 @@ export default function Portfolio() {
         </div>
       </main>
 
-      {/* الفوتر */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
