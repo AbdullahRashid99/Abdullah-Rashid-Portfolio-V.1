@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Portfolio from './Portfolio-Enhanced.jsx';
 import './index.css';
-import './enhanced-styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
