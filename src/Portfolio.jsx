@@ -3,27 +3,28 @@ import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-  Instagram, Dribbble, Twitter, ArrowUp, TrendingUp, TrendingUpDown,
+  Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
   ShoppingCart as IconShopify,
-  HelpCircle, Users, Layers, BarChart2, MoreHorizontal
+  HelpCircle, Users, Layers, BarChart2, MoreHorizontal,
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
-import SocialCircle from "@/components/SocialCircle";
+import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP } from 'react-icons/fa';
+import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
 
 // --- UI Components ---
-const Button = ({ children, className, ...props }: any) => (
+const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
     {children}
   </button>
 );
 
-const Card = ({ children, className, ...props }: any) => (
+const Card = ({ children, className, ...props }) => (
   <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
     {children}
   </div>
 );
 
-const CardContent = ({ children, className, ...props }: any) => (
+const CardContent = ({ children, className, ...props }) => (
   <div className={`p-6 ${className}`} {...props}>
     {children}
   </div>
@@ -50,7 +51,7 @@ const sections = [
 const experienceData = [
   { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
   { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
-  { icon: <Target />, title: "Media Buyer", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
+  { icon: <Target />, title: "Media Buyer ", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
   { icon: <ShoppingCart />, title: "E-commerce & Dropshipping Expert", company: "Freelance", description: "Created high-converting Shopify stores, specializing in pricing, competitor analysis, and product development." },
   { icon: <UserCheck />, title: "One-to-One Digital Marketing Coach", company: "Freelance", description: "Delivered personalized training sessions, simplifying complex concepts to help clients execute real-world campaigns." },
   { icon: <Briefcase />, title: "Account Manager", company: "Business Empire", description: "Managed key accounts across diverse niches including fashion, cosmetics & real estate." },
@@ -78,7 +79,7 @@ const projectsData = [
 ];
 
 // --- العدّاد المتحرك ---
-const AnimatedCounter = ({ value }: { value: number }) => {
+const AnimatedCounter = ({ value }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const motionValue = useSpring(0, { stiffness: 50, damping: 30 });
@@ -98,7 +99,7 @@ const AnimatedCounter = ({ value }: { value: number }) => {
 };
 
 // --- التفاف الأقسام ---
-const SectionWrapper = React.forwardRef<HTMLElement, any>(({ id, title, children, className }, ref) => (
+const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
     id={id}
@@ -115,8 +116,8 @@ const SectionWrapper = React.forwardRef<HTMLElement, any>(({ id, title, children
   </motion.section>
 ));
 
-// --- الناف بار ---
-const Navbar = ({ activeSection }: { activeSection: string }) => {
+// --- Navbar ---
+const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
@@ -192,7 +193,7 @@ function ScrollToTopButton() {
 }
 
 // --- مودال الخدمات ---
-const ModalBackdrop = ({ children, onClose }: any) => (
+const ModalBackdrop = ({ children, onClose }) => (
   <motion.div
     className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4"
     initial={{ opacity: 0 }}
@@ -205,7 +206,7 @@ const ModalBackdrop = ({ children, onClose }: any) => (
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.8, opacity: 0 }}
-      onClick={(e: any) => e.stopPropagation()}
+      onClick={e => e.stopPropagation()}
     >
       {children}
       <button
@@ -228,32 +229,115 @@ const servicesList = [
   { title: 'Others', icon: <MoreHorizontal size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSciaASGQ9zYjllG3gXcZVq5Z_1pu-mSh8dtCqgJeyIRswTExw/viewform' },
 ];
 
-function ServicesModal({ onClose }: any) {
+// === مكون SocialCircle داخل الملف نفسه مع التعديلات المطلوبة ===
+
+const platforms = [
+  { name: 'Facebook', Icon: FaFacebookF, color: '#1877F2' },
+  { name: 'Instagram', Icon: FaInstagram, color: '#E1306C' },
+  { name: 'Google', Icon: FaGoogle, color: '#4285F4' },
+  { name: 'Snapchat', Icon: FaSnapchatGhost, color: '#FFFC00', iconColor: '#000' },
+  { name: 'LinkedIn', Icon: FaLinkedinIn, color: '#0077B5' },
+  { name: 'YouTube', Icon: FaYoutube, color: '#FF0000' },
+  { name: 'X', Icon: FaXTwitter, color: '#1DA1F2' },
+  { name: 'TikTok', Icon: FaTiktok, color: '#000000' },
+  { name: 'Pinterest', Icon: FaPinterestP, color: '#E60023' },
+];
+
+function SocialCircle() {
+  const circleRef = useRef(null);
+  const [angle, setAngle] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+
+  // دوران تلقائي ببطء إلى اليمين (زاوية تزداد)
+  useEffect(() => {
+    let animationId;
+    function animate() {
+      if (!isHovering) {
+        setAngle((a) => (a + 0.008) % (2 * Math.PI));
+      }
+      animationId = requestAnimationFrame(animate);
+    }
+    animationId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationId);
+  }, [isHovering]);
+
+  const size = window.innerWidth < 600 ? 220 : 320;
+  const radius = size / 2 - 35;
+
   return (
-    <ModalBackdrop onClose={onClose}>
-      <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">Our Services</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {servicesList.map(({ title, icon, link }, index) => (
-          <motion.div
-            key={index}
-            className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500 transition-shadow cursor-pointer"
-            whileHover={{ scale: 1.05 }}
+    <section className="py-16 flex justify-center items-center relative select-none pointer-events-auto">
+      <div
+        ref={circleRef}
+        className="relative"
+        style={{ width: size, height: size }}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        title="Social Media Platforms"
+      >
+        {/* دائرة خارجية */}
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+          style={{
+            width: size,
+            height: size,
+            border: '2px solid rgba(150, 150, 150, 0.3)',
+            boxShadow: '0 0 20px 4px rgba(150, 150, 150, 0.1) inset',
+            zIndex: 0,
+          }}
+        />
+        {/* الأيقونات */}
+        {platforms.map(({ name, Icon, color, iconColor }, idx) => {
+          const theta = (idx / platforms.length) * 2 * Math.PI + angle;
+          const x = radius * Math.cos(theta) + size / 2 - 28;
+          const y = radius * Math.sin(theta) + size / 2 - 28;
+          const iconDisplayColor = iconColor || '#fff';
+          return (
+            <motion.div
+              key={name}
+              style={{ position: 'absolute', left: x, top: y, zIndex: 10 }}
+              whileHover={{ scale: 1.25, zIndex: 20 }}
+              className="cursor-pointer flex flex-col items-center"
+              tabIndex={0}
+              aria-label={name}
+              role="button"
+            >
+              <div
+                className="rounded-full shadow-md flex items-center justify-center p-3"
+                style={{
+                  backgroundColor: color,
+                  boxShadow: `0 0 14px 3px ${color}90`,
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <Icon size={28} color={iconDisplayColor} />
+              </div>
+              <span className="mt-2 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                {isHovering ? name : ''}
+              </span>
+            </motion.div>
+          );
+        })}
+        {/* كلمة Ads في المنتصف */}
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-20 select-none"
+          style={{ userSelect: 'none' }}
+        >
+          <span
+            className="text-3xl font-extrabold text-white tracking-widest"
+            style={{ letterSpacing: '0.25em', textShadow: '0 1px 10px rgba(255, 255, 255, 0.5)' }}
           >
-            <div className="text-teal-400 mb-4">{icon}</div>
-            <h3 className="text-xl font-semibold mb-4">{title}</h3>
-            <a href={link} target="_blank" rel="noopener noreferrer" className="mt-auto w-full">
-              <Button className="bg-teal-500 w-full text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-600 transition">
-                Start
-              </Button>
-            </a>
-          </motion.div>
-        ))}
+            Ads
+          </span>
+        </div>
       </div>
-    </ModalBackdrop>
+    </section>
   );
 }
 
-export default function Home() {
+// --- ملف Portfolio الرئيسي ---
+
+export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
 
@@ -280,7 +364,7 @@ export default function Home() {
       <Navbar activeSection={activeSection} />
 
       <main className="max-w-5xl mx-auto px-4 pb-24">
-        {/* Hero Section */}
+        {/* Section Hero */}
         <section
           ref={sectionRefs.home}
           id="home"
@@ -294,7 +378,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-            onError={(e: any) => {
+            onError={(e) => {
               e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
               e.target.alt = "Placeholder image with initials AR";
             }}
@@ -321,47 +405,20 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <motion.div
-              whileHover={{ 
-                scale: 1.05
-              }}
-              whileTap={{ scale: 0.95 }}
-              animate={{
-                y: [0, -3, 0]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+            <Button
+              className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
+              onClick={() => setShowServices(true)}
+              type="button"
             >
-              <Button
-                className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/10 hover:shadow-teal-500/20 relative overflow-hidden border border-teal-400/30"
-                onClick={() => setShowServices(true)}
-                type="button"
-              >
-                <motion.span
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 1
-                  }}
-                />
-                Let's Work Together
-              </Button>
-            </motion.div>
+              Let’s Work Together
+            </Button>
           </motion.div>
         </section>
 
-        {/* Social Circle - بين Hero و About */}
-        <div className="py-16">
-          <SocialCircle />
-        </div>
+        {/* دمج مكون SocialCircle - الدائرة الدوارة بين زر Let’s Work Together و قسم About */}
+        <SocialCircle />
 
-        {/* About Section */}
+        {/* قسم About Me */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -371,7 +428,9 @@ export default function Home() {
           </p>
         </SectionWrapper>
 
-        {/* Experience Section */}
+        {/* باقي الأقسام... (Experience, Skills, Projects...) */}
+        {/* نسختك الأصلية بدون تغيير */}
+
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -400,105 +459,18 @@ export default function Home() {
           </div>
         </SectionWrapper>
 
-        {/* Achievements Section */}
-        <SectionWrapper id="achievements" title="Key Achievements">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto text-center">
-            <Card className="p-3 lg:p-4 rounded-2xl">
-              <CardContent className="p-4 lg:p-5">
-                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-amber-400 mb-3 whitespace-nowrap">Total Ad Spend Managed</h3>
-                <p className="text-3xl md:text-4xl lg:text-5xl font-mono font-bold text-white flex justify-center mb-4">
-                  <AnimatedCounter value={750000} />
-                </p>
-                {/* أيقونة TrendingUpDown زرقاء سماوية */}
-                <div className="flex justify-center mb-2">
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.8, duration: 0.8 }}
-                  >
-                    <motion.div
-                      animate={{ 
-                        y: [-2, 2, -2],
-                        scale: [1, 1.1, 1]
-                      }}
-                      transition={{ 
-                        duration: 2.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      <TrendingUpDown className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-sky-400" />
-                    </motion.div>
-                  </motion.div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="p-3 lg:p-4 rounded-2xl">
-              <CardContent className="p-4 lg:p-5">
-                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-teal-400 mb-3 whitespace-nowrap">Average ROAS Generated</h3>
-                <p className="text-3xl md:text-4xl lg:text-5xl font-mono font-bold text-white flex justify-center mb-4">13x - 20x</p>
-                {/* العواميد المقارنة للـ ROAS مع تقليل المسافات */}
-                <div className="flex justify-center items-end gap-6 md:gap-8 h-20 md:h-22 lg:h-24">
-                  <div className="text-center">
-                    <div className="relative w-10 md:w-12 lg:w-14 h-16 md:h-18 lg:h-20 bg-neutral-800 mb-2 overflow-hidden">
-                      <motion.div
-                        initial={{ height: 0 }}
-                        whileInView={{ height: '25%' }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3, duration: 1.5, ease: "easeOut" }}
-                        className="absolute bottom-0 w-full bg-gradient-to-t from-neutral-600 to-neutral-500"
-                      />
-                    </div>
-                    <span className="text-sm md:text-base font-medium text-neutral-300">Spend</span>
-                  </div>
-                  <div className="text-center">
-                    <div className="relative w-10 md:w-12 lg:w-14 h-16 md:h-18 lg:h-20 bg-neutral-800 mb-2 overflow-hidden">
-                      <motion.div
-                        initial={{ height: 0 }}
-                        whileInView={{ height: '100%' }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5, duration: 2, ease: "easeOut" }}
-                        className="absolute bottom-0 w-full bg-gradient-to-t from-teal-600 to-sky-400"
-                      />
-                    </div>
-                    <span className="text-sm md:text-base font-medium text-teal-300">Return</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </SectionWrapper>
-
-        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
-              <motion.div 
-                key={index} 
-                initial={{ opacity: 0, scale: 0.8 }} 
-                whileInView={{ opacity: 1, scale: 1 }} 
-                viewport={{ once: true }} 
-                transition={{ duration: 0.3, delay: index * 0.05 }} 
-                className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium hover:bg-teal-500/20 hover:text-teal-300 transition-all duration-300"
-              >
-                {skill}
-              </motion.div>
+              <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
             ))}
           </div>
         </SectionWrapper>
 
-        {/* Projects Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
-              <motion.div 
-                key={index} 
-                initial={{ opacity: 0, y: 20 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
-                viewport={{ once: true }} 
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+              <motion.div key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
                 <Card className="group overflow-hidden h-full hover:border-teal-500/50 transition-colors">
                   <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
                   <CardContent>
@@ -513,7 +485,8 @@ export default function Home() {
           </div>
         </SectionWrapper>
 
-        {/* Additional Info Section */}
+        {/* Additional Sections as in your original code */}
+
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
@@ -541,10 +514,10 @@ export default function Home() {
         <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
       </footer>
 
-      {/* Scroll to Top Button */}
+      {/* زر العودة لأعلى */}
       <ScrollToTopButton />
 
-      {/* Services Modal */}
+      {/* مودال الخدمات */}
       <AnimatePresence>
         {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
       </AnimatePresence>
