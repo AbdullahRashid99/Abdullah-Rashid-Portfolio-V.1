@@ -1,4 +1,6 @@
-export default function SocialCircle() {
+import React from 'react';
+
+const SocialCircle = () => {
   const socialPlatforms = [
     { name: 'Facebook', icon: 'fab fa-facebook-f', color: '#1877F2' },
     { name: 'Instagram', icon: 'fab fa-instagram', color: '#E1306C' },
@@ -11,7 +13,6 @@ export default function SocialCircle() {
     { name: 'Pinterest', icon: 'fab fa-pinterest-p', color: '#E60023' }
   ];
 
-  // Different container sizes for different screen sizes
   const containerSizes = {
     mobile: 280,
     sm: 350,
@@ -20,7 +21,6 @@ export default function SocialCircle() {
     xl: 580
   };
 
-  // Corresponding radius for each screen size
   const radiusSizes = {
     mobile: 100,
     sm: 125,
@@ -29,7 +29,6 @@ export default function SocialCircle() {
     xl: 210
   };
 
-  // Icon sizes for each screen
   const iconSizes = {
     mobile: { size: 40, iconText: 'text-sm' },
     sm: { size: 48, iconText: 'text-base' },
@@ -38,204 +37,136 @@ export default function SocialCircle() {
     xl: { size: 72, iconText: 'text-2xl' }
   };
 
-  return (
-    <section className="py-8 flex justify-center items-center">
-      <div className="relative mx-auto">
-        {/* Mobile Container */}
-        <div className="block sm:hidden relative" style={{ width: `${containerSizes.mobile}px`, height: `${containerSizes.mobile}px` }}>
-          <div className="absolute inset-0 animate-rotate-slow">
-            {socialPlatforms.map((platform, index) => {
-              const angle = (index / socialPlatforms.length) * 2 * Math.PI;
-              const x = Math.cos(angle) * radiusSizes.mobile + containerSizes.mobile / 2 - iconSizes.mobile.size / 2;
-              const y = Math.sin(angle) * radiusSizes.mobile + containerSizes.mobile / 2 - iconSizes.mobile.size / 2;
+  const renderIconContainer = (breakpoint, isVisible) => {
+    const containerSize = containerSizes[breakpoint];
+    const radius = radiusSizes[breakpoint];
+    const iconConfig = iconSizes[breakpoint];
 
-              return (
-                <div
-                  key={`mobile-${platform.name}`}
-                  className="absolute cursor-pointer group transition-all duration-300 hover:scale-110 animate-counter-rotate"
-                  style={{ left: `${x}px`, top: `${y}px` }}
+    const visibilityClasses = {
+      mobile: 'block sm:hidden',
+      sm: 'hidden sm:block md:hidden',
+      md: 'hidden md:block lg:hidden', 
+      lg: 'hidden lg:block xl:hidden',
+      xl: 'hidden xl:block'
+    };
+
+    const centerTextSizes = {
+      mobile: 'text-xl px-3 py-2',
+      sm: 'text-2xl px-4 py-2',
+      md: 'text-3xl px-5 py-3',
+      lg: 'text-4xl px-6 py-3',
+      xl: 'text-5xl px-8 py-4'
+    };
+
+    return (
+      <div 
+        key={breakpoint}
+        className={`${visibilityClasses[breakpoint]} relative`}
+        style={{ width: `${containerSize}px`, height: `${containerSize}px` }}
+      >
+        <div className="absolute inset-0 animate-spin-slow">
+          {socialPlatforms.map((platform, index) => {
+            const angle = (index / socialPlatforms.length) * 2 * Math.PI;
+            const x = Math.cos(angle) * radius + containerSize / 2 - iconConfig.size / 2;
+            const y = Math.sin(angle) * radius + containerSize / 2 - iconConfig.size / 2;
+
+            return (
+              <div
+                key={`${breakpoint}-${platform.name}`}
+                className="absolute cursor-pointer group transition-all duration-300 hover:scale-110 animate-reverse-spin"
+                style={{ left: `${x}px`, top: `${y}px` }}
+              >
+                <div 
+                  className="rounded-full shadow-lg flex items-center justify-center border border-gray-700/50 transition-all duration-300 hover:shadow-xl"
+                  style={{ 
+                    backgroundColor: platform.color,
+                    boxShadow: `0 4px 15px ${platform.color}66`,
+                    width: `${iconConfig.size}px`,
+                    height: `${iconConfig.size}px`
+                  }}
                 >
-                  <div 
-                    className="rounded-full shadow-lg flex items-center justify-center border border-neutral-700/50 transition-all duration-300"
-                    style={{ 
-                      backgroundColor: platform.color,
-                      boxShadow: `0 4px 15px ${platform.color}66`,
-                      width: `${iconSizes.mobile.size}px`,
-                      height: `${iconSizes.mobile.size}px`
-                    }}
-                  >
-                    <i 
-                      className={`${platform.icon} ${iconSizes.mobile.iconText}`}
-                      style={{ color: platform.textColor || '#FFFFFF' }}
-                    />
-                  </div>
+                  <i 
+                    className={`${platform.icon} ${iconConfig.iconText}`}
+                    style={{ color: platform.textColor || '#FFFFFF' }}
+                  />
                 </div>
-              );
-            })}
-          </div>
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="text-xl font-bold text-white tracking-wide px-3 py-2 rounded-full bg-neutral-900/90 border border-neutral-700 shadow-xl animate-pulse-glow">
-              Ads
-            </div>
-          </div>
+                
+                {/* Tooltip */}
+                <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none bg-gray-900 px-2 py-1 rounded">
+                  {platform.name}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Small Screen Container */}
-        <div className="hidden sm:block md:hidden relative" style={{ width: `${containerSizes.sm}px`, height: `${containerSizes.sm}px` }}>
-          <div className="absolute inset-0 animate-rotate-slow">
-            {socialPlatforms.map((platform, index) => {
-              const angle = (index / socialPlatforms.length) * 2 * Math.PI;
-              const x = Math.cos(angle) * radiusSizes.sm + containerSizes.sm / 2 - iconSizes.sm.size / 2;
-              const y = Math.sin(angle) * radiusSizes.sm + containerSizes.sm / 2 - iconSizes.sm.size / 2;
-
-              return (
-                <div
-                  key={`sm-${platform.name}`}
-                  className="absolute cursor-pointer group transition-all duration-300 hover:scale-110 animate-counter-rotate"
-                  style={{ left: `${x}px`, top: `${y}px` }}
-                >
-                  <div 
-                    className="rounded-full shadow-lg flex items-center justify-center border border-neutral-700/50 transition-all duration-300"
-                    style={{ 
-                      backgroundColor: platform.color,
-                      boxShadow: `0 4px 15px ${platform.color}66`,
-                      width: `${iconSizes.sm.size}px`,
-                      height: `${iconSizes.sm.size}px`
-                    }}
-                  >
-                    <i 
-                      className={`${platform.icon} ${iconSizes.sm.iconText}`}
-                      style={{ color: platform.textColor || '#FFFFFF' }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="text-2xl font-bold text-white tracking-wide px-4 py-2 rounded-full bg-neutral-900/90 border border-neutral-700 shadow-xl animate-pulse-glow">
-              Ads
-            </div>
-          </div>
-        </div>
-
-        {/* Medium Screen Container */}
-        <div className="hidden md:block lg:hidden relative" style={{ width: `${containerSizes.md}px`, height: `${containerSizes.md}px` }}>
-          <div className="absolute inset-0 animate-rotate-slow">
-            {socialPlatforms.map((platform, index) => {
-              const angle = (index / socialPlatforms.length) * 2 * Math.PI;
-              const x = Math.cos(angle) * radiusSizes.md + containerSizes.md / 2 - iconSizes.md.size / 2;
-              const y = Math.sin(angle) * radiusSizes.md + containerSizes.md / 2 - iconSizes.md.size / 2;
-
-              return (
-                <div
-                  key={`md-${platform.name}`}
-                  className="absolute cursor-pointer group transition-all duration-300 hover:scale-110 animate-counter-rotate"
-                  style={{ left: `${x}px`, top: `${y}px` }}
-                >
-                  <div 
-                    className="rounded-full shadow-lg flex items-center justify-center border border-neutral-700/50 transition-all duration-300"
-                    style={{ 
-                      backgroundColor: platform.color,
-                      boxShadow: `0 4px 15px ${platform.color}66`,
-                      width: `${iconSizes.md.size}px`,
-                      height: `${iconSizes.md.size}px`
-                    }}
-                  >
-                    <i 
-                      className={`${platform.icon} ${iconSizes.md.iconText}`}
-                      style={{ color: platform.textColor || '#FFFFFF' }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="text-3xl font-bold text-white tracking-wide px-5 py-3 rounded-full bg-neutral-900/90 border border-neutral-700 shadow-xl animate-pulse-glow">
-              Ads
-            </div>
-          </div>
-        </div>
-
-        {/* Large Screen Container */}
-        <div className="hidden lg:block xl:hidden relative" style={{ width: `${containerSizes.lg}px`, height: `${containerSizes.lg}px` }}>
-          <div className="absolute inset-0 animate-rotate-slow">
-            {socialPlatforms.map((platform, index) => {
-              const angle = (index / socialPlatforms.length) * 2 * Math.PI;
-              const x = Math.cos(angle) * radiusSizes.lg + containerSizes.lg / 2 - iconSizes.lg.size / 2;
-              const y = Math.sin(angle) * radiusSizes.lg + containerSizes.lg / 2 - iconSizes.lg.size / 2;
-
-              return (
-                <div
-                  key={`lg-${platform.name}`}
-                  className="absolute cursor-pointer group transition-all duration-300 hover:scale-110 animate-counter-rotate"
-                  style={{ left: `${x}px`, top: `${y}px` }}
-                >
-                  <div 
-                    className="rounded-full shadow-lg flex items-center justify-center border border-neutral-700/50 transition-all duration-300"
-                    style={{ 
-                      backgroundColor: platform.color,
-                      boxShadow: `0 4px 15px ${platform.color}66`,
-                      width: `${iconSizes.lg.size}px`,
-                      height: `${iconSizes.lg.size}px`
-                    }}
-                  >
-                    <i 
-                      className={`${platform.icon} ${iconSizes.lg.iconText}`}
-                      style={{ color: platform.textColor || '#FFFFFF' }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="text-4xl font-bold text-white tracking-wide px-6 py-3 rounded-full bg-neutral-900/90 border border-neutral-700 shadow-xl animate-pulse-glow">
-              Ads
-            </div>
-          </div>
-        </div>
-
-        {/* Extra Large Screen Container */}
-        <div className="hidden xl:block relative" style={{ width: `${containerSizes.xl}px`, height: `${containerSizes.xl}px` }}>
-          <div className="absolute inset-0 animate-rotate-slow">
-            {socialPlatforms.map((platform, index) => {
-              const angle = (index / socialPlatforms.length) * 2 * Math.PI;
-              const x = Math.cos(angle) * radiusSizes.xl + containerSizes.xl / 2 - iconSizes.xl.size / 2;
-              const y = Math.sin(angle) * radiusSizes.xl + containerSizes.xl / 2 - iconSizes.xl.size / 2;
-
-              return (
-                <div
-                  key={`xl-${platform.name}`}
-                  className="absolute cursor-pointer group transition-all duration-300 hover:scale-110 animate-counter-rotate"
-                  style={{ left: `${x}px`, top: `${y}px` }}
-                >
-                  <div 
-                    className="rounded-full shadow-lg flex items-center justify-center border border-neutral-700/50 transition-all duration-300"
-                    style={{ 
-                      backgroundColor: platform.color,
-                      boxShadow: `0 4px 15px ${platform.color}66`,
-                      width: `${iconSizes.xl.size}px`,
-                      height: `${iconSizes.xl.size}px`
-                    }}
-                  >
-                    <i 
-                      className={`${platform.icon} ${iconSizes.xl.iconText}`}
-                      style={{ color: platform.textColor || '#FFFFFF' }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="text-5xl font-bold text-white tracking-wide px-8 py-4 rounded-full bg-neutral-900/90 border border-neutral-700 shadow-xl animate-pulse-glow">
-              Ads
-            </div>
+        {/* Center "Ads" text */}
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+          <div 
+            className={`${centerTextSizes[breakpoint]} font-bold text-white tracking-wide rounded-full bg-gray-900/90 border border-gray-700 shadow-xl transition-all duration-300 glow-text`}
+          >
+            Ads
           </div>
         </div>
       </div>
-    </section>
+    );
+  };
+
+  return (
+    <>
+      {/* CSS Styles */}
+      <style jsx>{`
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        
+        @keyframes reverse-spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
+        }
+        
+        @keyframes glow-pulse {
+          0%, 100% { 
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+          }
+          50% { 
+            text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 60px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+          }
+        }
+        
+        .animate-spin-slow {
+          animation: spin-slow 20s linear infinite;
+        }
+        
+        .animate-reverse-spin {
+          animation: reverse-spin 20s linear infinite;
+        }
+        
+        .glow-text {
+          animation: glow-pulse 3s ease-in-out infinite;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          * {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+          }
+        }
+      `}</style>
+
+      <section className="py-8 flex justify-center items-center">
+        <div className="relative mx-auto">
+          {Object.keys(containerSizes).map(breakpoint => 
+            renderIconContainer(breakpoint, true)
+          )}
+        </div>
+      </section>
+    </>
   );
-}
+};
+
+export default SocialCircle;
