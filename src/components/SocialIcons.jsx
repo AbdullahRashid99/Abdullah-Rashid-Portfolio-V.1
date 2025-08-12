@@ -1,89 +1,50 @@
-// src/components/SocialIcons.jsx
+// src/components/SocialCircle.jsx
 import React from 'react';
-import { 
-  FaFacebookF, 
-  FaInstagram, 
-  FaGoogle, 
-  FaSnapchatGhost, 
-  FaLinkedinIn, 
-  FaYoutube, 
-  FaPinterestP
-} from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP } from 'react-icons/fa';
 import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
 
 const platforms = [
-  {
-    name: 'Facebook',
-    icon: <FaFacebookF size={30} color="#1877F2" />,
-    gradient: 'from-[#1877f2] to-[#4364f7]',
-    shadow: 'rgba(33,207,239,0.3)'
-  },
-  {
-    name: 'Instagram',
-    icon: <FaInstagram size={30} color="#fff" />,
-    gradient: 'from-pink-500 via-[#fccc63] to-purple-500',
-    shadow: 'rgba(236,72,153,0.14)'
-  },
-  {
-    name: 'Google',
-    icon: <FaGoogle size={30} color="#fff" />,
-    gradient: 'from-[#34a853] via-[#fbbc05] to-[#ea4335]',
-    shadow: 'rgba(52,168,83,0.12)'
-  },
-  {
-    name: 'Snapchat',
-    icon: <FaSnapchatGhost size={30} color="#222" />,
-    gradient: 'from-yellow-300 to-yellow-500',
-    shadow: 'rgba(255,234,0,0.10)'
-  },
-  {
-    name: 'LinkedIn',
-    icon: <FaLinkedinIn size={30} color="#fff" />,
-    gradient: 'from-[#00aaff] to-[#283e63]',
-    shadow: 'rgba(0,170,255,0.11)'
-  },
-  {
-    name: 'YouTube',
-    icon: <FaYoutube size={30} color="#fff" />,
-    gradient: 'from-red-600 to-red-800',
-    shadow: 'rgba(255,0,0,0.15)'
-  },
-  {
-    name: 'X',
-    icon: <FaXTwitter size={30} color="#fff" />,
-    gradient: 'from-black to-gray-800',
-    shadow: 'rgba(0,0,0,0.15)'
-  },
-  {
-    name: 'TikTok',
-    icon: <FaTiktok size={30} color="#fff" />,
-    gradient: 'from-black via-[#25F4EE] to-[#FE2C55]',
-    shadow: 'rgba(0,0,0,0.15)'
-  },
-  {
-    name: 'Pinterest',
-    icon: <FaPinterestP size={30} color="#fff" />,
-    gradient: 'from-red-500 to-red-700',
-    shadow: 'rgba(189,8,28,0.15)'
-  }
+  { name: 'Facebook', icon: <FaFacebookF size={28} color="#1877F2" /> },
+  { name: 'Instagram', icon: <FaInstagram size={28} color="#fff" /> },
+  { name: 'Google', icon: <FaGoogle size={28} color="#fff" /> },
+  { name: 'Snapchat', icon: <FaSnapchatGhost size={28} color="#222" /> },
+  { name: 'LinkedIn', icon: <FaLinkedinIn size={28} color="#fff" /> },
+  { name: 'YouTube', icon: <FaYoutube size={28} color="#fff" /> },
+  { name: 'X', icon: <FaXTwitter size={28} color="#fff" /> },
+  { name: 'TikTok', icon: <FaTiktok size={28} color="#fff" /> },
+  { name: 'Pinterest', icon: <FaPinterestP size={28} color="#fff" /> }
 ];
 
-export default function SocialIcons() {
+export default function SocialCircle() {
+  const radius = 120; // نصف قطر الدائرة
   return (
-    <div className="flex justify-center py-10 mb-5">
-      <div className="flex flex-wrap gap-8 bg-neutral-900/80 px-8 py-6 rounded-2xl shadow-xl border border-neutral-800 max-w-4xl mx-auto">
-        {platforms.map(({ name, icon, gradient, shadow }) => (
-          <div key={name} className="flex flex-col items-center cursor-pointer transition duration-300 hover:scale-110">
-            <div
-              className={`bg-gradient-to-br ${gradient} rounded-full p-3 shadow-md`}
-              style={{ boxShadow: `0 6px 20px -2px ${shadow}` }}
-            >
-              {icon}
+    <div className="relative flex items-center justify-center w-[320px] h-[320px] md:w-[400px] md:h-[400px]">
+      {/* الدائرة الرئيسية */}
+      <div className="absolute w-full h-full rounded-full border-2 border-neutral-700 animate-spin-slow"></div>
+
+      {/* توزيع الأيقونات على الدائرة */}
+      {platforms.map((platform, index) => {
+        const angle = (index / platforms.length) * (2 * Math.PI);
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        return (
+          <div
+            key={platform.name}
+            className="absolute transition-transform duration-300 hover:scale-125"
+            style={{
+              transform: `translate(${x}px, ${y}px)`
+            }}
+          >
+            <div className="bg-neutral-900 p-3 rounded-full shadow-lg border border-neutral-800">
+              {platform.icon}
             </div>
-            <span className="mt-2 font-medium text-sm text-neutral-300">{name}</span>
-            <span className="text-xs text-neutral-400">Ads</span>
           </div>
-        ))}
+        );
+      })}
+
+      {/* النص في المنتصف */}
+      <div className="absolute flex flex-col items-center text-center">
+        <span className="text-neutral-300 font-semibold">Follow Me</span>
       </div>
     </div>
   );
