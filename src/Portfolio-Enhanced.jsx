@@ -451,4 +451,8 @@ export default function Portfolio() {
 
       {/* مودال الخدمات */}
       <AnimatePresence>
-        {showServices &&
+        {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
+      </AnimatePresence>
+    </div>
+  );
+}
