@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP, FaTiktok, FaTwitter } from 'react-icons/fa';
+import { 
+  FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, 
+  FaLinkedinIn, FaYoutube, FaPinterestP, FaTiktok, FaTwitter 
+} from 'react-icons/fa';
 
 const platforms = [
   { name: 'Facebook', Icon: FaFacebookF, color: '#1877F2' },
@@ -15,11 +18,33 @@ const platforms = [
 ];
 
 export default function SocialCircle() {
-  const radius = 120;
-  const size = 280;
+  // حالة لتتبع حجم الشاشة
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsDesktop(window.innerWidth > 1024);
+    }
+
+    handleResize(); // تعيين القيمة عند التحميل
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // القيم حسب حجم الشاشة
+  const radius = isDesktop ? 200 : 120;
+  const size = isDesktop ? 400 : 280;
 
   return (
-    <section className="py-8 flex justify-center items-center">
+    <section
+      className="flex justify-center items-center"
+      style={{
+        paddingTop: isDesktop ? '64px' : '32px',
+        paddingBottom: isDesktop ? '64px' : '32px',
+        minHeight: isDesktop ? '600px' : 'auto',
+      }}
+    >
       <div className="relative mx-auto" style={{ width: size, height: size }}>
         {/* Rotating container for icons */}
         <motion.div
