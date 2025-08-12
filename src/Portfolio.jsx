@@ -3,30 +3,27 @@ import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-  Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,   // تجنب تكرار اسم ShoppingCart
-  HelpCircle,
-  Users,
-  Layers,
-  BarChart2,
-  MoreHorizontal
+  Instagram, Dribbble, Twitter, ArrowUp, TrendingUp, TrendingUpDown,
+  ShoppingCart as IconShopify,
+  HelpCircle, Users, Layers, BarChart2, MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
+import SocialCircle from "@/components/SocialCircle";
 
 // --- UI Components ---
-const Button = ({ children, className, ...props }) => (
+const Button = ({ children, className, ...props }: any) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
     {children}
   </button>
 );
 
-const Card = ({ children, className, ...props }) => (
+const Card = ({ children, className, ...props }: any) => (
   <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
     {children}
   </div>
 );
 
-const CardContent = ({ children, className, ...props }) => (
+const CardContent = ({ children, className, ...props }: any) => (
   <div className={`p-6 ${className}`} {...props}>
     {children}
   </div>
@@ -53,7 +50,7 @@ const sections = [
 const experienceData = [
   { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
   { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
-  { icon: <Target />, title: "Media Buyer ", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
+  { icon: <Target />, title: "Media Buyer", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROI and reducing CPA." },
   { icon: <ShoppingCart />, title: "E-commerce & Dropshipping Expert", company: "Freelance", description: "Created high-converting Shopify stores, specializing in pricing, competitor analysis, and product development." },
   { icon: <UserCheck />, title: "One-to-One Digital Marketing Coach", company: "Freelance", description: "Delivered personalized training sessions, simplifying complex concepts to help clients execute real-world campaigns." },
   { icon: <Briefcase />, title: "Account Manager", company: "Business Empire", description: "Managed key accounts across diverse niches including fashion, cosmetics & real estate." },
@@ -81,7 +78,7 @@ const projectsData = [
 ];
 
 // --- العدّاد المتحرك ---
-const AnimatedCounter = ({ value }) => {
+const AnimatedCounter = ({ value }: { value: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const motionValue = useSpring(0, { stiffness: 50, damping: 30 });
@@ -100,12 +97,12 @@ const AnimatedCounter = ({ value }) => {
   return <motion.span ref={ref}>{formattedValue}</motion.span>;
 };
 
-// --- التفاف الأقسام (لنفس الهيكل) ---
-const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
+// --- التفاف الأقسام ---
+const SectionWrapper = React.forwardRef<HTMLElement, any>(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
     id={id}
-    className={`py-20 md:py-28 ${className}`}
+    className={`py-20 md:py-28 ${className || ''}`}
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, amount: 0.2 }}
@@ -119,7 +116,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
 ));
 
 // --- الناف بار ---
-const Navbar = ({ activeSection }) => {
+const Navbar = ({ activeSection }: { activeSection: string }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
@@ -195,7 +192,7 @@ function ScrollToTopButton() {
 }
 
 // --- مودال الخدمات ---
-const ModalBackdrop = ({ children, onClose }) => (
+const ModalBackdrop = ({ children, onClose }: any) => (
   <motion.div
     className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4"
     initial={{ opacity: 0 }}
@@ -208,7 +205,7 @@ const ModalBackdrop = ({ children, onClose }) => (
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.8, opacity: 0 }}
-      onClick={e => e.stopPropagation()}
+      onClick={(e: any) => e.stopPropagation()}
     >
       {children}
       <button
@@ -231,7 +228,7 @@ const servicesList = [
   { title: 'Others', icon: <MoreHorizontal size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSciaASGQ9zYjllG3gXcZVq5Z_1pu-mSh8dtCqgJeyIRswTExw/viewform' },
 ];
 
-function ServicesModal({ onClose }) {
+function ServicesModal({ onClose }: any) {
   return (
     <ModalBackdrop onClose={onClose}>
       <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">Our Services</h2>
@@ -256,9 +253,7 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- ملف Portfolio الرئيسي ---
-
-export default function Portfolio() {
+export default function Home() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
 
@@ -299,7 +294,7 @@ export default function Portfolio() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.1 }}
             className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-            onError={e => {
+            onError={(e: any) => {
               e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
               e.target.alt = "Placeholder image with initials AR";
             }}
@@ -321,27 +316,62 @@ export default function Portfolio() {
           >
             {personalInfo.title}
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-            {/* زرار Let’s Work Together */}
-            <Button
-              className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
-              onClick={() => setShowServices(true)}
-              type="button"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <motion.div
+              whileHover={{ 
+                scale: 1.05
+              }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                y: [0, -3, 0]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             >
-              Let’s Work Together
-            </Button>
+              <Button
+                className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/10 hover:shadow-teal-500/20 relative overflow-hidden border border-teal-400/30"
+                onClick={() => setShowServices(true)}
+                type="button"
+              >
+                <motion.span
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 1
+                  }}
+                />
+                Let's Work Together
+              </Button>
+            </motion.div>
           </motion.div>
         </section>
 
-        {/* الأقسام الباقية كما في الكود الأصلي */}
+        {/* Social Circle - بين Hero و About */}
+        <div className="py-16">
+          <SocialCircle />
+        </div>
 
+        {/* About Section */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
-            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
+            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights,
+            and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me
+            a unique, data-driven yet creative approach to every challenge.
           </p>
         </SectionWrapper>
 
+        {/* Experience Section */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -359,7 +389,6 @@ export default function Portfolio() {
                   <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
                   <Card className="hover:border-teal-500/50 transition-colors">
                     <CardContent>
-                      <p className="text-xs text-amber-400 mb-1">{item.date}</p>
                       <h3 className="text-xl font-semibold text-white mb-1">{item.title}</h3>
                       <p className="text-sm text-neutral-400 font-medium mb-3">{item.company}</p>
                       <p className="text-neutral-400">{item.description}</p>
@@ -371,40 +400,106 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
-            <Card>
-              <CardContent>
-                <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto text-center">
+            <Card className="p-3 lg:p-4 rounded-2xl">
+              <CardContent className="p-4 lg:p-5">
+                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-amber-400 mb-3 whitespace-nowrap">Total Ad Spend Managed</h3>
+                <p className="text-3xl md:text-4xl lg:text-5xl font-mono font-bold text-white flex justify-center mb-4">
+                  <AnimatedCounter value={750000} />
+                </p>
+                {/* أيقونة TrendingUpDown زرقاء سماوية */}
+                <div className="flex justify-center mb-2">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.8, duration: 0.8 }}
+                  >
+                    <motion.div
+                      animate={{ 
+                        y: [-2, 2, -2],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        duration: 2.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <TrendingUpDown className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-sky-400" />
+                    </motion.div>
+                  </motion.div>
+                </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent>
-                <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROI Generated</h3>
-                <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
-                <div className="flex justify-center items-end gap-2 mt-4 h-16">
-                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
-                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
+            <Card className="p-3 lg:p-4 rounded-2xl">
+              <CardContent className="p-4 lg:p-5">
+                <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-teal-400 mb-3 whitespace-nowrap">Average ROAS Generated</h3>
+                <p className="text-3xl md:text-4xl lg:text-5xl font-mono font-bold text-white flex justify-center mb-4">13x - 20x</p>
+                {/* العواميد المقارنة للـ ROAS مع تقليل المسافات */}
+                <div className="flex justify-center items-end gap-6 md:gap-8 h-20 md:h-22 lg:h-24">
+                  <div className="text-center">
+                    <div className="relative w-10 md:w-12 lg:w-14 h-16 md:h-18 lg:h-20 bg-neutral-800 mb-2 overflow-hidden">
+                      <motion.div
+                        initial={{ height: 0 }}
+                        whileInView={{ height: '25%' }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3, duration: 1.5, ease: "easeOut" }}
+                        className="absolute bottom-0 w-full bg-gradient-to-t from-neutral-600 to-neutral-500"
+                      />
+                    </div>
+                    <span className="text-sm md:text-base font-medium text-neutral-300">Spend</span>
+                  </div>
+                  <div className="text-center">
+                    <div className="relative w-10 md:w-12 lg:w-14 h-16 md:h-18 lg:h-20 bg-neutral-800 mb-2 overflow-hidden">
+                      <motion.div
+                        initial={{ height: 0 }}
+                        whileInView={{ height: '100%' }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5, duration: 2, ease: "easeOut" }}
+                        className="absolute bottom-0 w-full bg-gradient-to-t from-teal-600 to-sky-400"
+                      />
+                    </div>
+                    <span className="text-sm md:text-base font-medium text-teal-300">Return</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </SectionWrapper>
 
+        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
-              <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, scale: 0.8 }} 
+                whileInView={{ opacity: 1, scale: 1 }} 
+                viewport={{ once: true }} 
+                transition={{ duration: 0.3, delay: index * 0.05 }} 
+                className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium hover:bg-teal-500/20 hover:text-teal-300 transition-all duration-300"
+              >
+                {skill}
+              </motion.div>
             ))}
           </div>
         </SectionWrapper>
 
+        {/* Projects Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
-              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-                <Card className="group overflow-hidden h-full">
+              <motion.div 
+                key={index} 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true }} 
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="group overflow-hidden h-full hover:border-teal-500/50 transition-colors">
                   <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
                   <CardContent>
                     <h3 className="text-xl font-semibold text-white flex items-center justify-between">
@@ -413,11 +508,12 @@ export default function Portfolio() {
                     </h3>
                   </CardContent>
                 </Card>
-              </motion.a>
+              </motion.div>
             ))}
           </div>
         </SectionWrapper>
 
+        {/* Additional Info Section */}
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
@@ -432,6 +528,7 @@ export default function Portfolio() {
         </div>
       </main>
 
+      {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
@@ -444,10 +541,10 @@ export default function Portfolio() {
         <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
       </footer>
 
-      {/* زر العودة لأعلى */}
+      {/* Scroll to Top Button */}
       <ScrollToTopButton />
 
-      {/* مودال الخدمات */}
+      {/* Services Modal */}
       <AnimatePresence>
         {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
       </AnimatePresence>
