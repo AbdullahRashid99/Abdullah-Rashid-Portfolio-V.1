@@ -4,7 +4,7 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,   // تجنب تكرار اسم ShoppingCart
+  ShoppingCart as IconShopify,
   HelpCircle,
   Users,
   Layers,
@@ -12,6 +12,9 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
+
+// Import SocialCircle component
+import SocialCircle from '../components/SocialCircle';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -32,7 +35,7 @@ const CardContent = ({ children, className, ...props }) => (
   </div>
 );
 
-// --- بيانات شخصية ---
+// --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
   title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
@@ -41,7 +44,7 @@ const personalInfo = {
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
 };
 
-// --- أقسام الصفحة ---
+// --- Sections ---
 const sections = [
   { id: "about", title: "About" },
   { id: "experience", title: "Experience" },
@@ -49,7 +52,7 @@ const sections = [
   { id: "projects", title: "Projects" },
 ];
 
-// --- خبرات ---
+// --- Experience Data ---
 const experienceData = [
   { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
   { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
@@ -61,14 +64,14 @@ const experienceData = [
   { icon: <LineChart />, title: "Stock Market & Financial Analyst", company: "Self-Directed", description: "Specialized in economic, political, and technical analysis of financial markets." },
 ];
 
-// --- مهارات ---
+// --- Skills Data ---
 const skillsData = [
   "Analytical & Creative Thinker", "Content Strategy", "Google Ads", "Meta Ads", "TikTok Ads",
   "Snapchat Ads", "Email Marketing", "Lead Generation", "Shopify Development",
   "KPI Tracking", "A/B Testing", "Communication", "Presentation Skills", "Media Strategy", "Budget Management"
 ];
 
-// --- مشاريع ---
+// --- Projects Data ---
 const projectsData = [
   { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
   { title: "Cosmetics & Beauty", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
@@ -80,7 +83,7 @@ const projectsData = [
   { title: "Tech", image: "https://www.eurokidsindia.com/blog/wp-content/uploads/2023/12/names-of-electronic-devices-in-english.jpg" },
 ];
 
-// --- العدّاد المتحرك ---
+// --- Animated Counter ---
 const AnimatedCounter = ({ value }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
@@ -100,7 +103,7 @@ const AnimatedCounter = ({ value }) => {
   return <motion.span ref={ref}>{formattedValue}</motion.span>;
 };
 
-// --- التفاف الأقسام (لنفس الهيكل) ---
+// --- Section Wrapper ---
 const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
@@ -118,7 +121,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
   </motion.section>
 ));
 
-// --- الناف بار ---
+// --- Navbar ---
 const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -169,7 +172,7 @@ const Navbar = ({ activeSection }) => {
   );
 };
 
-// --- زر العودة للأعلى ---
+// --- Scroll to Top Button ---
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
 
@@ -194,7 +197,7 @@ function ScrollToTopButton() {
   );
 }
 
-// --- مودال الخدمات ---
+// --- Services Modal ---
 const ModalBackdrop = ({ children, onClose }) => (
   <motion.div
     className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4"
@@ -256,8 +259,7 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// --- ملف Portfolio الرئيسي ---
-
+// --- Main Portfolio Component ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
@@ -322,19 +324,20 @@ export default function Portfolio() {
             {personalInfo.title}
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-            {/* زرار Let’s Work Together */}
             <Button
               className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
               onClick={() => setShowServices(true)}
               type="button"
             >
-              Let’s Work Together
+              Let's Work Together
             </Button>
           </motion.div>
         </section>
 
-        {/* الأقسام الباقية كما في الكود الأصلي */}
+        {/* Social Circle Component - Added between Hero and About sections */}
+        <SocialCircle />
 
+        {/* About Me Section */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
             With over 4 years in digital marketing, performance media buying, and e-commerce growth,
@@ -342,6 +345,7 @@ export default function Portfolio() {
           </p>
         </SectionWrapper>
 
+        {/* Experience Section */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
           <div className="max-w-3xl mx-auto relative">
             <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
@@ -371,6 +375,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -392,6 +397,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills & Expertise">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -400,6 +406,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Projects Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
@@ -418,6 +425,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Additional Content */}
         <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <Camera className="mx-auto text-amber-400 mb-4" size={40} />
@@ -432,6 +440,7 @@ export default function Portfolio() {
         </div>
       </main>
 
+      {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-neutral-500 hover:text-teal-400 transition-colors">
@@ -444,10 +453,10 @@ export default function Portfolio() {
         <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
       </footer>
 
-      {/* زر العودة لأعلى */}
+      {/* Scroll to Top Button */}
       <ScrollToTopButton />
 
-      {/* مودال الخدمات */}
+      {/* Services Modal */}
       <AnimatePresence>
         {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
       </AnimatePresence>
