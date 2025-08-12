@@ -1,51 +1,101 @@
-// src/components/SocialCircle.jsx
 import React from 'react';
-import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP } from 'react-icons/fa';
-import { FaXTwitter, FaTiktok } from 'react-icons/fa6';
+import { motion } from 'framer-motion';
+import { FaFacebookF, FaInstagram, FaGoogle, FaSnapchatGhost, FaLinkedinIn, FaYoutube, FaPinterestP, FaTiktok, FaTwitter } from 'react-icons/fa';
 
 const platforms = [
-  { name: 'Facebook', icon: <FaFacebookF size={28} color="#1877F2" /> },
-  { name: 'Instagram', icon: <FaInstagram size={28} color="#fff" /> },
-  { name: 'Google', icon: <FaGoogle size={28} color="#fff" /> },
-  { name: 'Snapchat', icon: <FaSnapchatGhost size={28} color="#222" /> },
-  { name: 'LinkedIn', icon: <FaLinkedinIn size={28} color="#fff" /> },
-  { name: 'YouTube', icon: <FaYoutube size={28} color="#fff" /> },
-  { name: 'X', icon: <FaXTwitter size={28} color="#fff" /> },
-  { name: 'TikTok', icon: <FaTiktok size={28} color="#fff" /> },
-  { name: 'Pinterest', icon: <FaPinterestP size={28} color="#fff" /> }
+  { name: 'Facebook', Icon: FaFacebookF, color: '#1877F2' },
+  { name: 'Instagram', Icon: FaInstagram, color: '#E1306C' },
+  { name: 'Google', Icon: FaGoogle, color: '#4285F4' },
+  { name: 'Snapchat', Icon: FaSnapchatGhost, color: '#FFFC00' },
+  { name: 'LinkedIn', Icon: FaLinkedinIn, color: '#0077B5' },
+  { name: 'YouTube', Icon: FaYoutube, color: '#FF0000' },
+  { name: 'X', Icon: FaTwitter, color: '#1DA1F2' },
+  { name: 'TikTok', Icon: FaTiktok, color: '#000000' },
+  { name: 'Pinterest', Icon: FaPinterestP, color: '#E60023' }
 ];
 
 export default function SocialCircle() {
-  const radius = 120; // نصف قطر الدائرة
-  return (
-    <div className="relative flex items-center justify-center w-[320px] h-[320px] md:w-[400px] md:h-[400px]">
-      
-      {/* مجموعة الأيقونات اللي بتلف */}
-      <div className="absolute w-full h-full animate-spin-slow">
-        {platforms.map((platform, index) => {
-          const angle = (index / platforms.length) * (2 * Math.PI);
-          const x = radius * Math.cos(angle);
-          const y = radius * Math.sin(angle);
-          return (
-            <div
-              key={platform.name}
-              className="absolute transition-transform duration-300 hover:scale-125"
-              style={{
-                transform: `translate(${160 + x}px, ${160 + y}px)` // 160 هو نصف عرض الـ container
-              }}
-            >
-              <div className="bg-neutral-900 p-3 rounded-full shadow-lg border border-neutral-800">
-                {platform.icon}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+  const radius = 120;
+  const size = 280;
 
-      {/* النص في المنتصف */}
-      <div className="absolute flex flex-col items-center text-center">
-        <span className="text-neutral-300 font-semibold">Follow Me</span>
+  return (
+    <section className="py-8 flex justify-center items-center">
+      <div className="relative mx-auto" style={{ width: size, height: size }}>
+        {/* Rotating container for icons */}
+        <motion.div
+          className="absolute inset-0"
+          animate={{ rotate: 360 }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          whileHover={{
+            animationPlayState: "paused"
+          }}
+        >
+          {platforms.map((platform, index) => {
+            const angle = (index / platforms.length) * 2 * Math.PI;
+            const x = Math.cos(angle) * radius + size / 2 - 20;
+            const y = Math.sin(angle) * radius + size / 2 - 20;
+
+            return (
+              <motion.div
+                key={platform.name}
+                className="absolute cursor-pointer group"
+                style={{ left: x, top: y }}
+                animate={{ rotate: -360 }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                whileHover={{ 
+                  scale: 1.2,
+                  animationPlayState: "paused"
+                }}
+              >
+                <div
+                  className="w-10 h-10 rounded-full shadow-lg flex items-center justify-center border border-neutral-700/50"
+                  style={{
+                    backgroundColor: platform.color,
+                    boxShadow: `0 4px 15px ${platform.color}40`,
+                  }}
+                >
+                  <platform.Icon 
+                    size={20} 
+                    color={platform.name === 'Snapchat' ? '#000000' : '#FFFFFF'}
+                  />
+                </div>
+                <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-neutral-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  {platform.name}
+                </span>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Center "Ads" text with glow effect */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-20">
+          <motion.div
+            className="text-3xl font-bold text-white tracking-wide px-4 py-2 rounded-full bg-neutral-900/90 border border-neutral-700 shadow-xl"
+            animate={{
+              textShadow: [
+                "0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6)",
+                "0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(255, 255, 255, 0.8)",
+                "0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6)"
+              ]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            Ads
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
