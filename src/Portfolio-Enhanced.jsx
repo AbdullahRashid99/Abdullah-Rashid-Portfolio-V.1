@@ -66,9 +66,13 @@ const experienceData = [
 
 // --- Skills Data ---
 const skillsData = [
-  "Analytical & Creative Thinker", "Content Strategy", "Google Ads", "Meta Ads", "TikTok Ads",
-  "Snapchat Ads", "Email Marketing", "Lead Generation", "Shopify Development",
-  "KPI Tracking", "A/B Testing", "Communication", "Presentation Skills", "Media Strategy", "Budget Management"
+  "Analytical Mindset", "Problems-Solver", "Creative Thinker", "Strategic Planner", "Know How to Scale",
+  "+SSS Communication Skills", "Leadership", "Data-Driven Decision Making", "E-commerce Expert",
+  "Lead Generation", "Google Ads Management", "Facebook Ads Management", "Instagram Ads Strategy",
+  "TikTok Ads Campaigns", "YouTube Advertising", "Snapchat Ads Management", "Email Marketing",
+  "Influencer Marketing", "Marketing Funnel Design", "Content Marketing Strategy", "Market Research",
+  "Competitor Analysis", "Customer Segmentation", "Pricing Strategy", "(CRO)", "KPI Tracking & Analysis",
+  "SEO / SEM (Google Analytics)", "ROAS Optimization", "Copywriting for Ads", "Landing Page Develop/Optimization"
 ];
 
 // --- Projects Data ---
