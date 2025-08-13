@@ -111,7 +111,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
     className={`py-20 md:py-28 ${className}`}
     initial={{ opacity: 0, y: 40 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.2 }}
+    viewport={{ once: true, amount: 0.1 }}
     transition={{ duration: 0.3, ease: "easeOut" }}
   >
     <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
