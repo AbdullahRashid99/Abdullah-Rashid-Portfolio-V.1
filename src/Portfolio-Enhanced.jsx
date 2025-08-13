@@ -66,15 +66,11 @@ const experienceData = [
 
 // --- Skills Data ---
 const skillsData = [
-  "Analytical Mindset", "Problems-Solver", "Creative Thinker", "Strategic Planner", "Know How to Scale",
-  "+SSS Communication Skills", "Leadership", "Data-Driven Decision Making", "E-commerce Expert",
-  "Lead Generation", "Google Ads Management", "Facebook Ads Management", "Instagram Ads Strategy",
-  "TikTok Ads Campaigns", "YouTube Advertising", "Snapchat Ads Management", "Email Marketing",
-  "Influencer Marketing", "Marketing Funnel Design", "Content Marketing Strategy", "Market Research",
-  "Competitor Analysis", "Customer Segmentation", "Pricing Strategy", "(CRO)", "KPI Tracking & Analysis",
-  "SEO / SEM (Google Analytics)", "ROAS Optimization", "Copywriting for Ads", "Landing Page Develop/Optimization"
+  "Analytical Mindset", "Problems-Solver", "Creative Thinker", "Strategic Planner", "Leadership",
+  "E-commerce Expert", "Know How to Scale", "+SSS Communication Skills", "Data-Driven Decision Making",
+  "Market Research", "Google Ads Management", "Facebook Ads Management", "Instagram Ads Strategy", "TikTok Ads Campaigns", "YouTube Advertising", "Snapchat Ads Management", "Email Marketing", "Influencer Marketing", "Lead Generation", "Content Marketing Strategy",
+  "Competitor Analysis", "Customer Segmentation", "Pricing Strategy", "(CRO)", "KPI Tracking & Analysis", "ROAS Optimization", "Copywriting for Ads", "Marketing Funnel Design", "SEO / SEM (Google Analytics)", "Landing Page Develop/Optimization"
 ];
-
 // --- Projects Data ---
 const projectsData = [
   { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
