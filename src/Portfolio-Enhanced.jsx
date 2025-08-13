@@ -49,7 +49,7 @@ const sections = [
   { id: "about", title: "About" },
   { id: "experience", title: "Experience" },
   { id: "skills", title: "Skills" },
-  { id: "projects", title: "Projects" },
+  { id: "projects", title: "Industries" },
 ];
 
 // --- Experience Data ---
