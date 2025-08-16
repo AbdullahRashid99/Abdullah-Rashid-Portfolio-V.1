@@ -38,7 +38,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "Senior Performance Marketer | E-commerce Expert | Certified by Google",
+  title: "junior Performance Marketer | E-commerce Expert | Certified by Google",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
@@ -343,7 +343,7 @@ export default function Portfolio() {
         {/* About Me Section */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
-            With over 4 years in digital marketing, performance media buying, and e-commerce growth,
+            With over 2 years in digital marketing, performance media buying, and e-commerce growth,
             I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
           </p>
         </SectionWrapper>
@@ -384,7 +384,7 @@ export default function Portfolio() {
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={750000} /></p>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={100000} /></p>
               </CardContent>
             </Card>
             <Card>
