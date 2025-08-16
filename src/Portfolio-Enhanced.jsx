@@ -38,7 +38,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "junior Performance Marketer | E-commerce Expert | Certified by Google",
+  title: "Junior Performance Marketer | E-commerce Expert | Certified by Google",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
@@ -390,7 +390,7 @@ export default function Portfolio() {
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROAS Generated</h3>
-                <p className="text-5xl font-mono font-bold text-white">13x - 20x</p>
+                <p className="text-5xl font-mono font-bold text-white">8x - 16x</p>
                 <div className="flex justify-center items-end gap-2 mt-4 h-16">
                   <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
                   <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
