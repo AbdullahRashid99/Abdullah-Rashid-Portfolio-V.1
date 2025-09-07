@@ -38,7 +38,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "Junior Performance Marketer | E-commerce Expert | Certified by Google",
+  title: "Performance Marketer | E-commerce Expert | Certified by Google",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
@@ -384,7 +384,7 @@ export default function Portfolio() {
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={200000} /></p>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={300000} /></p>
               </CardContent>
             </Card>
             <Card>
