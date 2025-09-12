@@ -38,7 +38,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "Performance Marketer | E-commerce Expert | Certified by Google",
+  title: "Performance Marketer | Shopify Developer | E-commerce Expert | +8 Google Certifications in Digital Marketing & E-commerce",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
