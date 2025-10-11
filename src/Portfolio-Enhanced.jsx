@@ -66,13 +66,9 @@ const experienceData = [
 
 // --- Skills Data ---
 const skillsData = [
-  "Analytical Mindset", "Problems-Solver", "Creative Thinker", "Strategic Planner", "Leadership",
-  "E-commerce Expert", "Know How to Scale", "+SSS Communication Skills", "Data-Driven Decision Making",
-  "Market Research", "Google Ads", "Facebook Ads", "Instagram Ads", "TikTok Ads", "YouTube", "Snapchat Ads", 
-  "Email Marketing", "Influencer Marketing", "Lead Generation", "Content Strategy",
-  "Competitor Analysis", "Customer Segmentation", "Pricing Strategy", "(CRO)", "KPI Tracking & Analysis", 
-  "ROAS Optimization", "Ads Copywriting", "Marketing Funnel Design", "SEO / SEM (Google Analytics)", 
-  "Landing Page Develop/Optimization"
+  "Problems-Solver", "Creative Thinker", "Google Ads", "Facebook Ads", "Instagram Ads", "TikTok Ads", "YouTube", "Snapchat Ads", 
+  "Email Marketing", "E-commerce Expert", "Content Strategy", "CRO", "Pricing Strategy", "KPI Tracking & Analysis" "Ads Copywriting"
+  "Shopify Develop-Optimization"
 ];
 // --- Projects Data ---
 const projectsData = [
