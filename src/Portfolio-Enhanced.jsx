@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, TrendingUp, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-  Award, Target, Megaphone, HandHelping, UserCheck, Building, LineChart,
+  Award, Target, Megaphone, Handshake, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
   Store as IconShopify,
@@ -230,7 +230,7 @@ const ModalBackdrop = ({ children, onClose }) => (
 
 const servicesList = [
   { title: 'Creat Shopify Store', icon: <Store size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Get Consultations', icon: <HandHelping size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
+  { title: 'Get Consultations', icon: <Handshake size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
   { title: 'Scale Brand', icon: <TrendingUp size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
 ];
 
