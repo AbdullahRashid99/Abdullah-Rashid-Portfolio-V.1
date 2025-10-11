@@ -13,9 +13,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// Import SocialCircle component
-import SocialCircle from '../src/components/SocialCircle.jsx';
-
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
