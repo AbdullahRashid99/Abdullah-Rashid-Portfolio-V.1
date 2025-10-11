@@ -340,8 +340,7 @@ export default function Portfolio() {
         {/* About Me Section */}
         <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
           <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
-            With My experiences in digital marketing, performance media buying, and e-commerce growth,
-            I specialize in transforming brands. I develop high-converting Shopify stores, scale ad campaigns to new heights, and coach businesses to success. My diverse background in trading, economic analysis, and content production gives me a unique, data-driven yet creative approach to every challenge.
+            I Scale E-commerce Brands...Thats it
           </p>
         </SectionWrapper>
 
