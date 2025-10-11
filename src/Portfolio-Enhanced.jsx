@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Mail, User, Briefcase,TrendingUp, Star, Folder, Menu, X, Send, Linkedin, Phone,
+  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
@@ -12,6 +12,9 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
+
+// Import SocialCircle component
+import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
