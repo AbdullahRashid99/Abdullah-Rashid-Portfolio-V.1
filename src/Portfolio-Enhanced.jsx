@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
+  Mail, ArrowTrendUp, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
+  Award, Target, Megaphone, ArrowTrendUp, HandHoldingMedical, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
+  Store as IconShopify,
   HelpCircle,
   Users,
   Layers,
@@ -230,8 +230,8 @@ const ModalBackdrop = ({ children, onClose }) => (
 
 const servicesList = [
   { title: 'Creat Shopify Store', icon: <Store size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Get Consultations', icon: <Hand size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
-  { title: 'Scale Brand', icon: <TrendUp size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
+  { title: 'Get Consultations', icon: <HandHoldingMedical size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
+  { title: 'Scale Brand', icon: <ArrowTrendUp size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
 ];
 
 function ServicesModal({ onClose }) {
