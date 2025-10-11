@@ -316,7 +316,7 @@ export default function Portfolio() {
             className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
           >
             Abdullah Rashid<br />
-            Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Digital Growth</span> Partner.
+            Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
