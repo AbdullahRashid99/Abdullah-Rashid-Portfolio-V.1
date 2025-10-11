@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, ArrowTrendUp, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-  Award, Target, Megaphone, ArrowTrendUp, HandHoldingMedical, UserCheck, Building, LineChart,
+  Award, Target, Megaphone, HandHoldingMedical, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
   Store as IconShopify,
