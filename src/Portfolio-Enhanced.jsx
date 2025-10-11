@@ -229,9 +229,9 @@ const ModalBackdrop = ({ children, onClose }) => (
 );
 
 const servicesList = [
-  { title: 'Creat Shopify Store', icon: <Store size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Get Consultations', icon: <Hand size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
-  { title: 'Scale Brand', icon: <TrendingUp size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
+  { title: 'Creat Shopify Store', icon: <ShoppingCart size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
+  { title: 'Get Consultations', icon: <HelpCircle size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
+  { title: 'Scale Brand', icon: <Users size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
 ];
 
 function ServicesModal({ onClose }) {
