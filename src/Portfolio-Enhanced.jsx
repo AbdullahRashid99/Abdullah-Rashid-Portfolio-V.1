@@ -229,12 +229,9 @@ const ModalBackdrop = ({ children, onClose }) => (
 );
 
 const servicesList = [
-  { title: 'Build Shopify Store', icon: <IconShopify size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Consultations', icon: <HelpCircle size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
-  { title: 'E-Commerce Brand? Scale or Startup', icon: <Users size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
-  { title: 'Lead-Gen / Digital-Products', icon: <Layers size={48} />, link: 'https://forms.gle/KP7VhseUnEmmBmz49' },
-  { title: 'Multi-Brand Management', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfw9dkRCOMLaoN2FwDmcG6iCpyjQq5kQFnr4SZVo0h0gLYqiA/viewform' },
-  { title: 'Others', icon: <MoreHorizontal size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSciaASGQ9zYjllG3gXcZVq5Z_1pu-mSh8dtCqgJeyIRswTExw/viewform' },
+  { title: 'Creat Shopify Store', icon: <IconShopify size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
+  { title: 'Get Consultations', icon: <HelpCircle size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
+  { title: 'Scale Brand' Scale or Startup', icon: <Users size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' }
 ];
 
 function ServicesModal({ onClose }) {
