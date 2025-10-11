@@ -67,8 +67,8 @@ const experienceData = [
 // --- Skills Data ---
 const skillsData = [
   "Problems-Solver", "Creative Thinker", "Google Ads", "Facebook Ads", "Instagram Ads", "TikTok Ads", "YouTube", "Snapchat Ads", 
-  "Email Marketing", "E-commerce Expert", "Content Strategy", "CRO", "Pricing Strategy", "KPI Tracking & Analysis" "Ads Copywriting"
-  "Shopify Develop & Optimization"
+  "Email Marketing", "E-commerce Expert", "Content Strategy", "CRO", "Pricing Strategy", "KPI Tracking & Analysis" "Ads Copywriting",
+  "Shopify Develop & Optimization",
 ];
 // --- Projects Data ---
 const projectsData = [
