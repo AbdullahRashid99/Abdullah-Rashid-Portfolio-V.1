@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-  Award, Target, Megaphone, UserCheck, Building, LineChart,
+  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
   ShoppingCart as IconShopify,
@@ -38,7 +38,7 @@ const CardContent = ({ children, className, ...props }) => (
 // --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
-  title: "Media Buyer | Shopify Developer | Google Certificated Digital Marketer & E-commerce expert",
+  title: "Media Buyer | Shopify Developer | Google Certificated Digital Marketer & E-commerce expert"
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
@@ -68,10 +68,10 @@ const experienceData = [
 const skillsData = [
   "Analytical Mindset", "Problems-Solver", "Creative Thinker", "Strategic Planner", "Leadership",
   "E-commerce Expert", "Know How to Scale", "+SSS Communication Skills", "Data-Driven Decision Making",
-  "Market Research", "Google Ads", "Facebook Ads", "Instagram Ads", "TikTok Ads", "YouTube", "Snapchat Ads",
+  "Market Research", "Google Ads", "Facebook Ads", "Instagram Ads", "TikTok Ads", "YouTube", "Snapchat Ads", 
   "Email Marketing", "Influencer Marketing", "Lead Generation", "Content Strategy",
-  "Competitor Analysis", "Customer Segmentation", "Pricing Strategy", "(CRO)", "KPI Tracking & Analysis",
-  "ROAS Optimization", "Ads Copywriting", "Marketing Funnel Design", "SEO / SEM (Google Analytics)",
+  "Competitor Analysis", "Customer Segmentation", "Pricing Strategy", "(CRO)", "KPI Tracking & Analysis", 
+  "ROAS Optimization", "Ads Copywriting", "Marketing Funnel Design", "SEO / SEM (Google Analytics)", 
   "Landing Page Develop/Optimization"
 ];
 // --- Projects Data ---
@@ -229,9 +229,9 @@ const ModalBackdrop = ({ children, onClose }) => (
 );
 
 const servicesList = [
-  { title: 'Creat Shopify Store', icon: <ShoppingCart size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Get Consultations', icon: <HelpCircle size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
-  { title: 'Scale Brand', icon: <Users size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
+  { title: 'Build Shopify Store', icon: <IconShopify size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
+  { title: 'Consultations', icon: <Users size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
+  { title: 'E-Commerce Brand? Scale or Startup', icon: <BarChart2 size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
 ];
 
 function ServicesModal({ onClose }) {
@@ -293,50 +293,45 @@ export default function Portfolio() {
           id="home"
           className="min-h-screen flex flex-col justify-center items-center text-center relative"
         >
-          {/* Fix applied here:
-              - background uses z-0 (not negative)
-              - content placed inside a relative z-10 wrapper so it always sits above the background */}
-          <div className="absolute inset-0 z-0 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
-          <div className="relative z-10 flex flex-col items-center">
-            <motion.img
-              src={personalInfo.profileImage}
-              alt="Profile Picture of Abdullah Rashid"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-              onError={e => {
-                e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
-                e.target.alt = "Placeholder image with initials AR";
-              }}
-            />
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
+          <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
+          <motion.img
+            src={personalInfo.profileImage}
+            alt="Profile Picture of Abdullah Rashid"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
+            onError={e => {
+              e.target.src = "https://placehold.co/128x128/334155/E2E8F0?text=AR";
+              e.target.alt = "Placeholder image with initials AR";
+            }}
+          />
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4"
+          >
+            Abdullah Rashid<br />
+            Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-lg md:text-xl text-neutral-300 mb-8"
+          >
+            {personalInfo.title}
+          </motion.p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
+            <Button
+              className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
+              onClick={() => setShowServices(true)}
+              type="button"
             >
-              Abdullah Rashid<br />
-              Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-lg md:text-xl text-neutral-300 mb-8"
-            >
-              {personalInfo.title}
-            </motion.p>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}>
-              <Button
-                className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-500/30"
-                onClick={() => setShowServices(true)}
-                type="button"
-              >
-                Let's Work Together
-              </Button>
-            </motion.div>
-          </div>
+              Let's Work Together
+            </Button>
+          </motion.div>
         </section>
 
         {/* Social Circle Component - Added between Hero and About sections */}
