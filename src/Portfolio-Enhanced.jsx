@@ -73,8 +73,8 @@ const skillsData = [
 
 // --- Projects Data ---
 const projectsData = [
-  { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
-  { title: "Cosmetics & Beauty", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
+  { title: "Fashion", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
+  { title: "Cosmetics", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
 ];
 
 // --- Animated Counter ---
@@ -220,9 +220,8 @@ const ModalBackdrop = ({ children, onClose }) => (
 );
 
 const servicesList = [
-  { title: 'Build Shopify Store', icon: <IconShopify size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Consultations', icon: <Users size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
-  { title: 'E-Commerce Brand? Scale or Startup', icon: <BarChart2 size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
+  { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
+  { title: 'Scale', icon: <LineChart size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
 ];
 
 function ServicesModal({ onClose }) {
