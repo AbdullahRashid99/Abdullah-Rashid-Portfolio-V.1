@@ -45,7 +45,6 @@ const personalInfo = {
 };
 
 // --- Sections ---
-// restored "about" so Navbar and SectionWrapper usage match
 const sections = [
   { id: "experience", title: "Experience" },
   { id: "skills", title: "Skills" },
@@ -321,7 +320,7 @@ export default function Portfolio() {
           </motion.div>
         </section>
 
-        {/* Social Circle Component - Added between Hero and About sections */}
+        {/* Social Circle Component */}
         <SocialCircle />
 
         {/* Experience Section */}
@@ -404,7 +403,8 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* Additional Content */}
+        {/* Additional Content (kept only the graduation/education block) */}
+        <div className="grid md:grid-cols-1 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
             <p className="text-neutral-300 leading-relaxed">
