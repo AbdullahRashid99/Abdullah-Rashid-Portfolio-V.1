@@ -73,8 +73,6 @@ const skillsData = [
 
 // --- Projects Data ---
 const projectsData = [
-  { title: "Fashion & Apparel", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
-  { title: "Cosmetics & Beauty", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
   { title: "Fashion", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
   { title: "Cosmetics", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
 ];
@@ -222,9 +220,6 @@ const ModalBackdrop = ({ children, onClose }) => (
 );
 
 const servicesList = [
-  { title: 'Build Shopify Store', icon: <IconShopify size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
-  { title: 'Consultations', icon: <Users size={48} />, link: 'https://forms.gle/C1pAyQRi2fmxzFEK8' },
-  { title: 'E-Commerce Brand? Scale or Startup', icon: <BarChart2 size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
   { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://forms.gle/SfkP6rgmFm2oVPs79' },
   { title: 'Scale', icon: <LineChart size={48} />, link: 'https://forms.gle/CzZKmtHBNmXWeKDHA' },
 ];
@@ -232,7 +227,7 @@ const servicesList = [
 function ServicesModal({ onClose }) {
   return (
     <ModalBackdrop onClose={onClose}>
-      <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">Our Services</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">What do you need help with?</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {servicesList.map(({ title, icon, link }, index) => (
           <motion.div
@@ -324,7 +319,7 @@ export default function Portfolio() {
               onClick={() => setShowServices(true)}
               type="button"
             >
-              Let's Work Together
+              Start Here
             </Button>
           </motion.div>
         </section>
@@ -375,7 +370,7 @@ export default function Portfolio() {
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={10000000} /></p>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={100000000} /></p>
               </CardContent>
             </Card>
             <Card>
