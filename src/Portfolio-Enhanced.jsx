@@ -45,6 +45,7 @@ const personalInfo = {
 };
 
 // --- Sections ---
+// restored "about" so Navbar and SectionWrapper usage match
 const sections = [
   { id: "experience", title: "Experience" },
   { id: "skills", title: "Skills" },
@@ -253,7 +254,6 @@ export default function Portfolio() {
 
   const sectionRefs = {
     home: useRef(null),
-    about: useRef(null),
     experience: useRef(null),
     skills: useRef(null),
     projects: useRef(null),
@@ -323,9 +323,6 @@ export default function Portfolio() {
 
         {/* Social Circle Component - Added between Hero and About sections */}
         <SocialCircle />
-
-          </p>
-        </SectionWrapper>
 
         {/* Experience Section */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
@@ -407,23 +404,15 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-{/* Additional Content */}
-<div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
-  <div className="text-center max-w-md mx-auto">
-    <Camera className="mx-auto text-amber-400 mb-4" size={40} />
-    <p className="text-neutral-300 leading-relaxed">
-      Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.
-    </p>
-  </div>
-
-  <div className="text-center max-w-md mx-auto">
-    <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-    <p className="text-neutral-300 leading-relaxed">
-      Bachelor of Business Administration from Ain Shams University.
-    </p>
-  </div>
-</div>
-</main>
+        {/* Additional Content */}
+          <div className="text-center max-w-md mx-auto">
+            <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
+            <p className="text-neutral-300 leading-relaxed">
+              Bachelor of Business Administration from Ain Shams University.
+            </p>
+          </div>
+        </div>
+      </main>
 
       {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
