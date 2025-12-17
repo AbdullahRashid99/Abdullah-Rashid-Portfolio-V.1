@@ -397,7 +397,7 @@ export default function Portfolio() {
         </SectionWrapper>
 
         {/* Projects Section */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Industries">
+        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {projectsData.map((project, index) => (
               <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
