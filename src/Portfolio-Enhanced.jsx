@@ -413,15 +413,10 @@ export default function Portfolio() {
         </SectionWrapper>
 
         {/* Additional Content */}
-        <div className="grid md:grid-cols-2 gap-8 mt-20 max-w-5xl mx-auto">
-          <div className="text-center max-w-md mx-auto">
-            <Camera className="mx-auto text-amber-400 mb-4" size={40} />
-            <p className="text-neutral-300 leading-relaxed">Supervised full-cycle photo/video shoots, managed influencer collaborations, and developed compelling ad creatives and storytelling strategies to build brand narratives that resonate.</p>
-          </div>
           <div className="text-center max-w-md mx-auto">
             <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
             <p className="text-neutral-300 leading-relaxed">
-              Bachelor of Business Administration from Ain Shams University, gaining foundations in marketing, finance, and economics. Explored emerging markets like crypto, NFTs, and digital goods.
+              Bachelor of Business Administration from Ain Shams University.
             </p>
           </div>
         </div>
