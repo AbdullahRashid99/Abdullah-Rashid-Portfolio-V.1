@@ -46,7 +46,7 @@ const personalInfo = {
 
 // --- Sections ---
 const sections = [
-  { id: "about", title: "About" },
+  {
   { id: "experience", title: "Experience" },
   { id: "skills", title: "Skills" },
   { id: "projects", title: "Results" },
@@ -254,7 +254,6 @@ export default function Portfolio() {
 
   const sectionRefs = {
     home: useRef(null),
-    about: useRef(null),
     experience: useRef(null),
     skills: useRef(null),
     projects: useRef(null),
@@ -321,16 +320,6 @@ export default function Portfolio() {
             </Button>
           </motion.div>
         </section>
-
-        {/* Social Circle Component - Added between Hero and About sections */}
-        <SocialCircle />
-
-        {/* About Me Section */}
-        <SectionWrapper ref={sectionRefs.about} id="about" title="About Me">
-          <p className="text-lg text-center leading-relaxed text-neutral-300 max-w-3xl mx-auto">
-            I Scale E-commerce Brands...Thats it
-          </p>
-        </SectionWrapper>
 
         {/* Experience Section */}
         <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
