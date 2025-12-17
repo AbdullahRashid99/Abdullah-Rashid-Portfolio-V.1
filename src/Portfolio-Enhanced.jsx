@@ -44,23 +44,10 @@ const personalInfo = {
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
 };
 
-// --- Sections ---
+// --- Sections (Experience removed) ---
 const sections = [
-  { id: "experience", title: "Experience" },
   { id: "skills", title: "Skills" },
   { id: "projects", title: "Results" },
-];
-
-// --- Experience Data ---
-const experienceData = [
-  { icon: <Award />, title: "Certified Digital Marketing & Ecommerce Expert", company: "Google", description: "Earned 8 certifications covering SMM, SEO, SEM, Email, Ads, Analytics, and Customer Loyalty." },
-  { icon: <Megaphone />, title: "Digital Marketing Specialist", company: "Lasers", description: "Helped scale social campaigns for mental health in the Arab world, boosting organic reach beyond internal capacity." },
-  { icon: <Target />, title: "Media Buyer ", company: "Azrak", description: "Planned, launched, and optimized paid media campaigns on Meta & Tiktok, significantly improving ROAS and reducing CPA." },
-  { icon: <ShoppingCart />, title: "E-commerce & Dropshipping Expert", company: "Freelance", description: "Created high-converting Shopify stores, specializing in pricing, competitor analysis, and product development." },
-  { icon: <UserCheck />, title: "One-to-One Digital Marketing Coach", company: "Freelance", description: "Delivered personalized training sessions, simplifying complex concepts to help clients execute real-world campaigns." },
-  { icon: <Briefcase />, title: "Account Manager", company: "Business Empire", description: "Managed key accounts across diverse niches including fashion, cosmetics & real estate." },
-  { icon: <Building />, title: "Real Estate Campaigns", company: "OFQ, Royal City", description: "Led successful digital marketing campaigns for major real estate developers." },
-  { icon: <LineChart />, title: "Stock Market & Financial Analyst", company: "Self-Directed", description: "Specialized in economic, political, and technical analysis of financial markets." },
 ];
 
 // --- Skills Data ---
@@ -253,7 +240,6 @@ export default function Portfolio() {
 
   const sectionRefs = {
     home: useRef(null),
-    experience: useRef(null),
     skills: useRef(null),
     projects: useRef(null),
     contact: useRef(null),
@@ -322,36 +308,6 @@ export default function Portfolio() {
 
         {/* Social Circle Component */}
         <SocialCircle />
-
-        {/* Experience Section */}
-        <SectionWrapper ref={sectionRefs.experience} id="experience" title="Experience Timeline">
-          <div className="max-w-3xl mx-auto relative">
-            <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-0.5 bg-neutral-800 -translate-x-1/2" />
-            {experienceData.map((item, index) => (
-              <motion.div
-                key={index}
-                className={`mb-12 flex items-start gap-4 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="hidden md:block w-1/2" />
-                <div className="relative w-full md:w-1/2">
-                  <div className="absolute -left-1.5 md:left-auto md:right-full md:mr-6 lg:mr-7 top-1 w-8 h-8 rounded-full bg-neutral-800 border-2 border-teal-500 flex items-center justify-center text-teal-400">{item.icon}</div>
-                  <Card className="hover:border-teal-500/50 transition-colors">
-                    <CardContent>
-                      <p className="text-xs text-amber-400 mb-1">{item.date}</p>
-                      <h3 className="text-xl font-semibold text-white mb-1">{item.title}</h3>
-                      <p className="text-sm text-neutral-400 font-medium mb-3">{item.company}</p>
-                      <p className="text-neutral-400">{item.description}</p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </SectionWrapper>
 
         {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
