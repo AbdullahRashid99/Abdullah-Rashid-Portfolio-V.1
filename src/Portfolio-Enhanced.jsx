@@ -66,9 +66,7 @@ const experienceData = [
 
 // --- Skills Data ---
 const skillsData = [
-  "Problems-Solver", "Creative Thinker", "Google Ads", "Facebook Ads", "Instagram Ads", "TikTok Ads", "YouTube", "Snapchat Ads", 
-  "Email Marketing", "E-commerce Expert", "Content Strategy", "CRO", "Pricing Strategy", "KPI Tracking & Analysis", "Ads Copywriting",
-  "Shopify Develop & Optimization"
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "CRO", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
 // --- Projects Data ---
@@ -370,7 +368,7 @@ export default function Portfolio() {
             <Card>
               <CardContent>
                 <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={100000000} /></p>
+                <p className="text-5xl font-mono font-bold text-white flex justify-center"><AnimatedCounter value={10000000} /></p>
               </CardContent>
             </Card>
             <Card>
