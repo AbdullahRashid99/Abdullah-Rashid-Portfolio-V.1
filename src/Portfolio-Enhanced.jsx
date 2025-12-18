@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
 
-// Import SocialCircle component
+// Import SocialCircle component (keep your original path)
 import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- UI Components ---
@@ -52,7 +52,7 @@ const sections = [
 
 // --- Skills Data ---
 const skillsData = [
-  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "CRO", "Business Consultant", "Copywriting", "Shopify Developer",
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
 // --- Projects Data ---
@@ -233,6 +233,57 @@ function ServicesModal({ onClose }) {
   );
 }
 
+// -------------------------
+// Image Slider Component
+// -------------------------
+// Usage: pass an array of image URLs (8 links). The slider duplicates the images and animates them
+// as a seamless marquee using framer-motion. Replace `DEFAULT_IMAGES` with your 8 links.
+
+const DEFAULT_IMAGES = [
+  // Replace these with your 8 image links
+  'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
+  'https://placehold.co/600x400?text=2',
+  'https://placehold.co/600x400?text=3',
+  'https://placehold.co/600x400?text=4',
+  'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
+  'https://placehold.co/600x400?text=6',
+  'https://placehold.co/600x400?text=7',
+  'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
+];
+
+const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 20 }) => {
+  // Duplicate images to create a smooth loop
+  const duplicated = [...images, ...images];
+
+  return (
+    <div className="w-full py-12">
+      <div className="max-w-5xl mx-auto">
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Testimonials</h3>
+        <div className="overflow-hidden rounded-xl border border-neutral-800">
+          <motion.div
+            className="flex will-change-transform"
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
+          >
+            {duplicated.map((src, i) => (
+              <div key={i} className="flex-shrink-0 w-40 sm:w-48 md:w-56 lg:w-64 p-3">
+                <div className="w-full h-28 sm:h-32 md:h-40 lg:h-44 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-800">
+                  <img
+                    src={src}
+                    alt={`Slide ${i + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.src = 'https://placehold.co/600x400?text=No+Image'; }}
+                  />
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main Portfolio Component ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
@@ -308,6 +359,9 @@ export default function Portfolio() {
 
         {/* Social Circle Component */}
         <SocialCircle />
+
+        {/* Image Slider (NEW) - placed above Achievements as requested */}
+        <ImageSlider />
 
         {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
