@@ -1,3 +1,4 @@
+// Portfolio.jsx (final fixed file)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -56,23 +57,22 @@ const skillsData = [
 ];
 
 // --- Animated Counter ---
+// Note: keep simple and safe — use spring and onChange to display numeric value.
 const AnimatedCounter = ({ value }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const motionValue = useSpring(0, { stiffness: 50, damping: 30 });
-
-  const formattedValue = useTransform(
-    motionValue,
-    (latest) => `£${Math.round(latest).toLocaleString()}+`
-  );
+  const [display, setDisplay] = useState('£0');
 
   useEffect(() => {
-    if (isInView) {
-      motionValue.set(value);
-    }
+    const unsub = motionValue.onChange(latest => {
+      setDisplay(`£${Math.round(latest).toLocaleString()}+`);
+    });
+    if (isInView) motionValue.set(value);
+    return () => unsub && unsub();
   }, [isInView, value, motionValue]);
 
-  return <motion.span ref={ref}>{formattedValue}</motion.span>;
+  return <span ref={ref}>{display}</span>;
 };
 
 // --- Section Wrapper ---
@@ -229,6 +229,207 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
+// ImageSlider (original restored) - used earlier in the layout
+// -------------------------
+const DEFAULT_IMAGES = [
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
+  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
+  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
+  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
+  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
+  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+];
+
+function useAutoScroll(containerRef, { speed = 60, playing = true, pauseRef }) {
+  const rafRef = useRef(null);
+  const lastTimeRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    function step(ts) {
+      if (!lastTimeRef.current) lastTimeRef.current = ts;
+      const dt = (ts - lastTimeRef.current) / 1000;
+      lastTimeRef.current = ts;
+
+      if (playing && (!pauseRef?.current)) {
+        const distance = speed * dt;
+        el.scrollLeft += distance;
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = el.scrollLeft - el.scrollWidth / 2;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(step);
+    }
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      lastTimeRef.current = null;
+    };
+  }, [containerRef, speed, playing, pauseRef]);
+}
+
+const ImageZoomModal = ({ src, onClose }) => (
+  <ModalBackdrop onClose={onClose}>
+    <div className="flex justify-center items-center">
+      <img src={src} alt="zoom" className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+    </div>
+  </ModalBackdrop>
+);
+
+const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
+  const containerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPausedByHover, setIsPausedByHover] = useState(false);
+  const pauseRef = useRef(false);
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const isTouchRef = useRef(false);
+  const pointerStartRef = useRef(null);
+
+  const duplicated = [...images, ...images];
+
+  useAutoScroll(containerRef, { speed, playing: isPlaying, pauseRef });
+
+  useEffect(() => {
+    isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }, []);
+
+  useEffect(() => { pauseRef.current = isPausedByHover; }, [isPausedByHover]);
+  useEffect(() => { pauseRef.current = !isPlaying || isPausedByHover; }, [isPlaying, isPausedByHover]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let pointerDown = false;
+
+    const onPointerDown = (e) => {
+      pointerDown = true;
+      pauseRef.current = true;
+      pointerStartRef.current = { x: e.clientX, y: e.clientY };
+    };
+    const onPointerUp = (e) => {
+      pointerDown = false;
+      pauseRef.current = !isPlaying || isPausedByHover;
+    };
+
+    el.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerup', onPointerUp);
+
+    return () => {
+      el.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, [isPlaying, isPausedByHover]);
+
+  const handlePointerUpOnItem = (e, src) => {
+    const start = pointerStartRef.current;
+    const end = { x: e.clientX, y: e.clientY };
+    const dx = Math.abs((start?.x || 0) - end.x);
+    const dy = Math.abs((start?.y || 0) - end.y);
+    const moved = Math.sqrt(dx * dx + dy * dy);
+    if (moved < 8) {
+      setZoomSrc(src);
+    }
+    pauseRef.current = !isPlaying || isPausedByHover;
+  };
+
+  const hideScrollbarCSS = `
+    .no-scrollbar::-webkit-scrollbar { display: none; height: 0; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  `;
+
+  return (
+    <div className="w-full py-8">
+      <style>{hideScrollbarCSS}</style>
+      <div className="max-w-5xl mx-auto">
+        <h3 className="text-xl md:text-2xl font-bold mb-4 text-center text-amber-400">X Google</h3>
+
+        <div className="relative">
+          <div
+            ref={containerRef}
+            className="overflow-x-auto no-scrollbar touch-pan-x will-change-scroll flex gap-3 items-center py-4 px-2"
+            onMouseEnter={() => { if (!isTouchRef.current) { setIsPausedByHover(true); } }}
+            onMouseLeave={() => { if (!isTouchRef.current) { setIsPausedByHover(false); } }}
+          >
+            {duplicated.map((src, i) => {
+              const originalIndex = i % images.length;
+              return (
+                <div
+                  key={i}
+                  data-slider-item
+                  data-original-index={originalIndex}
+                  className="flex-shrink-0 w-40 sm:w-48 md:w-56 lg:w-64 p-1"
+                >
+                  <div
+                    onMouseEnter={() => { if (!isTouchRef.current) { setHoveredIndex(i); setIsPausedByHover(true); } }}
+                    onMouseLeave={() => { if (!isTouchRef.current) { setHoveredIndex(null); setIsPausedByHover(false); } }}
+                    onPointerDown={(e) => {
+                      pointerStartRef.current = { x: e.clientX, y: e.clientY };
+                      pauseRef.current = true;
+                    }}
+                    onPointerUp={(e) => handlePointerUpOnItem(e, src)}
+                    className={`w-full h-28 sm:h-32 md:h-40 lg:h-44 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-800 cursor-pointer transition-transform duration-300 ${hoveredIndex === i ? 'scale-110 z-20' : ''}`}
+                    style={{ transformOrigin: 'center center' }}
+                  >
+                    <img
+                      src={src}
+                      alt={`Slide ${originalIndex + 1}`}
+                      className={`w-full h-full object-cover block`}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => { e.target.src = 'https://placehold.co/600x400?text=No+Image'; }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 flex items-center justify-between max-w-5xl mx-auto px-2">
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setIsPlaying((p) => { const next = !p; if (!next) pauseRef.current = true; else pauseRef.current = !!isPausedByHover; return next; })}
+                className={`bg-neutral-800 text-white px-3 py-2 flex items-center gap-2`}
+              >
+                {isPlaying ? 'Pause' : 'Play'}
+              </Button>
+              <span className="text-sm text-neutral-400 hidden sm:inline">(Hover to zoom on desktop. Tap to open on mobile.)</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {images.slice(0, images.length).map((_, idx) => (
+                <button
+                  key={idx}
+                  aria-label={`Go to ${idx + 1}`}
+                  onClick={() => { setIsPlaying(false); const el = containerRef.current; if (!el) return; const children = Array.from(el.querySelectorAll('[data-slider-item]')); const target = children[idx]; if (!target) return; el.scrollTo({ left: target.offsetLeft, behavior: 'smooth' }); }}
+                  className="w-3 h-3 rounded-full bg-neutral-700 hover:bg-teal-400 transition"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {zoomSrc && (
+            <ImageZoomModal src={zoomSrc} onClose={() => setZoomSrc(null)} />
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
+// -------------------------
+// Multi-strip full-width banners (fixed) and helpers
+// -------------------------
+
+// -------------------------
 // BANNER IMAGES (replace these 12 strings with your actual image URLs)
 // Order: row1 (4 images), row2 (4 images), row3 (4 images)
 // -------------------------
@@ -250,9 +451,6 @@ const BANNER_IMAGES = [
   "https://placehold.co/800x600?text=12",
 ];
 
-// -------------------------
-// Auto-scroll helper for strips
-// -------------------------
 function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playing = true, pauseRef }) {
   const rafRef = useRef(null);
   const lastRef = useRef(null);
@@ -292,11 +490,6 @@ function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playin
   }, [containerRef, speed, reverse, playing, pauseRef]);
 }
 
-// -------------------------
-// BannerStrip - single horizontal strip
-// - hover on an image pauses this strip only and zooms that image (not the whole strip)
-// - click/tap opens modal (tap only if not dragging)
-// -------------------------
 const BannerStrip = ({ images = [], reverse = false, playing = true, globalPauseRef }) => {
   const ref = useRef(null);
   const isTouchRef = useRef(false);
@@ -305,21 +498,18 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
   const pointerStartRef = useRef(null);
   const [zoomSrc, setZoomSrc] = useState(null);
 
-  // duplicated for seamless scrolling
   const duplicated = [...images, ...images];
 
   useEffect(() => {
     isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }, []);
 
-  // keep pauseRef in sync with hoveredIndex or global pause
   useEffect(() => {
     pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
   }, [hoveredIndex, globalPauseRef]);
 
   useAutoScrollStrip(ref, { speed: 60, reverse, playing, pauseRef });
 
-  // pointer handling to detect drag vs tap
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -341,13 +531,12 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
     };
   }, [hoveredIndex, globalPauseRef]);
 
-  const handlePointerUpOnItem = (e, src, originalIndex) => {
+  const handlePointerUpOnItem = (e, src) => {
     const start = pointerStartRef.current;
     const end = { x: e.clientX, y: e.clientY };
     const dx = Math.abs((start?.x || 0) - end.x);
     const dy = Math.abs((start?.y || 0) - end.y);
     const moved = Math.sqrt(dx * dx + dy * dy);
-    // threshold: if small movement consider tap/click
     if (moved < 8) {
       setZoomSrc(src);
     }
@@ -380,7 +569,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
               >
                 <div
                   onPointerDown={(e) => { pointerStartRef.current = { x: e.clientX, y: e.clientY }; pauseRef.current = true; }}
-                  onPointerUp={(e) => handlePointerUpOnItem(e, src, originalIndex)}
+                  onPointerUp={(e) => handlePointerUpOnItem(e, src)}
                   onMouseEnter={() => { if (!isTouchRef.current) setHoveredIndex(originalIndex); }}
                   onMouseLeave={() => { if (!isTouchRef.current) setHoveredIndex(prev => (prev === originalIndex ? null : prev)); }}
                   className={`w-full md:h-[280px] h-[180px] overflow-hidden relative cursor-pointer transition-transform duration-300`}
@@ -414,13 +603,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
   );
 };
 
-// -------------------------
-// MultiStripBanners - container for 3 strips (the Results grid)
-// - split images into 3 strips of 4 images each
-// - directions alternate (row1 reverse, row2 forward, row3 reverse) based on your initial spec
-// -------------------------
 const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
-  // split images into 3 strips of 4 images each
   const [isPlaying, setIsPlaying] = useState(true);
   const globalPauseRef = useRef(false);
   useEffect(() => { globalPauseRef.current = !isPlaying; }, [isPlaying]);
@@ -536,9 +719,7 @@ export default function Portfolio() {
         {/* Social Circle Component */}
         <SocialCircle />
 
-        {/* X Google slider (kept in place) */}
-        {/* If you want this moved, tell me; left as original */}
-        {/* ... existing ImageSlider (not duplicated here for brevity) */}
+        {/* X Google slider (restored and included) */}
         <ImageSlider />
 
         {/* Skills Section (clean - no grid inside) */}
