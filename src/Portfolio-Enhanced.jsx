@@ -285,9 +285,10 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
 
-  const row1 = ["https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg", "https://i.postimg.cc/rsxncdPk/65952225.jpg", "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg", "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg"];
-  const row2 = ["https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg", "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg", "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg", "https://i.postimg.cc/rsxncdPk/65952225.jpg"];
-  const row3 = ["https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg", "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg", "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg", "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg"];
+  const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
+  const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
+  const row3 = ["https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png
+"];
 
   return (
     <div className="space-y-4 md:space-y-8">
