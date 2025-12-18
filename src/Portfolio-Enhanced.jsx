@@ -440,35 +440,23 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
   );
 };
 
-// -------------------------
-// Multi-strip full-width banners
-// - 3 strips (rows) stacked vertically
-// - each strip has 4 images (you supply 12 total links below)
-// - directions alternate: row1 right->left, row2 left->right, row3 right->left
-// - hover on an image pauses its row and applies a small zoom
-// - click/tap opens single-image modal (doesn't open if the user was dragging)
-// - responsive: md+ => 4 per row (w-1/4), <md => 2 per row (w-1/2)
-// -------------------------
-
-/*
-  Replace the LINK_# strings below with your 12 image URLs (keep order as rows: 4 images per row)
 */
 const BANNER_IMAGES = [
   // Row 1 (indexes 0..3)
-  "LINK_1",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
   "LINK_2",
   "LINK_3",
-  "LINK_4",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
   // Row 2 (indexes 4..7)
-  "LINK_5",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
   "LINK_6",
-  "LINK_7",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
   "LINK_8",
   // Row 3 (indexes 8..11)
-  "LINK_9",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
   "LINK_10",
-  "LINK_11",
-  "LINK_12",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
+  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
 ];
 
 function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playing = true, pauseRef }) {
@@ -664,7 +652,6 @@ const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
     </div>
   );
 };
-
 // --- Main Portfolio Component ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
