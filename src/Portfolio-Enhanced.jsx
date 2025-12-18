@@ -179,9 +179,9 @@ const ModalBackdrop = ({ children, onClose }) => (
   >
     <motion.div
       className="bg-neutral-900 rounded-lg shadow-xl max-w-4xl w-full max-h-full overflow-auto p-6 relative"
-      initial={{ scale: 0.8, opacity: 0 }}
+      initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.8, opacity: 0 }}
+      exit={{ scale: 0.9, opacity: 0 }}
       onClick={e => e.stopPropagation()}
     >
       {children}
@@ -228,7 +228,8 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
-// ImageSlider (kept intact)
+// ImageSlider (kept intact above if you still want it)
+// (Left unchanged from your original file - used earlier in layout)
 // -------------------------
 const DEFAULT_IMAGES = [
   'https://i.postimg.cc/rsxncdPk/65952225.jpg',
@@ -425,10 +426,10 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
 };
 
 // -------------------------
-// NEW: Perfect Results scrolling strips
+// NEW RESULTS: full-bleed responsive gallery (3 cols desktop / 2 cols mobile)
+// Replaces the old strip implementation with a large full-bleed grid that matches your screenshots.
 // -------------------------
 
-// Banner images (4 per row, 12 total) - replace with your own links
 const BANNER_IMAGES = [
   // Row 1
   "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
@@ -447,172 +448,89 @@ const BANNER_IMAGES = [
   "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg",
 ];
 
-// Auto-scroll hook (returns pauseRef for that row)
-function useInfiniteScroll(ref, { speed = 60, reverse = false }) {
-  const pauseRef = useRef(false);
-  const rafRef = useRef(null);
-  const lastRef = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    function step(now) {
-      if (!lastRef.current) lastRef.current = now;
-      const dt = (now - lastRef.current) / 1000;
-      lastRef.current = now;
-
-      if (!pauseRef.current) {
-        const move = speed * dt;
-        if (reverse) {
-          el.scrollLeft -= move;
-          if (el.scrollLeft <= 0) {
-            el.scrollLeft += el.scrollWidth / 2;
-          }
-        } else {
-          el.scrollLeft += move;
-          if (el.scrollLeft >= el.scrollWidth / 2) {
-            el.scrollLeft -= el.scrollWidth / 2;
-          }
-        }
-      }
-
-      rafRef.current = requestAnimationFrame(step);
-    }
-
-    rafRef.current = requestAnimationFrame(step);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      lastRef.current = null;
-    };
-  }, [ref, speed, reverse]);
-
-  return pauseRef;
-}
-
-// Single scroll row component
-const ResultsRow = ({ images = [], reverse = false }) => {
-  const ref = useRef(null);
-  const pauseRef = useInfiniteScroll(ref, { speed: 55, reverse });
+// Full-bleed responsive grid component
+const ResultsGrid = ({ images = BANNER_IMAGES }) => {
   const [zoomSrc, setZoomSrc] = useState(null);
-  const isTouchRef = useRef(false);
-  const pointerStartRef = useRef(null);
+  const [focusedIndex, setFocusedIndex] = useState(null);
+  const gridRef = useRef(null);
 
+  // keyboard: close modal on esc
   useEffect(() => {
-    isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  }, []);
-
-  const duplicated = [...images, ...images];
-
-  // pointer handlers to support tap vs drag
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let down = false;
-
-    const onPointerDown = (e) => {
-      down = true;
-      pointerStartRef.current = { x: e.clientX, y: e.clientY };
-      pauseRef.current = true; // pause while interacting
+    const onKey = (e) => {
+      if (e.key === 'Escape') setZoomSrc(null);
+      if (e.key === 'ArrowRight' && zoomSrc) {
+        // next image
+        setFocusedIndex((i) => {
+          const next = i == null ? 0 : Math.min(i + 1, images.length - 1);
+          setZoomSrc(images[next]);
+          return next;
+        });
+      }
+      if (e.key === 'ArrowLeft' && zoomSrc) {
+        setFocusedIndex((i) => {
+          const prev = i == null ? images.length - 1 : Math.max(i - 1, 0);
+          setZoomSrc(images[prev]);
+          return prev;
+        });
+      }
     };
-    const onPointerUp = (e) => {
-      down = false;
-      // restore auto-play after short delay (if not hover)
-      setTimeout(() => { if (!isTouchRef.current) pauseRef.current = false; }, 100);
-    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [zoomSrc, images]);
 
-    el.addEventListener('pointerdown', onPointerDown, { passive: true });
-    window.addEventListener('pointerup', onPointerUp, { passive: true });
-
-    return () => {
-      el.removeEventListener('pointerdown', onPointerDown);
-      window.removeEventListener('pointerup', onPointerUp);
-    };
-  }, []);
-
-  const handleItemPointerUp = (e, src) => {
-    const start = pointerStartRef.current;
-    const end = { x: e.clientX, y: e.clientY };
-    const dx = Math.abs((start?.x || 0) - end.x);
-    const dy = Math.abs((start?.y || 0) - end.y);
-    const moved = Math.sqrt(dx * dx + dy * dy);
-    // considered a tap if movement small
-    if (moved < 8) {
-      setZoomSrc(src);
-    }
-    // allow a short resume
-    setTimeout(() => { pauseRef.current = false; }, 120);
+  const openModal = (src, idx) => {
+    setFocusedIndex(idx);
+    setZoomSrc(src);
   };
 
-  const hideScrollbarCSS = `
-    .no-scrollbar::-webkit-scrollbar { display: none; height: 0; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  `;
-
+  // Break out of centered container to full-bleed:
+  // This wrapper makes the grid go edge-to-edge across the viewport.
   return (
     <>
-      <style>{hideScrollbarCSS}</style>
-
-      {/* Breakout to full viewport width while inside centered container */}
-      <div className="w-screen relative left-1/2 -translate-x-1/2 -mx-[50vw] mb-4">
-        <div
-          ref={ref}
-          className="flex no-scrollbar"
-          style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}
-        >
-          {duplicated.map((src, i) => {
-            const idx = i % images.length;
-            return (
-              <div
-                key={i}
-                className="flex-shrink-0 w-screen"
-                onMouseEnter={() => { if (!isTouchRef.current) pauseRef.current = true; }}
-                onMouseLeave={() => { if (!isTouchRef.current) pauseRef.current = false; }}
-              >
-                <div
-                  onPointerUp={(e) => handleItemPointerUp(e, src)}
-                  className="h-[160px] md:h-[200px] lg:h-[240px] overflow-hidden relative cursor-pointer"
-                  style={{ touchAction: 'pan-y' }}
-                >
-                  <img
-                    src={src}
-                    alt={`result-${idx + 1}`}
-                    className="w-full h-full object-cover transform-gpu transition-transform duration-300 hover:scale-[1.03] hover:rotate-[0.6deg]"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => { e.target.src = 'https://placehold.co/1200x600?text=No+Image'; }}
-                    draggable={false}
-                  />
-                </div>
+      <div className="w-screen relative left-1/2 -translate-x-1/2 -mx-[50vw] px-6">
+        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {images.map((src, i) => (
+            <button
+              key={i}
+              onClick={() => openModal(src, i)}
+              onKeyDown={(e) => { if (e.key === 'Enter') openModal(src, i); }}
+              className="group block rounded-xl overflow-hidden focus:outline-none focus:ring-4 focus:ring-teal-400/30"
+              aria-label={`Open result ${i + 1}`}
+            >
+              <div className="relative w-full h-[170px] md:h-[220px] lg:h-[280px] bg-neutral-800">
+                <img
+                  src={src}
+                  alt={`result-${i + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover transform-gpu transition-transform duration-400 group-hover:scale-[1.04] group-hover:rotate-[0.4deg]"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => { e.target.src = 'https://placehold.co/1200x800?text=No+Image'; }}
+                  draggable={false}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-            );
-          })}
+            </button>
+          ))}
         </div>
       </div>
 
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <motion.img src={zoomSrc} alt="zoom" className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} />
+            <div className="flex items-center justify-center">
+              <motion.img
+                src={zoomSrc}
+                alt="zoomed result"
+                className="max-w-full max-h-[92vh] rounded-lg shadow-2xl"
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+              />
+            </div>
           </ModalBackdrop>
         )}
       </AnimatePresence>
     </>
-  );
-};
-
-// Results section that composes the three rows
-const ResultsSection = ({ images = BANNER_IMAGES }) => {
-  const strip1 = images.slice(0, 4);
-  const strip2 = images.slice(4, 8);
-  const strip3 = images.slice(8, 12);
-
-  return (
-    <div className="w-full">
-      <ResultsRow images={strip1} reverse={true} />
-      <ResultsRow images={strip2} reverse={false} />
-      <ResultsRow images={strip3} reverse={true} />
-    </div>
   );
 };
 
@@ -695,7 +613,7 @@ export default function Portfolio() {
         {/* X Google slider (restored and included) */}
         <ImageSlider />
 
-        {/* Skills Section */}
+        {/* Skills Section (clean - no grid inside) */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -726,11 +644,11 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* RESULTS Section - full width moving strips */}
+        {/* RESULTS Section - full width grid (3 cols desktop / 2 cols phone) */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <ResultsSection images={BANNER_IMAGES} />
+          <ResultsGrid images={BANNER_IMAGES} />
           <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
-            Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
+            Click any image to open a larger view. Grid is full-bleed, 3 columns on desktop, 2 on phones — bigger visuals, no awkward empty space.
           </p>
         </SectionWrapper>
 
