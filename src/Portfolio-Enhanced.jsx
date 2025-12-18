@@ -55,7 +55,7 @@ const skillsData = [
   "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
-// --- Projects Data ---
+// --- Projects Data (kept if needed elsewhere) ---
 const projectsData = [
   { title: "Fashion", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
   { title: "Cosmetics", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
@@ -775,25 +775,6 @@ export default function Portfolio() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </SectionWrapper>
-
-        {/* Projects Section */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {projectsData.map((project, index) => (
-              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-                <Card className="group overflow-hidden h-full">
-                  <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <CardContent>
-                    <h3 className="text-xl font-semibold text-white flex items-center justify-between">
-                      {project.title}
-                      <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-teal-400" />
-                    </h3>
-                  </CardContent>
-                </Card>
-              </motion.a>
-            ))}
           </div>
         </SectionWrapper>
 
