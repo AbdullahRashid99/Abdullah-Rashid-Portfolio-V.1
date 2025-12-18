@@ -242,7 +242,7 @@ function ServicesModal({ onClose }) {
 const DEFAULT_IMAGES = [
   // Replace these with your 8 image links
   'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
-  'https://placehold.co/600x400?text=2',
+  'https://drive.google.com/file/d/1zj16cx5XLZf5ZrZx5hGNgZhzIzMSAbJJ/view?usp=drive_link',
   'https://placehold.co/600x400?text=3',
   'https://placehold.co/600x400?text=4',
   'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
