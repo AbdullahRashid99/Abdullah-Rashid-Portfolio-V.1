@@ -188,7 +188,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto overflow-hidden">
-        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google X Certifications</h3>
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google Certifications</h3>
         <div 
           ref={containerRef}
           className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
@@ -411,13 +411,16 @@ export default function Portfolio() {
         </div>
       </main>
 
-      <footer className="text-center py-12 border-t border-neutral-800/50">
-        <div className="flex justify-center gap-6 mb-4">
-          <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
-          <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
-        </div>
-        <p className="text-neutral-500 text-sm">© {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.</p>
-      </footer>
+<footer className="text-center py-12 border-t border-neutral-800/50">
+  <div className="flex justify-center gap-6 mb-4">
+    <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
+    <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
+  </div>
+  {/* Updated line below */}
+  <p className="text-neutral-500 text-sm">
+    © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
+  </p>
+</footer>
 
       <ScrollToTopButton />
       <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
