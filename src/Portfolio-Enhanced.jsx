@@ -234,51 +234,208 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
-// Image Slider Component
+// Image Slider Component (improved)
+// Features:
+// - Continuous seamless scroll by auto-updating scrollLeft (no framer marquee)
+// - Pause on hover (desktop) and pause button
+// - Hover zoom on desktop
+// - Tap to open zoom modal on mobile
+// - Native drag/scroll (touch/mouse) supported
+// - Dots to jump to a specific image
 // -------------------------
-// Usage: pass an array of image URLs (8 links). The slider duplicates the images and animates them
-// as a seamless marquee using framer-motion. Replace `DEFAULT_IMAGES` with your 8 links.
 
 const DEFAULT_IMAGES = [
-  // Replace these with your 8 image links
-  'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
-  'https://drive.google.com/file/d/1zj16cx5XLZf5ZrZx5hGNgZhzIzMSAbJJ/view?usp=drive_link',
-  'https://postimg.cc/ftffd9Gy',
-  '<a href="https://postimg.cc/ftffd9Gy" target="_blank"><img src="https://i.postimg.cc/ftffd9Gy/3ZWC24LXWG87_page_0001.jpg" alt="3ZWC24LXWG87_page_0001"></a>',
-  'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
+  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
+  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
+  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
   'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
-  'https://placehold.co/600x400?text=7',
-  'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
+  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg', // duplicate to reach 8
 ];
 
-const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 20 }) => {
-  // Duplicate images to create a smooth loop
+function useAutoScroll(containerRef, { speed = 60, playing = true, pauseRef }) {
+  // speed in px/sec
+  const rafRef = useRef(null);
+  const lastTimeRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    function step(ts) {
+      if (!lastTimeRef.current) lastTimeRef.current = ts;
+      const dt = (ts - lastTimeRef.current) / 1000; // seconds
+      lastTimeRef.current = ts;
+
+      if (playing && (!pauseRef?.current)) {
+        const distance = speed * dt;
+        el.scrollLeft += distance;
+        // seamless
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = el.scrollLeft - el.scrollWidth / 2;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(step);
+    }
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [containerRef, speed, playing, pauseRef]);
+}
+
+const ImageZoomModal = ({ src, onClose }) => (
+  <ModalBackdrop onClose={onClose}>
+    <div className="flex justify-center items-center">
+      <img src={src} alt="zoom" className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+    </div>
+  </ModalBackdrop>
+);
+
+const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
+  const containerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPausedByHover, setIsPausedByHover] = useState(false);
+  const pauseRef = useRef(false); // used by auto-scroll hook
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const isTouchRef = useRef(false);
+
+  // duplicate images for seamless loop
   const duplicated = [...images, ...images];
 
+  // auto-scroll
+  useAutoScroll(containerRef, { speed, playing: isPlaying, pauseRef });
+
+  // detect touch device (for hover vs tap behavior)
+  useEffect(() => {
+    isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }, []);
+
+  // pauseRef mirrors state for hook
+  useEffect(() => { pauseRef.current = isPausedByHover; }, [isPausedByHover]);
+  useEffect(() => { pauseRef.current = !isPlaying || isPausedByHover; }, [isPlaying, isPausedByHover]);
+
+  // stop scrolling while user is interacting (mouse down / touch start)
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let pointerDown = false;
+
+    const onPointerDown = () => { pointerDown = true; pauseRef.current = true; };
+    const onPointerUp = () => { pointerDown = false; pauseRef.current = !isPlaying || isPausedByHover; };
+
+    el.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerup', onPointerUp);
+
+    return () => {
+      el.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, [isPlaying, isPausedByHover]);
+
+  // helper to scroll to a specific original image index
+  const jumpToIndex = (index) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const children = Array.from(el.querySelectorAll('[data-slider-item]'));
+    const target = children[index];
+    if (!target) return;
+    // Calculate position inside first set
+    const left = target.offsetLeft;
+    el.scrollTo({ left, behavior: 'smooth' });
+  };
+
+  const onImageClick = (src) => {
+    if (isTouchRef.current) {
+      // on mobile: open zoom modal
+      setZoomSrc(src);
+    } else {
+      // on desktop: do nothing on click (hover handles zoom)
+    }
+  };
+
   return (
-    <div className="w-full py-12">
+    <div className="w-full py-8">
       <div className="max-w-5xl mx-auto">
-        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Testimonials</h3>
-        <div className="overflow-hidden rounded-xl border border-neutral-800">
-          <motion.div
-            className="flex will-change-transform"
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
+        <h3 className="text-xl md:text-2xl font-bold mb-4 text-center text-amber-400">Testimonials</h3>
+
+        <div className="relative">
+          {/* Slider container */}
+          <div
+            ref={containerRef}
+            className="overflow-x-auto scrollbar-hide no-scrollbar touch-pan-x will-change-scroll flex gap-3 items-center py-4 px-2"
+            onMouseEnter={() => { if (!isTouchRef.current) { setIsPausedByHover(true); } }}
+            onMouseLeave={() => { if (!isTouchRef.current) { setIsPausedByHover(false); } }}
+            // allow user to drag/scroll naturally (native)
           >
-            {duplicated.map((src, i) => (
-              <div key={i} className="flex-shrink-0 w-40 sm:w-48 md:w-56 lg:w-64 p-3">
-                <div className="w-full h-28 sm:h-32 md:h-40 lg:h-44 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-800">
-                  <img
-                    src={src}
-                    alt={`Slide ${i + 1}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.src = 'https://placehold.co/600x400?text=No+Image'; }}
-                  />
+            {duplicated.map((src, i) => {
+              // compute original index (0..images.length-1)
+              const originalIndex = i % images.length;
+              return (
+                <div
+                  key={i}
+                  data-slider-item
+                  data-original-index={originalIndex}
+                  className="flex-shrink-0 w-40 sm:w-48 md:w-56 lg:w-64 p-1"
+                >
+                  <div
+                    onMouseEnter={() => { if (!isTouchRef.current) { setHoveredIndex(i); setIsPausedByHover(true); } }}
+                    onMouseLeave={() => { if (!isTouchRef.current) { setHoveredIndex(null); setIsPausedByHover(false); } }}
+                    onClick={() => onImageClick(src)}
+                    className={`w-full h-28 sm:h-32 md:h-40 lg:h-44 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-800 cursor-pointer transition-transform duration-300 ${hoveredIndex === i ? 'scale-105 z-20' : ''}`}
+                    style={{ transformOrigin: 'center center' }}
+                  >
+                    <img
+                      src={src}
+                      alt={`Slide ${originalIndex + 1}`}
+                      className={`w-full h-full object-cover block`}
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => { e.target.src = 'https://placehold.co/600x400?text=No+Image'; }}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Play / Pause & Dots controls */}
+          <div className="mt-4 flex items-center justify-between max-w-5xl mx-auto px-2">
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setIsPlaying((p) => { const next = !p; if (!next) pauseRef.current = true; else pauseRef.current = !!isPausedByHover; return next; })}
+                className={`bg-neutral-800 text-white px-3 py-2 flex items-center gap-2`}
+              >
+                {isPlaying ? 'Pause' : 'Play'}
+              </Button>
+              <span className="text-sm text-neutral-400 hidden sm:inline">(Hover to zoom on desktop. Tap to open on mobile.)</span>
+            </div>
+
+            {/* dots for originals */}
+            <div className="flex items-center gap-2">
+              {images.slice(0, images.length).map((_, idx) => (
+                <button
+                  key={idx}
+                  aria-label={`Go to ${idx + 1}`}
+                  onClick={() => { setIsPlaying(false); jumpToIndex(idx); }}
+                  className="w-3 h-3 rounded-full bg-neutral-700 hover:bg-teal-400 transition"
+                />
+              ))}
+            </div>
+          </div>
         </div>
+
+        {/* Zoom modal for mobile */}
+        <AnimatePresence>
+          {zoomSrc && (
+            <ImageZoomModal src={zoomSrc} onClose={() => setZoomSrc(null)} />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
