@@ -435,19 +435,19 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
 // -------------------------
 const BANNER_IMAGES = [
   // Row 1 (0..3)
-  "https://placehold.co/800x600?text=1",
-  "https://placehold.co/800x600?text=2",
-  "https://placehold.co/800x600?text=3",
-  "https://placehold.co/800x600?text=4",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
   // Row 2 (4..7)
-  "https://placehold.co/800x600?text=5",
-  "https://placehold.co/800x600?text=6",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
   "https://placehold.co/800x600?text=7",
   "https://placehold.co/800x600?text=8",
   // Row 3 (8..11)
-  "https://placehold.co/800x600?text=9",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
   "https://placehold.co/800x600?text=10",
-  "https://placehold.co/800x600?text=11",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
   "https://placehold.co/800x600?text=12",
 ];
 
@@ -732,7 +732,7 @@ export default function Portfolio() {
         </SectionWrapper>
 
         {/* RESULTS Section - full width moving grid (MultiStripBanners) */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
+        <SectionWrapper ref={sectionRefs.projects} id="projects" title="">
           <MultiStripBanners images={BANNER_IMAGES} />
           <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
             Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
