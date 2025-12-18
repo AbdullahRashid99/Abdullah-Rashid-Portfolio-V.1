@@ -489,12 +489,14 @@ function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playin
     };
   }, [containerRef, speed, reverse, playing, pauseRef]);
 }
-
+// -------------------------
+// Improved BannerStrip (full-width single-slide view)
+// -------------------------
 const BannerStrip = ({ images = [], reverse = false, playing = true, globalPauseRef }) => {
   const ref = useRef(null);
   const isTouchRef = useRef(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null); // index of original image hovered
-  const pauseRef = useRef(false); // local pause for this strip
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const pauseRef = useRef(false);
   const pointerStartRef = useRef(null);
   const [zoomSrc, setZoomSrc] = useState(null);
 
@@ -504,16 +506,20 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
     isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }, []);
 
+  // Local pause for this strip (hover or global pause)
   useEffect(() => {
     pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
   }, [hoveredIndex, globalPauseRef]);
 
+  // Auto scroll (same wrapping logic as before)
   useAutoScrollStrip(ref, { speed: 60, reverse, playing, pauseRef });
 
+  // Pointer handlers: detect drag vs tap (for modal)
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     let pointerDown = false;
+
     const onPointerDown = (e) => {
       pointerDown = true;
       pointerStartRef.current = { x: e.clientX, y: e.clientY };
@@ -523,8 +529,10 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
       pointerDown = false;
       pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
     };
-    el.addEventListener('pointerdown', onPointerDown);
-    window.addEventListener('pointerup', onPointerUp);
+
+    el.addEventListener('pointerdown', onPointerDown, { passive: true });
+    window.addEventListener('pointerup', onPointerUp, { passive: true });
+
     return () => {
       el.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
@@ -537,9 +545,8 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
     const dx = Math.abs((start?.x || 0) - end.x);
     const dy = Math.abs((start?.y || 0) - end.y);
     const moved = Math.sqrt(dx * dx + dy * dy);
-    if (moved < 8) {
-      setZoomSrc(src);
-    }
+    // treat as tap if very little movement
+    if (moved < 8) setZoomSrc(src);
     pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
   };
 
@@ -551,12 +558,15 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
   return (
     <>
       <style>{hideScrollbarCSS}</style>
+
+      {/* container uses overflow-x-auto on small devices so native swipe works */}
       <div className="w-full overflow-hidden">
         <div
           ref={ref}
           className="flex gap-0 no-scrollbar"
+          // let desktop detect hover, but on touch devices we don't use hover logic
           onMouseLeave={() => { if (!isTouchRef.current) setHoveredIndex(null); }}
-          style={{ alignItems: 'stretch' }}
+          style={{ alignItems: 'stretch', scrollBehavior: 'smooth', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}
         >
           {duplicated.map((src, i) => {
             const originalIndex = i % images.length;
@@ -564,7 +574,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
             return (
               <div
                 key={i}
-                className="flex-shrink-0 w-1/2 md:w-1/4 p-0"
+                className="flex-shrink-0 w-screen p-0"
                 data-slider-item
               >
                 <div
@@ -572,13 +582,13 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
                   onPointerUp={(e) => handlePointerUpOnItem(e, src)}
                   onMouseEnter={() => { if (!isTouchRef.current) setHoveredIndex(originalIndex); }}
                   onMouseLeave={() => { if (!isTouchRef.current) setHoveredIndex(prev => (prev === originalIndex ? null : prev)); }}
-                  className={`w-full md:h-[280px] h-[180px] overflow-hidden relative cursor-pointer transition-transform duration-300`}
+                  className={`w-full h-[62vh] md:h-[48vh] lg:h-[420px] overflow-hidden relative cursor-pointer transition-transform duration-500`}
                   style={{ touchAction: 'pan-y' }}
                 >
                   <img
                     src={src}
                     alt={`banner-${originalIndex}`}
-                    className={`w-full h-full object-cover transform transition-transform duration-300 ${isThisHovered ? 'scale-105 z-20' : ''}`}
+                    className={`w-full h-full object-cover transform-gpu transition-transform duration-500 ${isThisHovered ? 'scale-105 rotate-1 z-20' : 'rotate-0'}`}
                     loading="lazy"
                     decoding="async"
                     onError={(e) => { e.target.src = 'https://placehold.co/1200x600?text=No+Image'; }}
@@ -603,9 +613,14 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
   );
 };
 
+// -------------------------
+// MultiStripBanners (uses BannerStrip)
+// -------------------------
 const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const globalPauseRef = useRef(false);
+
+  // keep ref in sync for children
   useEffect(() => { globalPauseRef.current = !isPlaying; }, [isPlaying]);
 
   const strip1 = images.slice(0, 4);
@@ -642,6 +657,7 @@ const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
     </div>
   );
 };
+
 
 // --- Main Portfolio Component ---
 export default function Portfolio() {
