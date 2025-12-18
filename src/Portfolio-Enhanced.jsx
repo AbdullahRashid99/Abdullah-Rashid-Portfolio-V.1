@@ -57,7 +57,7 @@ const skillsData = [
 
 // --- Projects Data ---
 const projectsData = [
-  { title: "Fashion", image: "https://drive.google.com/file/d/15ZQOSFftHS02Zb4Hymh5Td7NxOZGQyrO/view?usp=drive_link" },
+  { title: "Fashion", image: "https://drive.google.com/file/d/1tfyW9W7IN9TBEPpB3ysyhNHASJBeZtmD/view?usp=sharing" },
   { title: "Cosmetics", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
 ];
 
