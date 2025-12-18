@@ -374,7 +374,7 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
     <div className="w-full py-8">
       <style>{hideScrollbarCSS}</style>
       <div className="max-w-5xl mx-auto">
-        <h3 className="text-xl md:text-2xl font-bold mb-4 text-center text-amber-400">Testimonials</h3>
+        <h3 className="text-xl md:text-2xl font-bold mb-4 text-center text-amber-400">X Google</h3>
 
         <div className="relative">
           {/* Slider container */}
