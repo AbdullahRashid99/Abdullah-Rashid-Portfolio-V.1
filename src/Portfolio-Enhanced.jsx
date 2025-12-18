@@ -47,7 +47,7 @@ const personalInfo = {
 // --- Sections (Experience removed) ---
 const sections = [
   { id: "skills", title: "Skills" },
-  { id: "projects", title: "Results" },
+  // removed Results section (we use full-width banners instead)
 ];
 
 // --- Skills Data ---
@@ -55,7 +55,7 @@ const skillsData = [
   "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
-// --- Projects Data ---
+// --- Projects Data (kept if needed elsewhere) ---
 const projectsData = [
   { title: "Fashion", image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60" },
   { title: "Cosmetics", image: "https://www.dhl.com/discover/content/dam/hong-kong/desktop/e-commerce-advice/e-commerce-guides-by-country/guide-to-packaging-and-shipping-cosmetics-and-beauty-products-from-hong-kong/cosmetic-and-beauty-products-in-a-shipping-box-1920x998.jpg" },
@@ -234,51 +234,37 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
-// MultiStripBanners Component
-// - 3 strips stacked vertically
-// - each strip has 4 images (you supply total 12 images in BANNER_IMAGES array below)
-// - direction alternates per strip (true => left-to-right, false => right-to-left)
-// - hover to pause + hover zoom on desktop, tap to open on mobile
-// - responsive: md & up => 4 per strip (w-1/4), below md => 2 per strip (w-1/2)
+// Multi-strip full-width banners
+// - 3 strips (rows) stacked vertically
+// - each strip has 4 images (you supply 12 total links below)
+// - directions alternate: row1 right->left, row2 left->right, row3 right->left
+// - hover on an image pauses its row and applies a small zoom
+// - click/tap opens single-image modal (doesn't open if the user was dragging)
+// - responsive: md+ => 4 per row (w-1/4), <md => 2 per row (w-1/2)
 // -------------------------
 
 /*
-  --> ضع هنا روابط الصور الـ12:
-  BANNER_IMAGES = [
-    'LINK_FOR_IMAGE_1', // strip 1 - image 1
-    'LINK_FOR_IMAGE_2', // strip 1 - image 2
-    'LINK_FOR_IMAGE_3', // strip 1 - image 3
-    'LINK_FOR_IMAGE_4', // strip 1 - image 4
-    'LINK_FOR_IMAGE_5', // strip 2 - image 1
-    'LINK_FOR_IMAGE_6', // strip 2 - image 2
-    'LINK_FOR_IMAGE_7', // strip 2 - image 3
-    'LINK_FOR_IMAGE_8', // strip 2 - image 4
-    'LINK_FOR_IMAGE_9', // strip 3 - image 1
-    'LINK_FOR_IMAGE_10',// strip 3 - image 2
-    'LINK_FOR_IMAGE_11',// strip 3 - image 3
-    'LINK_FOR_IMAGE_12' // strip 3 - image 4
-  ]
+  Replace the LINK_# strings below with your 12 image URLs (keep order as rows: 4 images per row)
 */
-
 const BANNER_IMAGES = [
-  // === strip 1 (indexes 0..3) ===
-  'https://placehold.co/1200x600?text=Banner+1',
-  'https://placehold.co/1200x600?text=Banner+2',
-  'https://placehold.co/1200x600?text=Banner+3',
-  'https://placehold.co/1200x600?text=Banner+4',
-  // === strip 2 (indexes 4..7) ===
-  'https://placehold.co/1200x600?text=Banner+5',
-  'https://placehold.co/1200x600?text=Banner+6',
-  'https://placehold.co/1200x600?text=Banner+7',
-  'https://placehold.co/1200x600?text=Banner+8',
-  // === strip 3 (indexes 8..11) ===
-  'https://placehold.co/1200x600?text=Banner+9',
-  'https://placehold.co/1200x600?text=Banner+10',
-  'https://placehold.co/1200x600?text=Banner+11',
-  'https://placehold.co/1200x600?text=Banner+12',
+  // Row 1 (indexes 0..3)
+  "LINK_1",
+  "LINK_2",
+  "LINK_3",
+  "LINK_4",
+  // Row 2 (indexes 4..7)
+  "LINK_5",
+  "LINK_6",
+  "LINK_7",
+  "LINK_8",
+  // Row 3 (indexes 8..11)
+  "LINK_9",
+  "LINK_10",
+  "LINK_11",
+  "LINK_12",
 ];
 
-function useAutoScrollStrip(containerRef, { speed = 60, reverse = false, playing = true, pauseRef }) {
+function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playing = true, pauseRef }) {
   const rafRef = useRef(null);
   const lastRef = useRef(null);
 
@@ -295,13 +281,11 @@ function useAutoScrollStrip(containerRef, { speed = 60, reverse = false, playing
         const distance = speed * dt;
         if (reverse) {
           el.scrollLeft -= distance;
-          // seamless for reverse
           if (el.scrollLeft <= 0) {
             el.scrollLeft = el.scrollLeft + el.scrollWidth / 2;
           }
         } else {
           el.scrollLeft += distance;
-          // seamless for forward
           if (el.scrollLeft >= el.scrollWidth / 2) {
             el.scrollLeft = el.scrollLeft - el.scrollWidth / 2;
           }
@@ -319,34 +303,29 @@ function useAutoScrollStrip(containerRef, { speed = 60, reverse = false, playing
   }, [containerRef, speed, reverse, playing, pauseRef]);
 }
 
-const BannerStrip = ({ images = [], reverse = false, playing, globalPauseRef, heightClass = 'md:h-64 lg:h-72' }) => {
+const BannerStrip = ({ images = [], reverse = false, playing = true, globalPauseRef }) => {
   const ref = useRef(null);
   const isTouchRef = useRef(false);
   const [hovered, setHovered] = useState(false);
-  const pauseRef = useRef(false); // local pause (hover/drag)
+  const pauseRef = useRef(false); // local pause for this strip
   const pointerStartRef = useRef(null);
   const [zoomSrc, setZoomSrc] = useState(null);
 
-  // duplicate for seamless loop
+  // duplicated for seamless scrolling
   const duplicated = [...images, ...images];
 
   useEffect(() => {
     isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }, []);
 
-  // mirror local pause + global pause into hook pauseRef
+  // keep pauseRef in sync with hovered or global pause
   useEffect(() => {
     pauseRef.current = !!(hovered || globalPauseRef.current === true);
   }, [hovered, globalPauseRef]);
 
-  useEffect(() => {
-    // also if global paused, ensure pauseRef true
-    pauseRef.current = !!(hovered || globalPauseRef.current === true);
-  }, [globalPauseRef]);
+  useAutoScrollStrip(ref, { speed: 60, reverse, playing, pauseRef });
 
-  useAutoScrollStrip(ref, { speed: 80, reverse, playing, pauseRef });
-
-  // pointer (mouse/touch) handling to detect drag vs tap
+  // pointer handling to detect drag vs tap
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -358,7 +337,6 @@ const BannerStrip = ({ images = [], reverse = false, playing, globalPauseRef, he
     };
     const onPointerUp = (e) => {
       pointerDown = false;
-      // restore pause state according to hovered/global pause
       pauseRef.current = !!(hovered || globalPauseRef.current === true);
     };
     el.addEventListener('pointerdown', onPointerDown);
@@ -375,11 +353,10 @@ const BannerStrip = ({ images = [], reverse = false, playing, globalPauseRef, he
     const dx = Math.abs((start?.x || 0) - end.x);
     const dy = Math.abs((start?.y || 0) - end.y);
     const moved = Math.sqrt(dx * dx + dy * dy);
-    // if small movement -> treat as tap/click
+    // threshold: if small movement consider tap/click
     if (moved < 8) {
       setZoomSrc(src);
     }
-    // restore pause state
     pauseRef.current = !!(hovered || globalPauseRef.current === true);
   };
 
@@ -391,44 +368,39 @@ const BannerStrip = ({ images = [], reverse = false, playing, globalPauseRef, he
   return (
     <>
       <style>{hideScrollbarCSS}</style>
-      <div
-        className="w-full overflow-hidden"
-        // container for the strip background if needed
-      >
+      <div className="w-full overflow-hidden">
         <div
           ref={ref}
-          className="flex gap-0 will-change-transform no-scrollbar"
-          onMouseEnter={() => { if (!isTouchRef.current) { setHovered(true); } }}
-          onMouseLeave={() => { if (!isTouchRef.current) { setHovered(false); } }}
+          className="flex gap-0 no-scrollbar"
+          onMouseEnter={() => { if (!isTouchRef.current) setHovered(true); }}
+          onMouseLeave={() => { if (!isTouchRef.current) setHovered(false); }}
           style={{ alignItems: 'stretch' }}
         >
-          {duplicated.map((src, i) => {
-            return (
+          {duplicated.map((src, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-1/2 md:w-1/4 p-0"
+              data-slider-item
+            >
               <div
-                key={i}
-                className={`flex-shrink-0 w-1/2 md:w-1/4 p-0`} // mobile: 2 per view, md+: 4 per view
-                data-slider-item
+                onPointerDown={(e) => { pointerStartRef.current = { x: e.clientX, y: e.clientY }; pauseRef.current = true; }}
+                onPointerUp={(e) => handlePointerUpOnItem(e, src)}
+                onMouseEnter={() => { if (!isTouchRef.current) setHovered(true); }}
+                onMouseLeave={() => { if (!isTouchRef.current) setHovered(false); }}
+                className={`w-full md:h-[280px] h-[180px] overflow-hidden relative cursor-pointer transition-transform duration-300 ${hovered ? 'group-hover:scale-105' : ''}`}
+                style={{ touchAction: 'pan-y' }}
               >
-                <div
-                  onPointerDown={(e) => { pointerStartRef.current = { x: e.clientX, y: e.clientY }; pauseRef.current = true; }}
-                  onPointerUp={(e) => handlePointerUpOnItem(e, src)}
-                  onMouseEnter={() => { if (!isTouchRef.current) setHovered(true); }}
-                  onMouseLeave={() => { if (!isTouchRef.current) setHovered(false); }}
-                  className={`w-full ${heightClass} overflow-hidden relative cursor-pointer transition-transform duration-300 ${hovered ? 'group-hover:scale-105' : ''}`}
-                  style={{ touchAction: 'pan-y' }}
-                >
-                  <img
-                    src={src}
-                    alt={`banner-${i}`}
-                    className={`w-full h-full object-cover transform transition-transform duration-300 ${hovered ? 'scale-105' : ''}`}
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => { e.target.src = 'https://placehold.co/1200x600?text=No+Image'; }}
-                  />
-                </div>
+                <img
+                  src={src}
+                  alt={`banner-${i}`}
+                  className={`w-full h-full object-cover transform transition-transform duration-300 ${hovered ? 'scale-105' : ''}`}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => { e.target.src = 'https://placehold.co/1200x600?text=No+Image'; }}
+                />
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -436,7 +408,7 @@ const BannerStrip = ({ images = [], reverse = false, playing, globalPauseRef, he
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
             <div className="flex justify-center items-center">
-              <img src={zoomSrc} alt="zoom" className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg" />
+              <motion.img src={zoomSrc} alt="zoom" className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg" initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} />
             </div>
           </ModalBackdrop>
         )}
@@ -446,44 +418,40 @@ const BannerStrip = ({ images = [], reverse = false, playing, globalPauseRef, he
 };
 
 const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
-  // expect images.length === 12 (4 per strip)
+  // split images into 3 strips of 4 images each
   const [isPlaying, setIsPlaying] = useState(true);
   const globalPauseRef = useRef(false);
-
   useEffect(() => { globalPauseRef.current = !isPlaying; }, [isPlaying]);
 
-  // split images into 3 strips of 4
   const strip1 = images.slice(0, 4);
   const strip2 = images.slice(4, 8);
   const strip3 = images.slice(8, 12);
 
   return (
-    <div className="w-full py-10 bg-neutral-950/0">
-      <div className="max-w-full mx-auto">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl md:text-2xl font-bold text-amber-400">Banners</h3>
-            <div className="flex items-center gap-3">
-              <Button onClick={() => setIsPlaying(p => !p)} className="bg-neutral-800 text-white px-3 py-2">
-                {isPlaying ? 'Pause' : 'Play'}
-              </Button>
-            </div>
+    <div className="w-full -mx-4">
+      <div className="w-screen">
+        <div className="flex items-center justify-between px-6 mb-4">
+          <h3 className="text-xl md:text-2xl font-bold text-amber-400">Results</h3>
+          <div>
+            <Button onClick={() => setIsPlaying(p => !p)} className="bg-neutral-800 text-white px-3 py-2">
+              {isPlaying ? 'Pause' : 'Play'}
+            </Button>
           </div>
+        </div>
 
-          {/* strip 1 - left to right */}
-          <div className="mb-4">
-            <BannerStrip images={strip1} reverse={false} playing={isPlaying} globalPauseRef={globalPauseRef} />
-          </div>
+        {/* Row 1: right -> left (reverse true) */}
+        <div className="mb-6">
+          <BannerStrip images={strip1} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
+        </div>
 
-          {/* strip 2 - right to left */}
-          <div className="mb-4">
-            <BannerStrip images={strip2} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
-          </div>
+        {/* Row 2: left -> right (reverse false) */}
+        <div className="mb-6">
+          <BannerStrip images={strip2} reverse={false} playing={isPlaying} globalPauseRef={globalPauseRef} />
+        </div>
 
-          {/* strip 3 - left to right */}
-          <div className="mb-4">
-            <BannerStrip images={strip3} reverse={false} playing={isPlaying} globalPauseRef={globalPauseRef} />
-          </div>
+        {/* Row 3: right -> left */}
+        <div className="mb-6">
+          <BannerStrip images={strip3} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
         </div>
       </div>
     </div>
@@ -498,7 +466,6 @@ export default function Portfolio() {
   const sectionRefs = {
     home: useRef(null),
     skills: useRef(null),
-    projects: useRef(null),
     contact: useRef(null),
   };
 
@@ -515,7 +482,7 @@ export default function Portfolio() {
     <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative">
       <Navbar activeSection={activeSection} />
 
-      <main className="max-w-7xl mx-auto px-4 pb-24">
+      <main className="max-w-5xl mx-auto px-4 pb-24">
         {/* Hero Section */}
         <section
           ref={sectionRefs.home}
@@ -566,9 +533,15 @@ export default function Portfolio() {
         {/* Social Circle Component */}
         <SocialCircle />
 
-        {/* === Multi-strip banners (new) === */}
-        <MultiStripBanners />
+        {/* FULL-WIDTH MOVING GRID (replaces Results section) */}
+        {/* To make it truly full width, it's implemented to escape the centered container */}
+      </main>
 
+      {/* Place MultiStripBanners outside the centered main to ensure full-width */}
+      <MultiStripBanners />
+
+      {/* Continue the centered main content below if needed */}
+      <main className="max-w-5xl mx-auto px-4 pb-24">
         {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
@@ -596,25 +569,6 @@ export default function Portfolio() {
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
               <motion.div key={index} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: index * 0.05 }} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
-            ))}
-          </div>
-        </SectionWrapper>
-
-        {/* Projects Section */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {projectsData.map((project, index) => (
-              <motion.a href={project.url} target="_blank" rel="noopener noreferrer" key={index} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: index * 0.1 }}>
-                <Card className="group overflow-hidden h-full">
-                  <img src={project.image} alt={project.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <CardContent>
-                    <h3 className="text-xl font-semibold text-white flex items-center justify-between">
-                      {project.title}
-                      <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-teal-400" />
-                    </h3>
-                  </CardContent>
-                </Card>
-              </motion.a>
             ))}
           </div>
         </SectionWrapper>
