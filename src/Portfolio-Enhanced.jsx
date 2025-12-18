@@ -12,7 +12,7 @@ import {
   BarChart2,
   MoreHorizontal
 } from 'lucide-react';
-import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 
 // Import SocialCircle component (keep your original path)
 import SocialCircle from '../src/components/SocialCircle.jsx';
@@ -57,7 +57,6 @@ const skillsData = [
 ];
 
 // --- Animated Counter ---
-// Note: keep simple and safe — use spring and onChange to display numeric value.
 const AnimatedCounter = ({ value }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
@@ -169,7 +168,7 @@ function ScrollToTopButton() {
   );
 }
 
-// --- Modal Backdrop / Image Zoom Modal (re-used) ---
+// --- Modal Backdrop / Image Zoom Modal ---
 const ModalBackdrop = ({ children, onClose }) => (
   <motion.div
     className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4"
@@ -229,7 +228,7 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
-// ImageSlider (original restored) - used earlier in the layout
+// ImageSlider (kept intact)
 // -------------------------
 const DEFAULT_IMAGES = [
   'https://i.postimg.cc/rsxncdPk/65952225.jpg',
@@ -426,55 +425,54 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
 };
 
 // -------------------------
-// Multi-strip full-width banners (fixed) and helpers
+// NEW: Perfect Results scrolling strips
 // -------------------------
 
-// -------------------------
-// BANNER IMAGES (replace these 12 strings with your actual image URLs)
-// Order: row1 (4 images), row2 (4 images), row3 (4 images)
-// -------------------------
+// Banner images (4 per row, 12 total) - replace with your own links
 const BANNER_IMAGES = [
-  // Row 1 (0..3)
+  // Row 1
   "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
+  "https://i.postimg.cc/BZKw2ynt/Google-Certification.png",
+  "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg",
+  "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg",
+  // Row 2
+  "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg",
+  "https://i.postimg.cc/rsxncdPk/65952225.jpg",
+  "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg",
   "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  // Row 2 (4..7)
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://placehold.co/800x600?text=7",
-  "https://placehold.co/800x600?text=8",
-  // Row 3 (8..11)
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://placehold.co/800x600?text=10",
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://placehold.co/800x600?text=12",
+  // Row 3
+  "https://i.postimg.cc/rsxncdPk/65952225.jpg",
+  "https://i.postimg.cc/BZKw2ynt/Google-Certification.png",
+  "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg",
+  "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg",
 ];
 
-function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playing = true, pauseRef }) {
+// Auto-scroll hook (returns pauseRef for that row)
+function useInfiniteScroll(ref, { speed = 60, reverse = false }) {
+  const pauseRef = useRef(false);
   const rafRef = useRef(null);
   const lastRef = useRef(null);
 
   useEffect(() => {
-    const el = containerRef.current;
+    const el = ref.current;
     if (!el) return;
 
-    function step(ts) {
-      if (!lastRef.current) lastRef.current = ts;
-      const dt = (ts - lastRef.current) / 1000;
-      lastRef.current = ts;
+    function step(now) {
+      if (!lastRef.current) lastRef.current = now;
+      const dt = (now - lastRef.current) / 1000;
+      lastRef.current = now;
 
-      if (playing && (!pauseRef?.current)) {
-        const distance = speed * dt;
+      if (!pauseRef.current) {
+        const move = speed * dt;
         if (reverse) {
-          el.scrollLeft -= distance;
+          el.scrollLeft -= move;
           if (el.scrollLeft <= 0) {
-            el.scrollLeft = el.scrollLeft + el.scrollWidth / 2;
+            el.scrollLeft += el.scrollWidth / 2;
           }
         } else {
-          el.scrollLeft += distance;
+          el.scrollLeft += move;
           if (el.scrollLeft >= el.scrollWidth / 2) {
-            el.scrollLeft = el.scrollLeft - el.scrollWidth / 2;
+            el.scrollLeft -= el.scrollWidth / 2;
           }
         }
       }
@@ -487,47 +485,40 @@ function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playin
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       lastRef.current = null;
     };
-  }, [containerRef, speed, reverse, playing, pauseRef]);
-}
-// -------------------------
-// Improved BannerStrip (full-width single-slide view)
-// -------------------------
-const BannerStrip = ({ images = [], reverse = false, playing = true, globalPauseRef }) => {
-  const ref = useRef(null);
-  const isTouchRef = useRef(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const pauseRef = useRef(false);
-  const pointerStartRef = useRef(null);
-  const [zoomSrc, setZoomSrc] = useState(null);
+  }, [ref, speed, reverse]);
 
-  const duplicated = [...images, ...images];
+  return pauseRef;
+}
+
+// Single scroll row component
+const ResultsRow = ({ images = [], reverse = false }) => {
+  const ref = useRef(null);
+  const pauseRef = useInfiniteScroll(ref, { speed: 55, reverse });
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const isTouchRef = useRef(false);
+  const pointerStartRef = useRef(null);
 
   useEffect(() => {
     isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }, []);
 
-  // Local pause for this strip (hover or global pause)
-  useEffect(() => {
-    pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
-  }, [hoveredIndex, globalPauseRef]);
+  const duplicated = [...images, ...images];
 
-  // Auto scroll (same wrapping logic as before)
-  useAutoScrollStrip(ref, { speed: 60, reverse, playing, pauseRef });
-
-  // Pointer handlers: detect drag vs tap (for modal)
+  // pointer handlers to support tap vs drag
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    let pointerDown = false;
+    let down = false;
 
     const onPointerDown = (e) => {
-      pointerDown = true;
+      down = true;
       pointerStartRef.current = { x: e.clientX, y: e.clientY };
-      pauseRef.current = true;
+      pauseRef.current = true; // pause while interacting
     };
     const onPointerUp = (e) => {
-      pointerDown = false;
-      pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
+      down = false;
+      // restore auto-play after short delay (if not hover)
+      setTimeout(() => { if (!isTouchRef.current) pauseRef.current = false; }, 100);
     };
 
     el.addEventListener('pointerdown', onPointerDown, { passive: true });
@@ -537,17 +528,20 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
       el.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
     };
-  }, [hoveredIndex, globalPauseRef]);
+  }, []);
 
-  const handlePointerUpOnItem = (e, src) => {
+  const handleItemPointerUp = (e, src) => {
     const start = pointerStartRef.current;
     const end = { x: e.clientX, y: e.clientY };
     const dx = Math.abs((start?.x || 0) - end.x);
     const dy = Math.abs((start?.y || 0) - end.y);
     const moved = Math.sqrt(dx * dx + dy * dy);
-    // treat as tap if very little movement
-    if (moved < 8) setZoomSrc(src);
-    pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
+    // considered a tap if movement small
+    if (moved < 8) {
+      setZoomSrc(src);
+    }
+    // allow a short resume
+    setTimeout(() => { pauseRef.current = false; }, 120);
   };
 
   const hideScrollbarCSS = `
@@ -559,39 +553,35 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
     <>
       <style>{hideScrollbarCSS}</style>
 
-      {/* container uses overflow-x-auto on small devices so native swipe works */}
-      <div className="w-full overflow-hidden">
+      {/* Breakout to full viewport width while inside centered container */}
+      <div className="w-screen relative left-1/2 -translate-x-1/2 -mx-[50vw] mb-4">
         <div
           ref={ref}
-          className="flex gap-0 no-scrollbar"
-          // let desktop detect hover, but on touch devices we don't use hover logic
-          onMouseLeave={() => { if (!isTouchRef.current) setHoveredIndex(null); }}
-          style={{ alignItems: 'stretch', scrollBehavior: 'smooth', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}
+          className="flex no-scrollbar"
+          style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth' }}
         >
           {duplicated.map((src, i) => {
-            const originalIndex = i % images.length;
-            const isThisHovered = hoveredIndex === originalIndex;
+            const idx = i % images.length;
             return (
               <div
                 key={i}
-                className="flex-shrink-0 w-screen p-0"
-                data-slider-item
+                className="flex-shrink-0 w-screen"
+                onMouseEnter={() => { if (!isTouchRef.current) pauseRef.current = true; }}
+                onMouseLeave={() => { if (!isTouchRef.current) pauseRef.current = false; }}
               >
                 <div
-                  onPointerDown={(e) => { pointerStartRef.current = { x: e.clientX, y: e.clientY }; pauseRef.current = true; }}
-                  onPointerUp={(e) => handlePointerUpOnItem(e, src)}
-                  onMouseEnter={() => { if (!isTouchRef.current) setHoveredIndex(originalIndex); }}
-                  onMouseLeave={() => { if (!isTouchRef.current) setHoveredIndex(prev => (prev === originalIndex ? null : prev)); }}
-                  className={`w-full h-[62vh] md:h-[48vh] lg:h-[420px] overflow-hidden relative cursor-pointer transition-transform duration-500`}
+                  onPointerUp={(e) => handleItemPointerUp(e, src)}
+                  className="h-[160px] md:h-[200px] lg:h-[240px] overflow-hidden relative cursor-pointer"
                   style={{ touchAction: 'pan-y' }}
                 >
                   <img
                     src={src}
-                    alt={`banner-${originalIndex}`}
-                    className={`w-full h-full object-cover transform-gpu transition-transform duration-500 ${isThisHovered ? 'scale-105 rotate-1 z-20' : 'rotate-0'}`}
+                    alt={`result-${idx + 1}`}
+                    className="w-full h-full object-cover transform-gpu transition-transform duration-300 hover:scale-[1.03] hover:rotate-[0.6deg]"
                     loading="lazy"
                     decoding="async"
                     onError={(e) => { e.target.src = 'https://placehold.co/1200x600?text=No+Image'; }}
+                    draggable={false}
                   />
                 </div>
               </div>
@@ -603,9 +593,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <div className="flex justify-center items-center">
-              <motion.img src={zoomSrc} alt="zoom" className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg" initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} />
-            </div>
+            <motion.img src={zoomSrc} alt="zoom" className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-lg" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} />
           </ModalBackdrop>
         )}
       </AnimatePresence>
@@ -613,51 +601,20 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
   );
 };
 
-// -------------------------
-// MultiStripBanners (uses BannerStrip)
-// -------------------------
-const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const globalPauseRef = useRef(false);
-
-  // keep ref in sync for children
-  useEffect(() => { globalPauseRef.current = !isPlaying; }, [isPlaying]);
-
+// Results section that composes the three rows
+const ResultsSection = ({ images = BANNER_IMAGES }) => {
   const strip1 = images.slice(0, 4);
   const strip2 = images.slice(4, 8);
   const strip3 = images.slice(8, 12);
 
   return (
-    <div className="w-full -mx-4">
-      <div className="w-screen">
-        <div className="flex items-center justify-between px-6 mb-4">
-          <h3 className="text-xl md:text-2xl font-bold text-amber-400"></h3>
-          <div>
-            <Button onClick={() => setIsPlaying(p => !p)} className="bg-neutral-800 text-white px-3 py-2">
-              {isPlaying ? 'Pause' : 'Play'}
-            </Button>
-          </div>
-        </div>
-
-        {/* Row 1: right -> left (reverse true) */}
-        <div className="mb-6">
-          <BannerStrip images={strip1} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
-        </div>
-
-        {/* Row 2: left -> right (reverse false) */}
-        <div className="mb-6">
-          <BannerStrip images={strip2} reverse={false} playing={isPlaying} globalPauseRef={globalPauseRef} />
-        </div>
-
-        {/* Row 3: right -> left (reverse true) */}
-        <div className="mb-6">
-          <BannerStrip images={strip3} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
-        </div>
-      </div>
+    <div className="w-full">
+      <ResultsRow images={strip1} reverse={true} />
+      <ResultsRow images={strip2} reverse={false} />
+      <ResultsRow images={strip3} reverse={true} />
     </div>
   );
 };
-
 
 // --- Main Portfolio Component ---
 export default function Portfolio() {
@@ -738,7 +695,7 @@ export default function Portfolio() {
         {/* X Google slider (restored and included) */}
         <ImageSlider />
 
-        {/* Skills Section (clean - no grid inside) */}
+        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, index) => (
@@ -769,9 +726,9 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* RESULTS Section - full width moving grid (MultiStripBanners) */}
+        {/* RESULTS Section - full width moving strips */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <MultiStripBanners images={BANNER_IMAGES} />
+          <ResultsSection images={BANNER_IMAGES} />
           <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
             Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
           </p>
