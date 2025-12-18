@@ -616,7 +616,7 @@ const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
     <div className="w-full -mx-4">
       <div className="w-screen">
         <div className="flex items-center justify-between px-6 mb-4">
-          <h3 className="text-xl md:text-2xl font-bold text-amber-400">Results</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-amber-400"></h3>
           <div>
             <Button onClick={() => setIsPlaying(p => !p)} className="bg-neutral-800 text-white px-3 py-2">
               {isPlaying ? 'Pause' : 'Play'}
@@ -732,7 +732,7 @@ export default function Portfolio() {
         </SectionWrapper>
 
         {/* RESULTS Section - full width moving grid (MultiStripBanners) */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="">
+        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners images={BANNER_IMAGES} />
           <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
             Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
