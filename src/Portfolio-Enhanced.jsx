@@ -731,14 +731,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* RESULTS Section - full width moving grid (MultiStripBanners) */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <MultiStripBanners images={BANNER_IMAGES} />
-          <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
-            Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
-          </p>
-        </SectionWrapper>
-
         {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
@@ -759,6 +751,14 @@ export default function Portfolio() {
               </CardContent>
             </Card>
           </div>
+        </SectionWrapper>
+
+        {/* RESULTS Section - full width moving grid (MultiStripBanners) */}
+        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
+          <MultiStripBanners images={BANNER_IMAGES} />
+          <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
+            Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
+          </p>
         </SectionWrapper>
 
         {/* Additional Content (education block) */}
