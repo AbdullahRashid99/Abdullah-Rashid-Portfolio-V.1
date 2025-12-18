@@ -1,8 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone, Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart, Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3, Tiktok, Instagram, Dribbble, Twitter, ArrowUp, ShoppingCart as IconShopify, HelpCircle, Users, Layers, BarChart2, MoreHorizontal } from 'lucide-react';
-import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
+import {
+  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
+  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
+  Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
+  Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
+  ShoppingCart as IconShopify,
+  HelpCircle,
+  Users,
+  Layers,
+  BarChart2,
+  MoreHorizontal
+} from 'lucide-react';
+import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 import SocialCircle from '../src/components/SocialCircle.jsx';
-import { useSwipeable } from 'react-swipeable';
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -61,80 +71,28 @@ const AnimatedCounter = ({ value }) => {
   return <span ref={ref}>{display}</span>;
 };
 
-// --- Section Wrapper ---
-const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
-  <motion.section ref={ref} id={id} className={`py-20 md:py-28 ${className}`} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.3, ease: "easeOut" }}>
-    <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-      <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">{title}</span>
-    </h2>
-    {children}
-  </motion.section>
-));
-
-// --- Navbar ---
-const Navbar = ({ activeSection }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-        <a href="#home" className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors">{personalInfo.name}</a>
-        <div className="hidden md:flex gap-8 items-center">
-          {sections.map((sec) => (
-            <a key={sec.id} href={`#${sec.id}`} className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
-              {sec.title}
-            </a>
-          ))}
-        </div>
-        <div className="md:hidden">
-          <Button onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-transparent text-white p-2">
-            {isMenuOpen ? <X /> : <Menu />}
-          </Button>
-        </div>
-      </div>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-neutral-900">
-            <div className="flex flex-col items-center gap-4 py-4">
-              {sections.map((sec) => (
-                <a key={sec.id} href={`#${sec.id}`} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
-                  {sec.title}
-                </a>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
-  );
-};
-
-// --- Scroll to Top Button ---
-function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const toggleVisibility = () => setVisible(window.pageYOffset > 300);
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
-  }, []);
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  if (!visible) return null;
-  return (
-    <button aria-label="Scroll to top" onClick={scrollToTop} className="fixed bottom-5 right-5 bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full shadow-lg transition opacity-80 hover:opacity-100 z-50">
-      <ArrowUp size={24} />
-    </button>
-  );
-}
-
 // --- Modal Backdrop / Image Zoom Modal ---
 const ModalBackdrop = ({ children, onClose }) => (
-  <motion.div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-    <motion.div className="bg-neutral-900 rounded-lg shadow-xl max-w-4xl w-full max-h-full overflow-auto p-6 relative" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} onClick={e => e.stopPropagation()}>
+  <motion.div
+    className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={onClose}
+  >
+    <motion.div
+      className="bg-neutral-900 rounded-lg shadow-xl max-w-4xl w-full max-h-full overflow-auto p-6 relative"
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.8, opacity: 0 }}
+      onClick={e => e.stopPropagation()}
+    >
       {children}
-      <button aria-label="Close modal" onClick={onClose} className="absolute top-3 right-3 text-neutral-400 hover:text-white transition">
+      <button
+        aria-label="Close modal"
+        onClick={onClose}
+        className="absolute top-3 right-3 text-neutral-400 hover:text-white transition"
+      >
         <X size={28} />
       </button>
     </motion.div>
@@ -270,18 +228,6 @@ const BannerStrip = ({
     pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
   };
 
-  const handlers = useSwipeable({
-    onSwipedLeft: () => {
-      if (reverse) ref.current.scrollLeft += 200;
-      else ref.current.scrollLeft -= 200;
-    },
-    onSwipedRight: () => {
-      if (reverse) ref.current.scrollLeft -= 200;
-      else ref.current.scrollLeft += 200;
-    },
-    trackMouse: true,
-  });
-
   return (
     <>
       <style>{`
@@ -295,7 +241,6 @@ const BannerStrip = ({
           onMouseLeave={() => {
             if (!isTouchRef.current) setHoveredIndex(null);
           }}
-          {...handlers}
         >
           {duplicated.map((src, i) => {
             const originalIndex = i % images.length;
