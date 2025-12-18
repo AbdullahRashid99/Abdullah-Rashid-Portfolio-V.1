@@ -246,7 +246,7 @@ const DEFAULT_IMAGES = [
   'https://postimg.cc/ftffd9Gy',
   '<a href="https://postimg.cc/ftffd9Gy" target="_blank"><img src="https://i.postimg.cc/ftffd9Gy/3ZWC24LXWG87_page_0001.jpg" alt="3ZWC24LXWG87_page_0001"></a>',
   'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
-  'https://placehold.co/600x400?text=6',
+  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
   'https://placehold.co/600x400?text=7',
   'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=60',
 ];
