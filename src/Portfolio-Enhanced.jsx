@@ -234,43 +234,101 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
-// Image Slider Component
+// Image Slider Component (improved)
+// - Click/tap opens zoom (desktop + mobile), but doesn't open while dragging
+// - Hover zoom on desktop (stops slider while hovering)
+// - Native drag/scroll supported
+// - Dots + Play/Pause only (no bottom scrollbar shown)
 // -------------------------
-// Tap / Click to open works on BOTH desktop & mobile
-// Hover on desktop = zoom + pause
+
+const DEFAULT_IMAGES = [
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
+  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
+  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
+  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
+  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
+  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+];
+
+function useAutoScroll(containerRef, { speed = 60, playing = true, pauseRef }) {
+  const rafRef = useRef(null);
+  const lastTimeRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    function step(ts) {
+      if (!lastTimeRef.current) lastTimeRef.current = ts;
+      const dt = (ts - lastTimeRef.current) / 1000;
+      lastTimeRef.current = ts;
+
+      if (playing && (!pauseRef?.current)) {
+        const distance = speed * dt;
+        el.scrollLeft += distance;
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft = el.scrollLeft - el.scrollWidth / 2;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(step);
+    }
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      lastTimeRef.current = null;
+    };
+  }, [containerRef, speed, playing, pauseRef]);
+}
+
+const ImageZoomModal = ({ src, onClose }) => (
+  <ModalBackdrop onClose={onClose}>
+    <div className="flex justify-center items-center">
+      <img src={src} alt="zoom" className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
+    </div>
+  </ModalBackdrop>
+);
 
 const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
   const containerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isPausedByHover, setIsPausedByHover] = useState(false);
-  const pauseRef = useRef(false); // used by auto-scroll hook
+  const pauseRef = useRef(false);
   const [zoomSrc, setZoomSrc] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const isTouchRef = useRef(false);
+  const pointerStartRef = useRef(null);
 
-  // duplicate images for seamless loop
   const duplicated = [...images, ...images];
 
-  // auto-scroll
   useAutoScroll(containerRef, { speed, playing: isPlaying, pauseRef });
 
-  // detect touch device (for hover vs tap behavior)
   useEffect(() => {
     isTouchRef.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   }, []);
 
-  // pauseRef mirrors state for hook
   useEffect(() => { pauseRef.current = isPausedByHover; }, [isPausedByHover]);
   useEffect(() => { pauseRef.current = !isPlaying || isPausedByHover; }, [isPlaying, isPausedByHover]);
 
-  // stop scrolling while user is interacting (mouse down / touch start)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     let pointerDown = false;
 
-    const onPointerDown = () => { pointerDown = true; pauseRef.current = true; };
-    const onPointerUp = () => { pointerDown = false; pauseRef.current = !isPlaying || isPausedByHover; };
+    const onPointerDown = (e) => {
+      pointerDown = true;
+      pauseRef.current = true;
+      pointerStartRef.current = { x: e.clientX, y: e.clientY };
+    };
+    const onPointerUp = (e) => {
+      pointerDown = false;
+      pauseRef.current = !isPlaying || isPausedByHover;
+      // reset start if needed
+      // pointerStartRef.current = null;
+    };
 
     el.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('pointerup', onPointerUp);
@@ -281,29 +339,40 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
     };
   }, [isPlaying, isPausedByHover]);
 
-  // helper to scroll to a specific original image index
   const jumpToIndex = (index) => {
     const el = containerRef.current;
     if (!el) return;
     const children = Array.from(el.querySelectorAll('[data-slider-item]'));
     const target = children[index];
     if (!target) return;
-    // Calculate position inside first set
     const left = target.offsetLeft;
     el.scrollTo({ left, behavior: 'smooth' });
   };
 
-  const onImageClick = (src) => {
-    if (isTouchRef.current) {
-      // on mobile: open zoom modal
-      setZoomSrc(src);
-    } else {
-      // on desktop: do nothing on click (hover handles zoom)
+  // when pointerup without significant movement => treat as tap/click and open modal
+  const handlePointerUpOnItem = (e, src) => {
+    const start = pointerStartRef.current;
+    const end = { x: e.clientX, y: e.clientY };
+    const dx = Math.abs((start?.x || 0) - end.x);
+    const dy = Math.abs((start?.y || 0) - end.y);
+    const moved = Math.sqrt(dx * dx + dy * dy);
+    // threshold: 8px
+    if (moved < 8) {
+      setZoomSrc(src); // open modal on tap/click (desktop + mobile)
     }
+    // restore pause state
+    pauseRef.current = !isPlaying || isPausedByHover;
   };
+
+  // hide scrollbar CSS
+  const hideScrollbarCSS = `
+    .no-scrollbar::-webkit-scrollbar { display: none; height: 0; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  `;
 
   return (
     <div className="w-full py-8">
+      <style>{hideScrollbarCSS}</style>
       <div className="max-w-5xl mx-auto">
         <h3 className="text-xl md:text-2xl font-bold mb-4 text-center text-amber-400">Testimonials</h3>
 
@@ -311,13 +380,11 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
           {/* Slider container */}
           <div
             ref={containerRef}
-            className="overflow-x-auto scrollbar-hide no-scrollbar touch-pan-x will-change-scroll flex gap-3 items-center py-4 px-2"
+            className="overflow-x-auto no-scrollbar touch-pan-x will-change-scroll flex gap-3 items-center py-4 px-2"
             onMouseEnter={() => { if (!isTouchRef.current) { setIsPausedByHover(true); } }}
             onMouseLeave={() => { if (!isTouchRef.current) { setIsPausedByHover(false); } }}
-            // allow user to drag/scroll naturally (native)
           >
             {duplicated.map((src, i) => {
-              // compute original index (0..images.length-1)
               const originalIndex = i % images.length;
               return (
                 <div
@@ -329,8 +396,13 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
                   <div
                     onMouseEnter={() => { if (!isTouchRef.current) { setHoveredIndex(i); setIsPausedByHover(true); } }}
                     onMouseLeave={() => { if (!isTouchRef.current) { setHoveredIndex(null); setIsPausedByHover(false); } }}
-                    onClick={() => onImageClick(src)}
-                    className={`w-full h-28 sm:h-32 md:h-40 lg:h-44 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-800 cursor-pointer transition-transform duration-300 ${hoveredIndex === i ? 'scale-105 z-20' : ''}`}
+                    onPointerDown={(e) => {
+                      // start tracking for tap vs drag
+                      pointerStartRef.current = { x: e.clientX, y: e.clientY };
+                      pauseRef.current = true;
+                    }}
+                    onPointerUp={(e) => handlePointerUpOnItem(e, src)}
+                    className={`w-full h-28 sm:h-32 md:h-40 lg:h-44 bg-neutral-800 rounded-lg overflow-hidden border border-neutral-800 cursor-pointer transition-transform duration-300 ${hoveredIndex === i ? 'scale-110 z-20' : ''}`}
                     style={{ transformOrigin: 'center center' }}
                   >
                     <img
@@ -356,7 +428,6 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
               >
                 {isPlaying ? 'Pause' : 'Play'}
               </Button>
-              <span className="text-sm text-neutral-400 hidden sm:inline">(Hover to zoom on desktop. Tap to open on mobile.)</span>
             </div>
 
             {/* dots for originals */}
@@ -373,7 +444,7 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
           </div>
         </div>
 
-        {/* Zoom modal for mobile */}
+        {/* Zoom modal for both desktop & mobile */}
         <AnimatePresence>
           {zoomSrc && (
             <ImageZoomModal src={zoomSrc} onClose={() => setZoomSrc(null)} />
