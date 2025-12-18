@@ -1,4 +1,3 @@
-// Portfolio.jsx (final fixed file)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -508,6 +507,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
     pauseRef.current = !!(hoveredIndex !== null || globalPauseRef.current === true);
   }, [hoveredIndex, globalPauseRef]);
 
+  // make each item full viewport width and tall so it "feels" like full-screen banners
   useAutoScrollStrip(ref, { speed: 60, reverse, playing, pauseRef });
 
   useEffect(() => {
@@ -564,7 +564,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
             return (
               <div
                 key={i}
-                className="flex-shrink-0 w-1/2 md:w-1/4 p-0"
+                className="flex-shrink-0 w-screen p-0"
                 data-slider-item
               >
                 <div
@@ -572,7 +572,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
                   onPointerUp={(e) => handlePointerUpOnItem(e, src)}
                   onMouseEnter={() => { if (!isTouchRef.current) setHoveredIndex(originalIndex); }}
                   onMouseLeave={() => { if (!isTouchRef.current) setHoveredIndex(prev => (prev === originalIndex ? null : prev)); }}
-                  className={`w-full md:h-[280px] h-[180px] overflow-hidden relative cursor-pointer transition-transform duration-300`}
+                  className={`w-full h-[60vh] md:h-[50vh] lg:h-[60vh] overflow-hidden relative cursor-pointer transition-transform duration-300`}
                   style={{ touchAction: 'pan-y' }}
                 >
                   <img
@@ -613,31 +613,29 @@ const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
   const strip3 = images.slice(8, 12);
 
   return (
-    <div className="w-full -mx-4">
-      <div className="w-screen">
-        <div className="flex items-center justify-between px-6 mb-4">
-          <h3 className="text-xl md:text-2xl font-bold text-amber-400"></h3>
-          <div>
-            <Button onClick={() => setIsPlaying(p => !p)} className="bg-neutral-800 text-white px-3 py-2">
-              {isPlaying ? 'Pause' : 'Play'}
-            </Button>
-          </div>
+    <div className="w-full">
+      <div className="flex items-center justify-between px-6 mb-4">
+        <h3 className="text-xl md:text-2xl font-bold text-amber-400"></h3>
+        <div>
+          <Button onClick={() => setIsPlaying(p => !p)} className="bg-neutral-800 text-white px-3 py-2">
+            {isPlaying ? 'Pause' : 'Play'}
+          </Button>
         </div>
+      </div>
 
-        {/* Row 1: right -> left (reverse true) */}
-        <div className="mb-6">
-          <BannerStrip images={strip1} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
-        </div>
+      {/* Row 1: right -> left (reverse true) */}
+      <div className="mb-6">
+        <BannerStrip images={strip1} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
+      </div>
 
-        {/* Row 2: left -> right (reverse false) */}
-        <div className="mb-6">
-          <BannerStrip images={strip2} reverse={false} playing={isPlaying} globalPauseRef={globalPauseRef} />
-        </div>
+      {/* Row 2: left -> right (reverse false) */}
+      <div className="mb-6">
+        <BannerStrip images={strip2} reverse={false} playing={isPlaying} globalPauseRef={globalPauseRef} />
+      </div>
 
-        {/* Row 3: right -> left (reverse true) */}
-        <div className="mb-6">
-          <BannerStrip images={strip3} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
-        </div>
+      {/* Row 3: right -> left (reverse true) */}
+      <div className="mb-6">
+        <BannerStrip images={strip3} reverse={true} playing={isPlaying} globalPauseRef={globalPauseRef} />
       </div>
     </div>
   );
@@ -753,14 +751,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
-        {/* RESULTS Section - full width moving grid (MultiStripBanners) */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <MultiStripBanners images={BANNER_IMAGES} />
-          <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
-            Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
-          </p>
-        </SectionWrapper>
-
         {/* Additional Content (education block) */}
         <div className="grid md:grid-cols-1 gap-8 mt-20 max-w-5xl mx-auto">
           <div className="text-center max-w-md mx-auto">
@@ -771,6 +761,19 @@ export default function Portfolio() {
           </div>
         </div>
       </main>
+
+      {/* RESULTS Section - moved outside main so it can be full-bleed / full-width */}
+      <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results" className="px-0">
+        {/* make MultiStripBanners full-bleed by wrapping in a w-screen container */}
+        <div className="w-screen -mx-4">
+          <div className="max-w-none">
+            <MultiStripBanners images={BANNER_IMAGES} />
+          </div>
+        </div>
+        <p className="text-sm text-neutral-400 mt-4 text-center max-w-2xl mx-auto">
+          Hover a single image to pause its row and apply a light zoom. Tap/click to open image modal. Replace the placeholder image links in <code>BANNER_IMAGES</code> with your 12 image URLs (4 per row).
+        </p>
+      </SectionWrapper>
 
       {/* Footer */}
       <footer className="text-center py-8 mt-16 border-t border-neutral-800/50">
