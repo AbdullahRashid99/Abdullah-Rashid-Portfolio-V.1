@@ -1,4 +1,4 @@
-// Portfolio.jsx (final fixed file with Enhanced Results)
+// Portfolio.jsx (Complete with Certifications and Restored Results)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -12,9 +12,9 @@ import {
   BarChart2,
   MoreHorizontal
 } from 'lucide-react';
-import { motion, AnimatePresence, useInView, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 
-// Import SocialCircle component (keep your original path)
+// Import SocialCircle component
 import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- UI Components ---
@@ -45,15 +45,14 @@ const personalInfo = {
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
 };
 
-// --- Sections ---
 const sections = [
   { id: "skills", title: "Skills" },
   { id: "projects", title: "Results" },
 ];
 
-// --- Skills Data ---
 const skillsData = [
-  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", 
+  "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
 // --- Animated Counter ---
@@ -64,11 +63,11 @@ const AnimatedCounter = ({ value }) => {
   const [display, setDisplay] = useState('£0');
 
   useEffect(() => {
-    const unsub = motionValue.onChange(latest => {
+    const unsub = motionValue.on("change", (latest) => {
       setDisplay(`£${Math.round(latest).toLocaleString()}+`);
     });
     if (isInView) motionValue.set(value);
-    return () => unsub && unsub();
+    return () => unsub();
   }, [isInView, value, motionValue]);
 
   return <span ref={ref}>{display}</span>;
@@ -101,11 +100,7 @@ const Navbar = ({ activeSection }) => {
         <a href="#home" className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors">{personalInfo.name}</a>
         <div className="hidden md:flex gap-8 items-center">
           {sections.map((sec) => (
-            <a
-              key={sec.id}
-              href={`#${sec.id}`}
-              className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}
-            >
+            <a key={sec.id} href={`#${sec.id}`} className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
               {sec.title}
             </a>
           ))}
@@ -118,20 +113,10 @@ const Navbar = ({ activeSection }) => {
       </div>
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-neutral-900"
-          >
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-neutral-900">
             <div className="flex flex-col items-center gap-4 py-4">
               {sections.map((sec) => (
-                <a
-                  key={sec.id}
-                  href={`#${sec.id}`}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}
-                >
+                <a key={sec.id} href={`#${sec.id}`} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
                   {sec.title}
                 </a>
               ))}
@@ -143,92 +128,28 @@ const Navbar = ({ activeSection }) => {
   );
 };
 
-// --- Scroll to Top Button ---
-function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const toggleVisibility = () => setVisible(window.pageYOffset > 300);
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
-  }, []);
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (!visible) return null;
-  return (
-    <button
-      aria-label="Scroll to top"
-      onClick={scrollToTop}
-      className="fixed bottom-5 right-5 bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-full shadow-lg transition opacity-80 hover:opacity-100 z-50"
-    >
-      <ArrowUp size={24} />
-    </button>
-  );
-}
-
-// --- Modal Backdrop ---
+// --- Modal Helpers ---
 const ModalBackdrop = ({ children, onClose }) => (
-  <motion.div
-    className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-[100] p-4 backdrop-blur-sm"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
+  <motion.div 
+    className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4 backdrop-blur-sm"
+    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     onClick={onClose}
   >
-    <motion.div
-      className="bg-neutral-900 rounded-lg shadow-xl max-w-5xl w-full max-h-full overflow-hidden relative"
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.8, opacity: 0 }}
+    <motion.div 
+      className="relative max-w-5xl w-full flex justify-center"
+      initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
       onClick={e => e.stopPropagation()}
     >
       {children}
-      <button
-        aria-label="Close modal"
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-teal-500 transition"
-      >
-        <X size={24} />
+      <button onClick={onClose} className="absolute -top-12 right-0 text-white hover:text-teal-400 transition">
+        <X size={32} />
       </button>
     </motion.div>
   </motion.div>
 );
 
-// --- Services Modal ---
-const servicesList = [
-  { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform' },
-  { title: 'Scale', icon: <LineChart size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfpnHDVpZeI_7Q5srnURXlnPzfLUhuyiPzptUeqj77uyeeRVg/viewform' },
-];
-
-function ServicesModal({ onClose }) {
-  return (
-    <ModalBackdrop onClose={onClose}>
-      <div className="p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">What do you need help with?</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
-          {servicesList.map(({ title, icon, link }, index) => (
-            <motion.div
-              key={index}
-              className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500 transition-shadow cursor-pointer"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="text-teal-400 mb-4">{icon}</div>
-              <h3 className="text-xl font-semibold mb-4">{title}</h3>
-              <a href={link} target="_blank" rel="noopener noreferrer" className="mt-auto w-full">
-                <Button className="bg-teal-500 w-full text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-600 transition">
-                  Start
-                </Button>
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </ModalBackdrop>
-  );
-}
-
-// -------------------------
-// ImageSlider (Original Restored for Top)
-// -------------------------
-const DEFAULT_IMAGES = [
+// --- START: CERTIFICATIONS SECTION (ImageSlider) ---
+const CERT_IMAGES = [
   'https://i.postimg.cc/rsxncdPk/65952225.jpg',
   'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
   'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
@@ -236,51 +157,43 @@ const DEFAULT_IMAGES = [
   'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
   'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
   'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
-  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
 ];
 
-function useAutoScroll(containerRef, { speed = 60, playing = true, pauseRef }) {
-  const rafRef = useRef(null);
-  const lastTimeRef = useRef(null);
+const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
+  const containerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const duplicated = [...images, ...images];
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    function step(ts) {
-      if (!lastTimeRef.current) lastTimeRef.current = ts;
-      const dt = (ts - lastTimeRef.current) / 1000;
-      lastTimeRef.current = ts;
-      if (playing && (!pauseRef?.current)) {
-        const distance = speed * dt;
-        el.scrollLeft += distance;
+    let lastTime = 0;
+    let rafId;
+
+    const step = (ts) => {
+      if (!lastTime) lastTime = ts;
+      const dt = (ts - lastTime) / 1000;
+      lastTime = ts;
+      if (!isPaused) {
+        el.scrollLeft += speed * dt;
         if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
       }
-      rafRef.current = requestAnimationFrame(step);
-    }
-    rafRef.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [containerRef, speed, playing, pauseRef]);
-}
-
-const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
-  const containerRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isPausedByHover, setIsPausedByHover] = useState(false);
-  const pauseRef = useRef(false);
-  const [zoomSrc, setZoomSrc] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const duplicated = [...images, ...images];
-  useAutoScroll(containerRef, { speed, playing: isPlaying, pauseRef });
-  useEffect(() => { pauseRef.current = isPausedByHover || !isPlaying; }, [isPausedByHover, isPlaying]);
+      rafId = requestAnimationFrame(step);
+    };
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [speed, isPaused]);
 
   return (
     <div className="w-full py-8">
       <div className="max-w-5xl mx-auto overflow-hidden">
-        <h3 className="text-xl md:text-2xl font-bold mb-4 text-center text-amber-400">Certifications</h3>
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Certifications</h3>
         <div 
           ref={containerRef}
           className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
-          onMouseEnter={() => setIsPausedByHover(true)}
-          onMouseLeave={() => setIsPausedByHover(false)}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           {duplicated.map((src, i) => (
             <motion.div 
@@ -297,37 +210,17 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img src={zoomSrc} className="w-full max-h-[80vh] object-contain" alt="zoom" />
+            <img src={zoomSrc} className="w-full max-h-[80vh] object-contain rounded-lg" alt="zoom" />
           </ModalBackdrop>
         )}
       </AnimatePresence>
     </div>
   );
 };
+// --- END: CERTIFICATIONS SECTION ---
 
-// -------------------------
-// NEW IMPROVED RESULTS SECTION
-// -------------------------
-
-const BANNER_IMAGES = [
-  // Row 1
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://i.postimg.cc/rsxncdPk/65952225.jpg",
-  "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg",
-  "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg",
-  // Row 2
-  "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg",
-  "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg",
-  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg",
-  "https://i.postimg.cc/rsxncdPk/65952225.jpg",
-  // Row 3
-  "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg",
-  "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg",
-  "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg",
-  "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg",
-];
-
-function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, isHovered = false }) {
+// --- START: RESTORED RESULTS LOGIC ---
+function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHovered = false }) {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -362,24 +255,26 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const duplicated = [...images, ...images];
 
-  useAutoScrollStrip(containerRef, { speed: 80, reverse, isHovered });
+  useAutoScrollResults(containerRef, { speed: 100, reverse, isHovered });
 
   return (
     <div 
       ref={containerRef}
-      className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-hidden flex touch-pan-x select-none"
+      className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-x select-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{ scrollbarWidth: 'none' }}
     >
       <div className="flex">
         {duplicated.map((src, i) => (
-          <div key={i} className="w-screen flex-shrink-0 px-4 py-2">
+          <div key={i} className="w-screen md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
             <motion.div 
-              className="w-full h-[300px] md:h-[500px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer"
-              whileHover={{ scale: 0.98 }}
+              className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
               onClick={() => onImageClick(src)}
             >
-              <img src={src} className="w-full h-full object-contain" alt="Result" draggable="false" />
+              <img src={src} alt="Result" className="w-full h-full object-cover md:object-contain" draggable="false" />
             </motion.div>
           </div>
         ))}
@@ -390,39 +285,60 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
-  const row1 = BANNER_IMAGES.slice(0, 4);
-  const row2 = BANNER_IMAGES.slice(4, 8);
-  const row3 = BANNER_IMAGES.slice(8, 12);
+
+  const row1 = ["https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg", "https://i.postimg.cc/rsxncdPk/65952225.jpg", "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg", "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg"];
+  const row2 = ["https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg", "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg", "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87-page-0001.jpg", "https://i.postimg.cc/rsxncdPk/65952225.jpg"];
+  const row3 = ["https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg", "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg", "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg", "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg"];
 
   return (
     <div className="space-y-4 md:space-y-8">
-      {/* Row 1: Right to Left */}
       <BannerStrip images={row1} reverse={false} onImageClick={setZoomSrc} />
-      {/* Row 2: Left to Right */}
       <BannerStrip images={row2} reverse={true} onImageClick={setZoomSrc} />
-      {/* Row 3: Right to Left */}
       <BannerStrip images={row3} reverse={false} onImageClick={setZoomSrc} />
 
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img src={zoomSrc} className="w-full max-h-[90vh] object-contain" alt="Zoomed Result" />
+            <img src={zoomSrc} alt="Zoomed" className="max-w-full max-h-[85vh] object-contain rounded-lg" />
           </ModalBackdrop>
         )}
       </AnimatePresence>
     </div>
   );
 };
+// --- END: RESTORED RESULTS LOGIC ---
 
-// --- Main Portfolio Component ---
+// --- Services Modal ---
+function ServicesModal({ onClose }) {
+  const servicesList = [
+    { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform' },
+    { title: 'Scale', icon: <LineChart size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfpnHDVpZeI_7Q5srnURXlnPzfLUhuyiPzptUeqj77uyeeRVg/viewform' },
+  ];
+  return (
+    <ModalBackdrop onClose={onClose}>
+      <div className="bg-neutral-900 p-8 rounded-2xl w-full">
+        <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">How can I help?</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          {servicesList.map(({ title, icon, link }, index) => (
+            <motion.div key={index} className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer" whileHover={{ y: -5 }}>
+              <div className="text-teal-400 mb-4">{icon}</div>
+              <h3 className="text-xl font-semibold mb-4">{title}</h3>
+              <a href={link} target="_blank" rel="noopener noreferrer" className="w-full">
+                <Button className="bg-teal-500 w-full text-white hover:bg-teal-600">Start</Button>
+              </a>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </ModalBackdrop>
+  );
+}
+
+// --- Main Portfolio ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
-  const sectionRefs = {
-    home: useRef(null),
-    skills: useRef(null),
-    projects: useRef(null),
-  };
+  const sectionRefs = { home: useRef(null), skills: useRef(null), projects: useRef(null) };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -436,31 +352,25 @@ export default function Portfolio() {
   return (
     <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden">
       <Navbar activeSection={activeSection} />
-
+      
       <main className="max-w-5xl mx-auto px-4 pb-24">
-        {/* Hero Section */}
+        {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
-          <motion.img
-            src={personalInfo.profileImage}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6"
-          />
+          <motion.img src={personalInfo.profileImage} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6" />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
             Abdullah Rashid<br /> Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
           </motion.h1>
-          <motion.p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</motion.p>
-          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-lg" onClick={() => setShowServices(true)}>Start Here</Button>
+          <p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</p>
+          <Button className="bg-teal-500 hover:bg-teal-600 text-white" onClick={() => setShowServices(true)}>Start Here</Button>
         </section>
 
         <SocialCircle />
-        <ImageSlider />
 
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
-          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-            {skillsData.map((skill, index) => (
-              <motion.div key={index} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {skillsData.map((skill, i) => (
+              <motion.div key={i} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
             ))}
           </div>
         </SectionWrapper>
@@ -468,27 +378,30 @@ export default function Portfolio() {
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card><CardContent>
-              <h3 className="text-2xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
-              <p className="text-5xl font-mono font-bold"><AnimatedCounter value={5000000} /></p>
+              <h3 className="text-xl font-bold text-amber-400 mb-2">Total Ad Spend Managed</h3>
+              <p className="text-4xl font-mono font-bold"><AnimatedCounter value={5000000} /></p>
             </CardContent></Card>
             <Card><CardContent>
-              <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROAS Generated</h3>
-              <p className="text-5xl font-mono font-bold">8x - 25x</p>
+              <h3 className="text-xl font-bold text-teal-400 mb-2">Average ROAS Generated</h3>
+              <p className="text-4xl font-mono font-bold">8x - 25x</p>
             </CardContent></Card>
           </div>
         </SectionWrapper>
 
-        {/* RESULTS SECTION */}
+        {/* Certifications Added Here */}
+        <ImageSlider />
+
+        {/* Updated RESULTS Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
-          <p className="text-sm text-neutral-500 mt-12 text-center max-w-2xl mx-auto italic">
-            Swipe left/right to browse. Hover on desktop to pause and zoom.
+          <p className="text-sm text-neutral-500 mt-10 text-center italic">
+            Swipe to navigate on mobile. Hover to pause and zoom on desktop. Click to expand.
           </p>
         </SectionWrapper>
 
         <div className="text-center mt-20">
           <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-          <p className="text-neutral-300 leading-relaxed">Bachelor of Business Administration from Ain Shams University.</p>
+          <p className="text-neutral-300">Bachelor of Business Administration from Ain Shams University.</p>
         </div>
       </main>
 
@@ -503,5 +416,20 @@ export default function Portfolio() {
       <ScrollToTopButton />
       <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
     </div>
+  );
+}
+
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const toggle = () => setVisible(window.pageYOffset > 300);
+    window.addEventListener('scroll', toggle);
+    return () => window.removeEventListener('scroll', toggle);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50">
+      <ArrowUp size={24} />
+    </button>
   );
 }
