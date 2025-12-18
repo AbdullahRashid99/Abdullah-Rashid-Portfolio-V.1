@@ -234,67 +234,10 @@ function ServicesModal({ onClose }) {
 }
 
 // -------------------------
-// Image Slider Component (improved)
-// Features:
-// - Continuous seamless scroll by auto-updating scrollLeft (no framer marquee)
-// - Pause on hover (desktop) and pause button
-// - Hover zoom on desktop
-// - Tap to open zoom modal on mobile
-// - Native drag/scroll (touch/mouse) supported
-// - Dots to jump to a specific image
+// Image Slider Component
 // -------------------------
-
-const DEFAULT_IMAGES = [
-  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
-  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
-  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
-  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
-  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
-  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
-  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
-  'https://i.postimg.cc/rsxncdPk/65952225.jpg', // duplicate to reach 8
-];
-
-function useAutoScroll(containerRef, { speed = 60, playing = true, pauseRef }) {
-  // speed in px/sec
-  const rafRef = useRef(null);
-  const lastTimeRef = useRef(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    function step(ts) {
-      if (!lastTimeRef.current) lastTimeRef.current = ts;
-      const dt = (ts - lastTimeRef.current) / 1000; // seconds
-      lastTimeRef.current = ts;
-
-      if (playing && (!pauseRef?.current)) {
-        const distance = speed * dt;
-        el.scrollLeft += distance;
-        // seamless
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft = el.scrollLeft - el.scrollWidth / 2;
-        }
-      }
-
-      rafRef.current = requestAnimationFrame(step);
-    }
-
-    rafRef.current = requestAnimationFrame(step);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [containerRef, speed, playing, pauseRef]);
-}
-
-const ImageZoomModal = ({ src, onClose }) => (
-  <ModalBackdrop onClose={onClose}>
-    <div className="flex justify-center items-center">
-      <img src={src} alt="zoom" className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-lg" />
-    </div>
-  </ModalBackdrop>
-);
+// Tap / Click to open works on BOTH desktop & mobile
+// Hover on desktop = zoom + pause
 
 const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
   const containerRef = useRef(null);
