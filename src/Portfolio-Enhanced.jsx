@@ -440,23 +440,37 @@ const ImageSlider = ({ images = DEFAULT_IMAGES, speed = 60 }) => {
   );
 };
 
+// -------------------------
+// Multi-strip full-width banners
+// - 3 strips (rows) stacked vertically
+// - each strip has 4 images (you supply 12 total links below)
+// - directions alternate: row1 right->left, row2 left->right, row3 right->left
+// - hover on an image pauses its row and applies a small zoom
+// - click/tap opens single-image modal (doesn't open if the user was dragging)
+// - responsive: md+ => 4 per row (w-1/4), <md => 2 per row (w-1/2)
+// -------------------------
+
+/*
+  Replace the LINK_# strings below with your 12 image URLs (keep order as rows: 4 images per row)
 */
 const BANNER_IMAGES = [
   // Row 1 (indexes 0..3)
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
-  "LINK_2",
-  "LINK_3",
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
+  "https://i.postimg.cc/BZKw2ynt/Google-Certification.png",
+  "https://i.postimg.cc/rsxncdPk/65952225.jpg",
+  "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg",
+  "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg",
+
   // Row 2 (indexes 4..7)
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
-  "LINK_6",
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
-  "LINK_8",
+  "https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg",
+  "https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg",
+  "https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg",
+  "https://i.postimg.cc/BZKw2ynt/Google-Certification.png",
+
   // Row 3 (indexes 8..11)
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
-  "LINK_10",
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
-  " 'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',",
+  "https://i.postimg.cc/rsxncdPk/65952225.jpg",
+  "https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg",
+  "https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg",
+  "https://i.postimg.cc/BZKw2ynt/Google-Certification.png",
 ];
 
 function useAutoScrollStrip(containerRef, { speed = 100, reverse = false, playing = true, pauseRef }) {
@@ -582,7 +596,7 @@ const BannerStrip = ({ images = [], reverse = false, playing = true, globalPause
                 onPointerUp={(e) => handlePointerUpOnItem(e, src)}
                 onMouseEnter={() => { if (!isTouchRef.current) setHovered(true); }}
                 onMouseLeave={() => { if (!isTouchRef.current) setHovered(false); }}
-                className={`w-full md:h-[280px] h-[180px] overflow-hidden relative cursor-pointer transition-transform duration-300 ${hovered ? 'group-hover:scale-105' : ''}`}
+                className={`w-full md:h-[280px] h-[180px] overflow-hidden relative cursor-pointer transition-transform duration-300`}
                 style={{ touchAction: 'pan-y' }}
               >
                 <img
@@ -652,6 +666,7 @@ const MultiStripBanners = ({ images = BANNER_IMAGES }) => {
     </div>
   );
 };
+
 // --- Main Portfolio Component ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
