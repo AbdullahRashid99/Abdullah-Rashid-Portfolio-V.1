@@ -188,7 +188,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto overflow-hidden">
-        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Certifications</h3>
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google X Certifications</h3>
         <div 
           ref={containerRef}
           className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
@@ -393,7 +393,6 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
           <p className="text-sm text-neutral-500 mt-10 text-center italic">
-            Swipe to navigate on mobile. Hover to pause and zoom on desktop. Click to expand.
           </p>
         </SectionWrapper>
 
