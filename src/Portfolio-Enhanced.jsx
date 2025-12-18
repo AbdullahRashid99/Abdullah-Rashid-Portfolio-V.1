@@ -73,6 +73,77 @@ const AnimatedCounter = ({ value }) => {
   return <span ref={ref}>{display}</span>;
 };
 
+// --- START: CERTIFICATIONS SECTION (ImageSlider) ---
+const CERT_IMAGES = [
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
+  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
+  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
+  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
+  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
+  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
+];
+
+const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
+  const containerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const duplicated = [...images, ...images];
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let lastTime = 0;
+    let rafId;
+
+    const step = (ts) => {
+      if (!lastTime) lastTime = ts;
+      const dt = (ts - lastTime) / 1000;
+      lastTime = ts;
+      if (!isPaused) {
+        el.scrollLeft += speed * dt;
+        if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
+      }
+      rafId = requestAnimationFrame(step);
+    };
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [speed, isPaused]);
+
+  return (
+    <div className="w-full py-8">
+      <div className="max-w-5xl mx-auto overflow-hidden">
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Certifications</h3>
+        <div 
+          ref={containerRef}
+          className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {duplicated.map((src, i) => (
+            <motion.div 
+              key={i} 
+              className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setZoomSrc(src)}
+            >
+              <img src={src} className="w-full h-full object-cover" alt="Cert" />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <AnimatePresence>
+        {zoomSrc && (
+          <ModalBackdrop onClose={() => setZoomSrc(null)}>
+            <img src={zoomSrc} className="w-full max-h-[80vh] object-contain rounded-lg" alt="zoom" />
+          </ModalBackdrop>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+// --- END: CERTIFICATIONS SECTION ---
+
 // --- Section Wrapper ---
 const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
@@ -147,77 +218,6 @@ const ModalBackdrop = ({ children, onClose }) => (
     </motion.div>
   </motion.div>
 );
-
-// --- START: CERTIFICATIONS SECTION (ImageSlider) ---
-const CERT_IMAGES = [
-  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
-  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
-  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
-  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
-  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
-  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
-  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
-];
-
-const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
-  const containerRef = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const [zoomSrc, setZoomSrc] = useState(null);
-  const duplicated = [...images, ...images];
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    let lastTime = 0;
-    let rafId;
-
-    const step = (ts) => {
-      if (!lastTime) lastTime = ts;
-      const dt = (ts - lastTime) / 1000;
-      lastTime = ts;
-      if (!isPaused) {
-        el.scrollLeft += speed * dt;
-        if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
-      }
-      rafId = requestAnimationFrame(step);
-    };
-    rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
-  }, [speed, isPaused]);
-
-  return (
-    <div className="w-full py-8">
-      <div className="max-w-5xl mx-auto overflow-hidden">
-        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Certifications</h3>
-        <div 
-          ref={containerRef}
-          className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          {duplicated.map((src, i) => (
-            <motion.div 
-              key={i} 
-              className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
-              whileHover={{ scale: 1.05 }}
-              onClick={() => setZoomSrc(src)}
-            >
-              <img src={src} className="w-full h-full object-cover" alt="Cert" />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-      <AnimatePresence>
-        {zoomSrc && (
-          <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img src={zoomSrc} className="w-full max-h-[80vh] object-contain rounded-lg" alt="zoom" />
-          </ModalBackdrop>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
-// --- END: CERTIFICATIONS SECTION ---
 
 // --- START: RESTORED RESULTS LOGIC ---
 function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHovered = false }) {
@@ -395,7 +395,6 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
           <p className="text-sm text-neutral-500 mt-10 text-center italic">
-            Swipe to navigate on mobile. Hover to pause and zoom on desktop. Click to expand.
           </p>
         </SectionWrapper>
 
