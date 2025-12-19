@@ -42,7 +42,7 @@ const personalInfo = {
   title: "Media Buyer | Shopify Developer | Google Certificated Digital Marketer & E-commerce expert",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
-  profileImage: "https://i.postimg.cc/9McpLQBB/cb021ab6-0b75-4b2f-9496-d6e487489240.jpg",
+  profileImage: "https://i.postimg.cc/cLptm1S7/Untitled-design-removebg-preview.png",
 };
 
 const sections = [
