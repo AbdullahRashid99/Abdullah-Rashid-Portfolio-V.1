@@ -349,18 +349,51 @@ export default function Portfolio() {
 
   return (
     <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden">
+      {/* Space Background Layer */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage: `
+              radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+              radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+              radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))
+            `,
+            backgroundSize: '200px 200px'
+          }}
+        ></div>
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
+              radial-gradient(1px 1px at 200px 300px, #fff, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 300px 50px, #fff, rgba(0,0,0,0)),
+              radial-gradient(1px 1px at 400px 250px, #ddd, rgba(0,0,0,0))
+            `,
+            backgroundSize: '400px 400px'
+          }}
+        ></div>
+      </div>
+
       <Navbar activeSection={activeSection} />
       
-      <main className="max-w-5xl mx-auto px-4 pb-24">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
-          <div className="absolute inset-0 -z-10 h-full w-full bg-neutral-950 bg-[radial-gradient(#2d2d2d_1px,transparent_1px)] [background-size:32px_32px]" />
-          <motion.img src={personalInfo.profileImage} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6" />
+          {/* Subtle Glow behind hero */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
+          
+          <motion.img src={personalInfo.profileImage} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
             Abdullah Rashid<br /> Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
           </motion.h1>
           <p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</p>
-          <Button className="bg-teal-500 hover:bg-teal-600 text-white" onClick={() => setShowServices(true)}>Start Here</Button>
+          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
         </section>
 
         <SocialCircle />
@@ -371,7 +404,7 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3">
             {skillsData.map((skill, i) => (
-              <motion.div key={i} className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-full text-sm font-medium">{skill}</motion.div>
+              <motion.div key={i} className="bg-neutral-800/60 backdrop-blur-md text-neutral-300 px-4 py-2 rounded-full text-sm font-medium border border-neutral-700">{skill}</motion.div>
             ))}
           </div>
         </SectionWrapper>
@@ -411,16 +444,15 @@ export default function Portfolio() {
         </div>
       </main>
 
-<footer className="text-center py-12 border-t border-neutral-800/50">
-  <div className="flex justify-center gap-6 mb-4">
-    <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
-    <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
-  </div>
-  {/* Updated line below */}
-  <p className="text-neutral-500 text-sm">
-    © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
-  </p>
-</footer>
+      <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
+        <div className="flex justify-center gap-6 mb-4">
+          <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
+          <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
+        </div>
+        <p className="text-neutral-500 text-sm">
+          © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
+        </p>
+      </footer>
 
       <ScrollToTopButton />
       <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
@@ -437,7 +469,7 @@ function ScrollToTopButton() {
   }, []);
   if (!visible) return null;
   return (
-    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50">
+    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors">
       <ArrowUp size={24} />
     </button>
   );
