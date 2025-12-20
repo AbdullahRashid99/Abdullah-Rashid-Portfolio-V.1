@@ -1,4 +1,4 @@
-// Portfolio.jsx (With Right-Click and Download Protection)
+// Portfolio.jsx (With Right-Click Protection & Abdullah Rashid Watermark)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -22,6 +22,25 @@ const protectionStyles = {
   WebkitTouchCallout: 'none', // Disables long-press menu on iOS
   WebkitUserSelect: 'none',
 };
+
+// --- Watermark Component (Abdullah Rashid) ---
+const WatermarkWrapper = ({ children }) => (
+  <div className="relative overflow-hidden group">
+    {children}
+    {/* Watermark Overlay */}
+    <div className="absolute inset-0 pointer-events-none opacity-20 flex flex-wrap justify-around items-around overflow-hidden select-none">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <span 
+          key={i} 
+          className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
+          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
+        >
+          Abdullah Rashid
+        </span>
+      ))}
+    </div>
+  </div>
+);
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -140,7 +159,7 @@ const ModalBackdrop = ({ children, onClose }) => (
     className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4 backdrop-blur-sm"
     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     onClick={onClose}
-    onContextMenu={(e) => e.preventDefault()} // Prevent right click on modal
+    onContextMenu={(e) => e.preventDefault()}
   >
     <motion.div 
       className="relative max-w-5xl w-full flex justify-center"
@@ -212,7 +231,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
                 src={src} 
                 className="w-full h-full object-cover" 
                 alt="Cert" 
-                draggable="false" // Disable dragging
+                draggable="false"
                 style={protectionStyles} 
               />
             </motion.div>
@@ -236,7 +255,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
   );
 };
 
-// --- RESTORED RESULTS LOGIC ---
+// --- RESULTS LOGIC ---
 function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHovered = false }) {
   useEffect(() => {
     const el = containerRef.current;
@@ -287,13 +306,16 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => onImageClick(src)}
             >
-              <img 
-                src={src} 
-                alt="Result" 
-                className="w-full h-full object-cover md:object-contain" 
-                draggable="false" 
-                style={protectionStyles}
-              />
+              {/* Added Watermark Wrapper here for Results Images */}
+              <WatermarkWrapper>
+                <img 
+                  src={src} 
+                  alt="Result" 
+                  className="w-full h-full object-cover md:object-contain" 
+                  draggable="false" 
+                  style={protectionStyles}
+                />
+              </WatermarkWrapper>
             </motion.div>
           </div>
         ))}
@@ -315,13 +337,15 @@ const MultiStripBanners = () => {
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img 
-                src={zoomSrc} 
-                alt="Zoomed" 
-                className="max-w-full max-h-[85vh] object-contain rounded-lg" 
-                draggable="false"
-                style={protectionStyles}
-            />
+            <WatermarkWrapper>
+              <img 
+                  src={zoomSrc} 
+                  alt="Zoomed" 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg" 
+                  draggable="false"
+                  style={protectionStyles}
+              />
+            </WatermarkWrapper>
           </ModalBackdrop>
         )}
       </AnimatePresence>
@@ -373,10 +397,9 @@ export default function Portfolio() {
   return (
     <div 
         className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-        onContextMenu={(e) => e.preventDefault()} // Global Disable Right-Click
-        style={protectionStyles} // Global Mobile Protection
+        onContextMenu={(e) => e.preventDefault()} 
+        style={protectionStyles}
     >
-      {/* Space Background Layer */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
         <div 
@@ -391,18 +414,6 @@ export default function Portfolio() {
               radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))
             `,
             backgroundSize: '200px 200px'
-          }}
-        ></div>
-        <div 
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage: `
-              radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
-              radial-gradient(1px 1px at 200px 300px, #fff, rgba(0,0,0,0)),
-              radial-gradient(2px 2px at 300px 50px, #fff, rgba(0,0,0,0)),
-              radial-gradient(1px 1px at 400px 250px, #ddd, rgba(0,0,0,0))
-            `,
-            backgroundSize: '400px 400px'
           }}
         ></div>
       </div>
@@ -426,9 +437,10 @@ export default function Portfolio() {
           <p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</p>
           <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
         </section>
+
         <SocialCircle />
-        {/* Certifications positioned before Skills */}
         <ImageSlider />
+
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3">
             {skillsData.map((skill, i) => (
@@ -436,7 +448,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-        {/* Achievements Section */}
+
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <Card>
@@ -449,23 +461,22 @@ export default function Portfolio() {
               <CardContent>
                 <h3 className="text-2xl font-bold text-teal-400 mb-2">Average ROAS Generated</h3>
                 <p className="text-5xl font-mono font-bold text-white">8x - 25x</p>
-                <div className="flex justify-center items-end gap-2 mt-4 h-16">
-                  <motion.div initial={{ height: 0 }} whileInView={{ height: '25%' }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="w-12 bg-neutral-700 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Spend</span></motion.div>
-                  <motion.div initial={{ height: 0 }} whileInView={{ height: '100%' }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="w-12 bg-gradient-to-t from-teal-500 to-sky-400 rounded-t-sm flex items-end justify-center"><span className="text-xs -mb-5">Return</span></motion.div>
-                </div>
               </CardContent>
             </Card>
           </div>
         </SectionWrapper>
-        {/* Results Section */}
+
+        {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
         </SectionWrapper>
+
         <div className="text-center mt-20">
           <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
           <p className="text-neutral-300">Bachelor of Business Administration from Ain Shams University.</p>
         </div>
       </main>
+
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
