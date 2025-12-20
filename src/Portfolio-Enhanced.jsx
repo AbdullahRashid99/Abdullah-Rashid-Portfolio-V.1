@@ -28,7 +28,7 @@ const WatermarkWrapper = ({ children }) => (
   <div className="relative overflow-hidden group">
     {children}
     {/* Watermark Overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-20 flex flex-wrap justify-around items-around overflow-hidden select-none">
+    <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
       {Array.from({ length: 12 }).map((_, i) => (
         <span 
           key={i} 
