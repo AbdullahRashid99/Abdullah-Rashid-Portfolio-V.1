@@ -1,4 +1,4 @@
-// Portfolio.jsx (With Right-Click Protection, Watermark & Interactive Certifications)
+// Portfolio.jsx (With Right-Click Protection & Abdullah Rashid Watermark)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -13,25 +13,27 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
+// Import SocialCircle component
 import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- Global Protection Styles ---
 const protectionStyles = {
   userSelect: 'none',
-  WebkitTouchCallout: 'none',
+  WebkitTouchCallout: 'none', // Disables long-press menu on iOS
   WebkitUserSelect: 'none',
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
 const WatermarkWrapper = ({ children }) => (
-  <div className="relative overflow-hidden group h-full w-full">
+  <div className="relative overflow-hidden group">
     {children}
-    <div className="absolute inset-0 pointer-events-none opacity-45 flex flex-wrap justify-around items-around overflow-hidden select-none">
+    {/* Watermark Overlay */}
+    <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
       {Array.from({ length: 12 }).map((_, i) => (
         <span 
           key={i} 
-          className="text-[10px] md:text-[14px] font-bold text-white/60 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
-          style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}
+          className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
+          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
         >
           Abdullah Rashid
         </span>
@@ -77,89 +79,6 @@ const skillsData = [
   "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", 
   "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
-
-// --- CERTIFICATIONS DATA ---
-const CERT_IMAGES = [
-  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
-  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
-  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
-  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
-  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
-  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
-  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
-  'https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg', // Placeholder for 8th image
-];
-
-// --- NEW INTERACTIVE CERTIFICATIONS SECTION ---
-const CertificationGallery = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [zoomSrc, setZoomSrc] = useState(null);
-
-  return (
-    <div className="w-full py-12 max-w-4xl mx-auto">
-      <h3 className="text-xl md:text-2xl font-bold mb-8 text-center text-amber-400">Google Certifications</h3>
-      
-      <div className="relative flex flex-col items-center">
-        {/* Main Image Display */}
-        <AnimatePresence mode='wait'>
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.4 }}
-            className="relative group cursor-pointer"
-            onClick={() => setZoomSrc(CERT_IMAGES[activeIndex])}
-          >
-            {/* Orange Glow Effect (الرزاز البرتقالي) */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-amber-500 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-            
-            <div className="relative w-full max-w-lg md:max-w-2xl aspect-[16/10] bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-2xl">
-                <img 
-                  src={CERT_IMAGES[activeIndex]} 
-                  className="w-full h-full object-contain" 
-                  alt="Certification" 
-                  style={protectionStyles}
-                  draggable="false"
-                />
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Dots Navigation (8 Dots) */}
-        <div className="flex gap-3 mt-8">
-          {CERT_IMAGES.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={`h-3 transition-all duration-300 rounded-full ${
-                activeIndex === index 
-                ? 'w-8 bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]' 
-                : 'w-3 bg-neutral-700 hover:bg-neutral-500'
-              }`}
-              aria-label={`Go to certificate ${index + 1}`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Zoom Modal */}
-      <AnimatePresence>
-        {zoomSrc && (
-          <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img 
-              src={zoomSrc} 
-              className="w-full max-h-[85vh] object-contain rounded-lg" 
-              alt="zoom" 
-              style={protectionStyles}
-              draggable="false"
-            />
-          </ModalBackdrop>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
 
 // --- Animated Counter ---
 const AnimatedCounter = ({ value }) => {
@@ -255,6 +174,87 @@ const ModalBackdrop = ({ children, onClose }) => (
   </motion.div>
 );
 
+// --- CERTIFICATIONS SECTION ---
+const CERT_IMAGES = [
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
+  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
+  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
+  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
+  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
+  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
+];
+
+const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
+  const containerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const duplicated = [...images, ...images];
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let lastTime = 0;
+    let rafId;
+    const step = (ts) => {
+      if (!lastTime) lastTime = ts;
+      const dt = (ts - lastTime) / 1000;
+      lastTime = ts;
+      if (!isPaused) {
+        el.scrollLeft += speed * dt;
+        if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
+      }
+      rafId = requestAnimationFrame(step);
+    };
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [speed, isPaused]);
+
+  return (
+    <div className="w-full py-12">
+      <div className="max-w-5xl mx-auto overflow-hidden">
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google Certifications</h3>
+        <div 
+          ref={containerRef}
+          className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {duplicated.map((src, i) => (
+            <motion.div 
+              key={i} 
+              className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setZoomSrc(src)}
+            >
+              <img 
+                src={src} 
+                className="w-full h-full object-cover" 
+                alt="Cert" 
+                draggable="false"
+                style={protectionStyles} 
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <AnimatePresence>
+        {zoomSrc && (
+          <ModalBackdrop onClose={() => setZoomSrc(null)}>
+            <img 
+                src={zoomSrc} 
+                className="w-full max-h-[80vh] object-contain rounded-lg" 
+                alt="zoom" 
+                draggable="false" 
+                style={protectionStyles}
+            />
+          </ModalBackdrop>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 // --- RESULTS LOGIC ---
 function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHovered = false }) {
   useEffect(() => {
@@ -306,6 +306,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => onImageClick(src)}
             >
+              {/* Added Watermark Wrapper here for Results Images */}
               <WatermarkWrapper>
                 <img 
                   src={src} 
@@ -438,9 +439,7 @@ export default function Portfolio() {
         </section>
 
         <SocialCircle />
-        
-        {/* Updated Interactive Certifications */}
-        <CertificationGallery />
+        <ImageSlider />
 
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3">
@@ -467,6 +466,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
 
+        {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
         </SectionWrapper>
