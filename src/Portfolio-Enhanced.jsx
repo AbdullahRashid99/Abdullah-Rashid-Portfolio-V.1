@@ -1,4 +1,4 @@
-// Portfolio.jsx (Certifications before Skills)
+// Portfolio.jsx (With Right-Click and Download Protection)
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -13,9 +13,15 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
-
 // Import SocialCircle component
 import SocialCircle from '../src/components/SocialCircle.jsx';
+
+// --- Global Protection Styles ---
+const protectionStyles = {
+  userSelect: 'none',
+  WebkitTouchCallout: 'none', // Disables long-press menu on iOS
+  WebkitUserSelect: 'none',
+};
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -134,6 +140,7 @@ const ModalBackdrop = ({ children, onClose }) => (
     className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4 backdrop-blur-sm"
     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     onClick={onClose}
+    onContextMenu={(e) => e.preventDefault()} // Prevent right click on modal
   >
     <motion.div 
       className="relative max-w-5xl w-full flex justify-center"
@@ -170,7 +177,6 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
     if (!el) return;
     let lastTime = 0;
     let rafId;
-
     const step = (ts) => {
       if (!lastTime) lastTime = ts;
       const dt = (ts - lastTime) / 1000;
@@ -202,7 +208,13 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
               whileHover={{ scale: 1.05 }}
               onClick={() => setZoomSrc(src)}
             >
-              <img src={src} className="w-full h-full object-cover" alt="Cert" />
+              <img 
+                src={src} 
+                className="w-full h-full object-cover" 
+                alt="Cert" 
+                draggable="false" // Disable dragging
+                style={protectionStyles} 
+              />
             </motion.div>
           ))}
         </div>
@@ -210,7 +222,13 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img src={zoomSrc} className="w-full max-h-[80vh] object-contain rounded-lg" alt="zoom" />
+            <img 
+                src={zoomSrc} 
+                className="w-full max-h-[80vh] object-contain rounded-lg" 
+                alt="zoom" 
+                draggable="false" 
+                style={protectionStyles}
+            />
           </ModalBackdrop>
         )}
       </AnimatePresence>
@@ -225,12 +243,10 @@ function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHov
     if (!el) return;
     let lastTime = 0;
     let rafId;
-
     const step = (ts) => {
       if (!lastTime) lastTime = ts;
       const dt = (ts - lastTime) / 1000;
       lastTime = ts;
-
       if (!isHovered) {
         const move = speed * dt;
         if (reverse) {
@@ -243,7 +259,6 @@ function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHov
       }
       rafId = requestAnimationFrame(step);
     };
-
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
   }, [speed, reverse, isHovered]);
@@ -253,7 +268,6 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   const containerRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const duplicated = [...images, ...images];
-
   useAutoScrollResults(containerRef, { speed: 100, reverse, isHovered });
 
   return (
@@ -273,7 +287,13 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => onImageClick(src)}
             >
-              <img src={src} alt="Result" className="w-full h-full object-cover md:object-contain" draggable="false" />
+              <img 
+                src={src} 
+                alt="Result" 
+                className="w-full h-full object-cover md:object-contain" 
+                draggable="false" 
+                style={protectionStyles}
+              />
             </motion.div>
           </div>
         ))}
@@ -284,21 +304,24 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
-
   const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
   const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
-
   return (
     <div className="space-y-4 md:space-y-8">
       <BannerStrip images={row1} reverse={false} onImageClick={setZoomSrc} />
       <BannerStrip images={row2} reverse={true} onImageClick={setZoomSrc} />
       <BannerStrip images={row3} reverse={false} onImageClick={setZoomSrc} />
-
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img src={zoomSrc} alt="Zoomed" className="max-w-full max-h-[85vh] object-contain rounded-lg" />
+            <img 
+                src={zoomSrc} 
+                alt="Zoomed" 
+                className="max-w-full max-h-[85vh] object-contain rounded-lg" 
+                draggable="false"
+                style={protectionStyles}
+            />
           </ModalBackdrop>
         )}
       </AnimatePresence>
@@ -348,7 +371,11 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden">
+    <div 
+        className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
+        onContextMenu={(e) => e.preventDefault()} // Global Disable Right-Click
+        style={protectionStyles} // Global Mobile Protection
+    >
       {/* Space Background Layer */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
@@ -379,28 +406,29 @@ export default function Portfolio() {
           }}
         ></div>
       </div>
-
       <Navbar activeSection={activeSection} />
       
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
-          {/* Subtle Glow behind hero */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
           
-          <motion.img src={personalInfo.profileImage} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" />
+          <motion.img 
+            src={personalInfo.profileImage} 
+            initial={{ opacity: 0, scale: 0.8 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" 
+            draggable="false"
+          />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
             Abdullah Rashid<br /> Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
           </motion.h1>
           <p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</p>
           <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
         </section>
-
         <SocialCircle />
-
         {/* Certifications positioned before Skills */}
         <ImageSlider />
-
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3">
             {skillsData.map((skill, i) => (
@@ -408,7 +436,6 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-
         {/* Achievements Section */}
         <SectionWrapper id="achievements" title="Key Achievements">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
@@ -430,20 +457,15 @@ export default function Portfolio() {
             </Card>
           </div>
         </SectionWrapper>
-
         {/* Results Section */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
-          <p className="text-sm text-neutral-500 mt-10 text-center italic">
-          </p>
         </SectionWrapper>
-
         <div className="text-center mt-20">
           <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
           <p className="text-neutral-300">Bachelor of Business Administration from Ain Shams University.</p>
         </div>
       </main>
-
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
@@ -453,7 +475,6 @@ export default function Portfolio() {
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
         </p>
       </footer>
-
       <ScrollToTopButton />
       <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
     </div>
