@@ -362,7 +362,7 @@ function ServicesModal({ onClose }) {
   return (
     <ModalBackdrop onClose={onClose}>
       <div className="bg-neutral-900 p-8 rounded-2xl w-full">
-        <h2 className="text-3xl font-bold mb-6 text-center text-teal-400"></h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">For E-Commerce</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {servicesList.map(({ title, icon, link }, index) => (
             <motion.div key={index} className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer" whileHover={{ y: -5 }}>
