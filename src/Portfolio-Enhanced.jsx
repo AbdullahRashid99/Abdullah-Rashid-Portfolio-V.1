@@ -68,7 +68,6 @@ const personalInfo = {
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
-  tiktok: "https://www.tiktok.com/@abdallah_rashidx",
 };
 
 const sections = [
