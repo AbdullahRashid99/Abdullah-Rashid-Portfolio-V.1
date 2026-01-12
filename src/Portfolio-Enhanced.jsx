@@ -4,7 +4,7 @@ import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-  Tiktok, Instagram, Dribbble, Twitter, ArrowUp,
+  Instagram, Dribbble, Twitter, ArrowUp,
   ShoppingCart as IconShopify,
   HelpCircle,
   Users,
@@ -12,6 +12,7 @@ import {
   BarChart2,
   MoreHorizontal
 } from 'lucide-react';
+import { SiTiktok } from 'react-icons/si';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 // Import SocialCircle component
 import SocialCircle from '../src/components/SocialCircle.jsx';
@@ -68,6 +69,7 @@ const personalInfo = {
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
+  tiktok: "https://www.tiktok.com/@abdallah_rashidx",
 };
 
 const sections = [
@@ -464,7 +466,7 @@ export default function Portfolio() {
         <div className="flex justify-center gap-6 mb-4">
           <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
           <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
-          <a href={personalInfo.tiktok} className="text-neutral-500 hover:text-pink-500 transition-colors"><Tiktok /></a>
+          <a href={personalInfo.tiktok} className="text-neutral-500 hover:text-pink-500 transition-colors"><SiTiktok /></a>
         </div>
         <p className="text-neutral-500 text-sm">
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
