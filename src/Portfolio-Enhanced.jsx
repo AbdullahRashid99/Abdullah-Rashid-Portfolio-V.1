@@ -448,6 +448,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
+        
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
