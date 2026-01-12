@@ -68,7 +68,7 @@ const personalInfo = {
   title: "E-Com Media Buyer | Shopify Developer | Google Certificated Digital Marketer & E-commerce expert",
   linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
   whatsapp: "http://wa.me/+201025030220",
-  profileImage: "https://i.postimg.cc/RFmtpNSy/Abdullah-Rashid.jpg",
+  profileImage: "https://i.postimg.cc/Xvdsc1Hn/9c10a25ab53cc9bdf0a8fc20082d0868-tplv-tiktokx-cropcenter-1080-1080.jpg",
   tiktok: "https://www.tiktok.com/@abdallah_rashidx",
 };
 
