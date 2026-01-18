@@ -141,7 +141,7 @@ const Navbar = ({ activeSection }) => {
       </AnimatePresence>
     </nav>
   );
-});
+};
 
 // --- Modal Helpers ---
 const ModalBackdrop = ({ children, onClose }) => (
