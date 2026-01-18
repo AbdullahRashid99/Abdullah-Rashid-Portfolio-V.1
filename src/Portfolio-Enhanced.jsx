@@ -1,4 +1,5 @@
 // Portfolio.jsx (With Right-Click Protection & Abdullah Rashid Watermark)
+// FULL FILE — updated touch/scroll logic for RESULTS
 
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -35,8 +36,8 @@ const WatermarkWrapper = ({ children }) => (
     {/* Watermark Overlay */}
     <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
       {Array.from({ length: 12 }).map((_, i) => (
-        <span
-          key={i}
+        <span 
+          key={i} 
           className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
           style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
         >
@@ -82,7 +83,7 @@ const sections = [
 ];
 
 const skillsData = [
-  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads",
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", 
   "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
@@ -161,13 +162,13 @@ const Navbar = ({ activeSection }) => {
 
 // --- Modal Helpers ---
 const ModalBackdrop = ({ children, onClose }) => (
-  <motion.div
+  <motion.div 
     className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4 backdrop-blur-sm"
     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
     onClick={onClose}
     onContextMenu={(e) => e.preventDefault()}
   >
-    <motion.div
+    <motion.div 
       className="relative max-w-5xl w-full flex justify-center"
       initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
       onClick={e => e.stopPropagation()}
@@ -220,25 +221,25 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto overflow-hidden">
         <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google Certifications</h3>
-        <div
+        <div 
           ref={containerRef}
           className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {duplicated.map((src, i) => (
-            <motion.div
-              key={i}
+            <motion.div 
+              key={i} 
               className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
               whileHover={{ scale: 1.05 }}
               onClick={() => setZoomSrc(src)}
             >
-              <img
-                src={src}
-                className="w-full h-full object-cover"
-                alt="Cert"
+              <img 
+                src={src} 
+                className="w-full h-full object-cover" 
+                alt="Cert" 
                 draggable="false"
-                style={protectionStyles}
+                style={protectionStyles} 
               />
             </motion.div>
           ))}
@@ -247,11 +248,11 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
       <AnimatePresence>
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
-            <img
-                src={zoomSrc}
-                className="w-full max-h-[80vh] object-contain rounded-lg"
-                alt="zoom"
-                draggable="false"
+            <img 
+                src={zoomSrc} 
+                className="w-full max-h-[80vh] object-contain rounded-lg" 
+                alt="zoom" 
+                draggable="false" 
                 style={protectionStyles}
             />
           </ModalBackdrop>
@@ -262,7 +263,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
 };
 
 // --- RESULTS LOGIC ---
-function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHovered = false, isClicked = false }) {
+function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPaused = false }) {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -272,7 +273,7 @@ function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHov
       if (!lastTime) lastTime = ts;
       const dt = (ts - lastTime) / 1000;
       lastTime = ts;
-      if (!isHovered && !isClicked) {
+      if (!isPaused) {
         const move = speed * dt;
         if (reverse) {
           el.scrollLeft -= move;
@@ -286,70 +287,197 @@ function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isHov
     };
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
-  }, [speed, reverse, isHovered, isClicked]);
+  }, [speed, reverse, isPaused]);
 }
 
 const BannerStrip = ({ images, reverse, onImageClick }) => {
   const containerRef = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const timeoutRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isPointerActive, setIsPointerActive] = useState(false);
+  const resumeTimerRef = useRef(null);
+
   const duplicated = [...images, ...images];
-
-  const handleMouseDown = () => {
-    setIsClicked(true);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  };
-
-  const handleMouseUp = () => {
-    timeoutRef.current = setTimeout(() => {
-      setIsClicked(false);
-    }, 5000); // 5 seconds delay
-  };
+  useAutoScrollResults(containerRef, { speed: 100, reverse, isPaused });
 
   useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+    const el = containerRef.current;
+    if (!el) return;
+
+    // We'll use pointer events to detect direction and allow vertical page scroll
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let directionDetermined = false;
+    let isHorizontal = false;
+    let isDragging = false;
+    let hasCapture = false;
+
+    const onPointerDown = (e) => {
+      // Only handle primary pointers
+      if (pointerId !== null) return;
+      pointerId = e.pointerId;
+      startX = e.clientX;
+      startY = e.clientY;
+      lastX = startX;
+      directionDetermined = false;
+      isHorizontal = false;
+      isDragging = true;
+      setIsPointerActive(true);
+
+      // Pause auto-scroll immediately when user touches
+      setIsPaused(true);
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = null;
+      }
+
+      try {
+        el.setPointerCapture(pointerId);
+        hasCapture = true;
+      } catch (err) {
+        hasCapture = false;
       }
     };
-  }, []);
 
-  useAutoScrollResults(containerRef, { speed: 100, reverse, isHovered, isClicked });
+    const onPointerMove = (e) => {
+      if (!isDragging || e.pointerId !== pointerId) return;
+
+      const dxTotal = e.clientX - startX;
+      const dyTotal = e.clientY - startY;
+      const dx = e.clientX - lastX;
+
+      if (!directionDetermined) {
+        // small threshold to avoid noise
+        if (Math.abs(dxTotal) > 6 || Math.abs(dyTotal) > 6) {
+          directionDetermined = true;
+          isHorizontal = Math.abs(dxTotal) > Math.abs(dyTotal);
+        } else {
+          return; // not enough movement yet
+        }
+      }
+
+      if (isHorizontal) {
+        // user intends to swipe horizontally -> prevent default page move and scroll container
+        // NOTE: we attached listener with passive:false so this preventDefault will work
+        e.preventDefault();
+        // scroll the container manually (invert direction for natural feel)
+        el.scrollLeft -= dx;
+        lastX = e.clientX;
+      } else {
+        // vertical movement: let the browser handle page scroll.
+        // If we have capture, release so the page can scroll smoothly on some browsers
+        if (hasCapture) {
+          try {
+            el.releasePointerCapture(pointerId);
+          } catch (err) {}
+          hasCapture = false;
+        }
+        // stop treating as dragging horizontally
+        isDragging = false;
+        pointerId = null;
+        setIsPointerActive(false);
+        // keep auto-scroll paused until pointerup logic handles resume
+      }
+    };
+
+    const endInteraction = (e) => {
+      if (!isDragging && !isPointerActive) {
+        // ensure paused state is still handled
+      }
+      isDragging = false;
+      directionDetermined = false;
+      isHorizontal = false;
+      if (pointerId !== null && hasCapture) {
+        try {
+          el.releasePointerCapture(pointerId);
+        } catch (err) {}
+        hasCapture = false;
+      }
+      pointerId = null;
+      setIsPointerActive(false);
+
+      // Start 5s resume timer (if user touches again before timer ends, it will be cleared)
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+      }
+      resumeTimerRef.current = setTimeout(() => {
+        setIsPaused(false);
+        resumeTimerRef.current = null;
+      }, 5000);
+    };
+
+    // Attach with passive:false for pointermove so we can preventDefault when needed
+    el.addEventListener('pointerdown', onPointerDown, { passive: true });
+    el.addEventListener('pointermove', onPointerMove, { passive: false });
+    el.addEventListener('pointerup', endInteraction, { passive: true });
+    el.addEventListener('pointercancel', endInteraction, { passive: true });
+    el.addEventListener('lostpointercapture', endInteraction, { passive: true });
+
+    // Also stop auto-scroll when mouse hovers (existing behavior)
+    const onMouseEnter = () => {
+      setIsPaused(true);
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = null;
+      }
+    };
+    const onMouseLeave = () => {
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+      resumeTimerRef.current = setTimeout(() => setIsPaused(false), 5000);
+    };
+    el.addEventListener('mouseenter', onMouseEnter);
+    el.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+        resumeTimerRef.current = null;
+      }
+      el.removeEventListener('pointerdown', onPointerDown);
+      el.removeEventListener('pointermove', onPointerMove);
+      el.removeEventListener('pointerup', endInteraction);
+      el.removeEventListener('pointercancel', endInteraction);
+      el.removeEventListener('lostpointercapture', endInteraction);
+      el.removeEventListener('mouseenter', onMouseEnter);
+      el.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, [setIsPaused, isPointerActive]);
+
+  // When user opens zoom via onImageClick, also pause the auto-scroll immediately
+  const handleImageClick = (src) => {
+    // pause and clear resume timer (so modal stays still)
+    setIsPaused(true);
+    if (resumeTimerRef.current) {
+      clearTimeout(resumeTimerRef.current);
+      resumeTimerRef.current = null;
+    }
+    onImageClick(src);
+  };
 
   return (
-    <div
+    <div 
       ref={containerRef}
       className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-x select-none"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ scrollbarWidth: 'none' }}
+      // allow vertical default scrolling; we handle horizontal in pointermove
+      style={{ scrollbarWidth: 'none', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
     >
       <div className="flex">
         {duplicated.map((src, i) => (
           <div key={i} className="w-screen md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
-            <motion.div
+            <motion.div 
               className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
-              onClick={() => onImageClick(src)}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={() => {
-                if (timeoutRef.current) {
-                  clearTimeout(timeoutRef.current);
-                }
-                setIsClicked(false);
-              }} // Ensure scrolling resumes if the mouse leaves while clicked
+              onClick={() => handleImageClick(src)}
             >
+              {/* Added Watermark Wrapper here for Results Images */}
               <WatermarkWrapper>
-                <img
-                  src={src}
-                  alt="Result"
-                  className="w-full h-full object-cover md:object-contain"
-                  draggable="false"
+                <img 
+                  src={src} 
+                  alt="Result" 
+                  className="w-full h-full object-cover md:object-contain" 
+                  draggable="false" 
                   style={protectionStyles}
                 />
               </WatermarkWrapper>
@@ -363,9 +491,11 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
+
   const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
   const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
+
   return (
     <div className="space-y-4 md:space-y-8">
       <BannerStrip images={row1} reverse={false} onImageClick={setZoomSrc} />
@@ -375,10 +505,10 @@ const MultiStripBanners = () => {
         {zoomSrc && (
           <ModalBackdrop onClose={() => setZoomSrc(null)}>
             <WatermarkWrapper>
-              <img
-                  src={zoomSrc}
-                  alt="Zoomed"
-                  className="max-w-full max-h-[85vh] object-contain rounded-lg"
+              <img 
+                  src={zoomSrc} 
+                  alt="Zoomed" 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg" 
                   draggable="false"
                   style={protectionStyles}
               />
@@ -432,14 +562,14 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div
+    <div 
         className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-        onContextMenu={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()} 
         style={protectionStyles}
     >
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
-        <div
+        <div 
           className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `
@@ -455,16 +585,17 @@ export default function Portfolio() {
         ></div>
       </div>
       <Navbar activeSection={activeSection} />
-
+      
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-          <motion.img
-            src={personalInfo.profileImage}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
+          
+          <motion.img 
+            src={personalInfo.profileImage} 
+            initial={{ opacity: 0, scale: 0.8 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" 
             draggable="false"
           />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
@@ -484,7 +615,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-
+        
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
