@@ -34,17 +34,16 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
-// Adjusted: smaller text and increased spacing between watermark repeats
 const WatermarkWrapper = ({ children }) => (
   <div className="relative overflow-hidden group">
     {children}
     {/* Watermark Overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-35 flex flex-wrap justify-center gap-8 overflow-hidden select-none">
-      {Array.from({ length: 8 }).map((_, i) => (
+    <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
+      {Array.from({ length: 12 }).map((_, i) => (
         <span 
           key={i} 
-          className="text-[9px] md:text-[12px] font-semibold text-white/45 -rotate-45 whitespace-nowrap m-2 uppercase tracking-wider"
-          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}
+          className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
+          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
         >
           Abdullah Rashid
         </span>
@@ -163,7 +162,6 @@ const Navbar = ({ activeSection }) => {
       </AnimatePresence>
     </nav>
   );
-};
 
 // --- Gallery Modal (supports swipe, arrows, keyboard) ---
 const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set(), certMode = false }) => {
@@ -688,12 +686,12 @@ export default function Portfolio() {
       </div>
 
       <Navbar activeSection={activeSection} />
-      
+
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-          
+
           <motion.img 
             src={personalInfo.profileImage} 
             initial={{ opacity: 0, scale: 0.8 }} 
@@ -718,7 +716,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-        
+
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
