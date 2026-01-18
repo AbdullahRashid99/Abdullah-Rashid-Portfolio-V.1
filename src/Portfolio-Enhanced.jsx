@@ -34,33 +34,44 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
-const WatermarkWrapper = ({ children }) => {
-  // Function to generate random positions within the container
-  const generateRandomPosition = () => {
-    return {
-      top: `${Math.random() * 80}%`,
-      left: `${Math.random() * 80}%`,
-    };
-  };
+// --- Premium Watermark Component (Abdullah Rashid) ---
 
+const WatermarkWrapper = ({ children }) => {
   return (
-    <div className="relative overflow-hidden group">
+    <div className="relative overflow-hidden">
       {children}
+
       {/* Watermark Overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 overflow-hidden select-none">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <span
-            key={i}
-            className="text-[16px] md:text-[20px] font-bold text-white/50 -rotate-45 whitespace-nowrap uppercase tracking-widest"
-            style={{
-              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
-              position: 'absolute',
-              ...generateRandomPosition(),
-            }}
-          >
-            Abdullah Rashid
-          </span>
-        ))}
+      <div className="absolute inset-0 pointer-events-none select-none opacity-30">
+        <div
+          className="absolute inset-[-50%]"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                -45deg,
+                rgba(255,255,255,0.08) 0px,
+                rgba(255,255,255,0.08) 120px,
+                transparent 120px,
+                transparent 240px
+              )
+            `,
+          }}
+        />
+
+        {/* Text Layer */}
+        <div className="absolute inset-[-50%] rotate-[-45deg] flex flex-wrap gap-[120px]">
+          {Array.from({ length: 40 }).map((_, i) => (
+            <span
+              key={i}
+              className="text-[18px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase"
+              style={{
+                textShadow: '0 0 2px rgba(0,0,0,0.4)',
+              }}
+            >
+              Abdullah Rashid
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
