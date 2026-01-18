@@ -1,6 +1,8 @@
 // Portfolio.jsx (With Right-Click Protection, Abdullah Rashid Watermark,
-// improved RESULTS touch/scroll behavior and in-modal gallery navigation)
-// *** Only changes: restored old starry background + fixed modal X and left/right arrows clicks ***
+// improved RESULTS touch/scroll behavior and in-modal gallery navigation
+// Updates per user: modal browses all images across 3 rows, arrows/X fixed for desktop,
+// auto-scroll resumes after 3s of inactivity, hold-for-3s resumes, row-specific modal sizing,
+// certificates modal supports swipe between certs.
 
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -163,12 +165,15 @@ const Navbar = ({ activeSection }) => {
 };
 
 // --- Gallery Modal (supports swipe, arrows, keyboard) ---
-const GalleryModal = ({ images = [], startIndex = 0, onClose }) => {
+const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set(), certMode = false }) => {
   const [index, setIndex] = useState(startIndex);
   const containerRef = useRef(null);
   const draggingRef = useRef(false);
   const startXRef = useRef(0);
   const lastXRef = useRef(0);
+  const pointerCaptureRef = useRef(null);
+
+  useEffect(() => { setIndex(startIndex); }, [startIndex]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -187,19 +192,19 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose }) => {
     let pointerId = null;
 
     const down = (e) => {
+      // ignore clicks on buttons/icons so arrows/X stay clickable
+      if (e.target.closest && e.target.closest('button')) return;
       pointerId = e.pointerId;
       draggingRef.current = false;
       startXRef.current = e.clientX;
       lastXRef.current = e.clientX;
-      try { el.setPointerCapture(pointerId); } catch(err){}
+      try { el.setPointerCapture(pointerId); pointerCaptureRef.current = pointerId; } catch(err){ pointerCaptureRef.current = null; }
     };
 
     const move = (e) => {
       if (pointerId === null || e.pointerId !== pointerId) return;
       const dx = e.clientX - startXRef.current;
-      if (Math.abs(dx) > 10) {
-        draggingRef.current = true;
-      }
+      if (Math.abs(dx) > 10) draggingRef.current = true;
       lastXRef.current = e.clientX;
     };
 
@@ -207,12 +212,13 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose }) => {
       if (pointerId === null || e.pointerId !== pointerId) return;
       const totalDx = e.clientX - startXRef.current;
       if (!draggingRef.current && Math.abs(totalDx) < 8) {
-        // tap (do nothing — keep modal open)
+        // tap -> do nothing (keep modal open)
       } else {
         if (totalDx < -30) setIndex(i => (i + 1) % images.length);
         if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
       }
-      try { el.releasePointerCapture(pointerId); } catch(err){}
+      try { if (pointerCaptureRef.current) el.releasePointerCapture(pointerCaptureRef.current); } catch(err){}
+      pointerCaptureRef.current = null;
       pointerId = null;
       draggingRef.current = false;
     };
@@ -232,9 +238,13 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose }) => {
 
   if (!images.length) return null;
 
+  // determine sizing per current image: if in middleSet => 80%, else 100%
+  const isMiddle = middleSet.has(images[index]);
+  const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '95vw', maxHeight: '95vh' };
+
   return (
     <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className="relative max-w-[80vw] w-full max-h-[80vh] h-auto flex items-center justify-center" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()} ref={containerRef}>
+      <motion.div className="relative w-full flex items-center justify-center" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()} ref={containerRef}>
 
         {/* Close X INSIDE image bounds */}
         <button
@@ -269,9 +279,9 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose }) => {
           <ChevronRight />
         </button>
 
-        <div className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800">
+        <div className="max-w-full max-h-[90vh] flex items-center justify-center rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800 p-4">
           <WatermarkWrapper>
-            <img src={images[index]} alt={`zoom-${index}`} className="max-w-full max-h-[80vh] object-contain" draggable={false} style={protectionStyles} />
+            <img src={images[index]} alt={`zoom-${index}`} className="object-contain" draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
           </WatermarkWrapper>
         </div>
 
@@ -322,6 +332,11 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
     return () => cancelAnimationFrame(rafId);
   }, [speed, isPaused]);
 
+  const openGalleryForCerts = (src) => {
+    const idx = images.indexOf(src);
+    setZoomSrc({ start: idx });
+  };
+
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto overflow-hidden">
@@ -337,7 +352,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
               key={i} 
               className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
               whileHover={{ scale: 1.05 }}
-              onClick={() => setZoomSrc(src)}
+              onClick={() => openGalleryForCerts(src)}
             >
               <img 
                 src={src} 
@@ -352,7 +367,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
       </div>
       <AnimatePresence>
         {zoomSrc && (
-          <GalleryModal images={[zoomSrc]} startIndex={0} onClose={() => setZoomSrc(null)} />
+          <GalleryModal images={images} startIndex={zoomSrc.start} onClose={() => setZoomSrc(null)} middleSet={new Set()} certMode={true} />
         )}
       </AnimatePresence>
     </div>
@@ -391,6 +406,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   const containerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
   const resumeTimerRef = useRef(null);
+  const holdResumeRef = useRef(null);
 
   const duplicated = [...images, ...images];
   useAutoScrollResults(containerRef, { speed: 100, reverse, isPaused });
@@ -407,13 +423,10 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
     let isHorizontal = false;
     let isDragging = false;
     let hasCapture = false;
-    let movedSinceDown = false;
 
     const clearResumeTimer = () => {
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
-        resumeTimerRef.current = null;
-      }
+      if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null; }
+      if (holdResumeRef.current) { clearTimeout(holdResumeRef.current); holdResumeRef.current = null; }
     };
 
     const startResumeTimer = (ms = 3000) => {
@@ -425,6 +438,8 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
     };
 
     const onPointerDown = (e) => {
+      // if clicking buttons inside, ignore
+      if (e.target.closest && e.target.closest('button')) return;
       if (pointerId !== null) return;
       pointerId = e.pointerId;
       startX = e.clientX;
@@ -433,9 +448,10 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       directionDetermined = false;
       isHorizontal = false;
       isDragging = true;
-      movedSinceDown = false;
       setIsPaused(true);
       clearResumeTimer();
+      // if user holds for 3s, resume auto-scroll even while still holding
+      holdResumeRef.current = setTimeout(() => { setIsPaused(false); holdResumeRef.current = null; }, 3000);
       try { el.setPointerCapture(pointerId); hasCapture = true; } catch(err) { hasCapture = false; }
     };
 
@@ -458,14 +474,8 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
         e.preventDefault();
         el.scrollLeft -= dx;
         lastX = e.clientX;
-        movedSinceDown = true;
       } else {
-        // vertical: let the page scroll; release capture so page can scroll smoothly
-        if (hasCapture) {
-          try { el.releasePointerCapture(pointerId); } catch(err) {}
-          hasCapture = false;
-        }
-        // end horizontal handling
+        if (hasCapture) { try { el.releasePointerCapture(pointerId); } catch(err){} hasCapture = false; }
         isDragging = false;
         pointerId = null;
       }
@@ -473,19 +483,16 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 
     const onPointerUp = (e) => {
       if (pointerId !== e.pointerId && pointerId !== null) return;
-      // if not moved much => treat as tap -> open modal
       const totalDx = e.clientX - startX;
       const totalDy = e.clientY - startY;
       const isTap = Math.abs(totalDx) < 10 && Math.abs(totalDy) < 10;
 
       if (isTap) {
-        // calculate which child was tapped by elementFromPoint
         const elAt = document.elementFromPoint(e.clientX, e.clientY);
         const card = elAt ? elAt.closest('[data-result-src]') : null;
         if (card) {
           const src = card.getAttribute('data-result-src');
           if (src) {
-            // pause auto-scroll (keeps modal still)
             setIsPaused(true);
             clearResumeTimer();
             onImageClick(src);
@@ -493,21 +500,15 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
         }
       }
 
-      // if user interacted horizontally we keep auto-scroll paused for 3s
       startResumeTimer(3000);
 
-      if (pointerId !== null && hasCapture) {
-        try { el.releasePointerCapture(pointerId); } catch(err) {}
-        hasCapture = false;
-      }
+      if (pointerId !== null && hasCapture) { try { el.releasePointerCapture(pointerId); } catch(err){} hasCapture = false; }
       pointerId = null;
       isDragging = false;
       directionDetermined = false;
       isHorizontal = false;
-      movedSinceDown = false;
     };
 
-    // mouse hover pause behavior too
     const onMouseEnter = () => { setIsPaused(true); clearResumeTimer(); };
     const onMouseLeave = () => { startResumeTimer(3000); };
 
@@ -533,12 +534,8 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   }, [onImageClick]);
 
   const handleImageClick = (src) => {
-    // fallback click for desktop (if pointer logic didn't open modal)
     setIsPaused(true);
-    if (resumeTimerRef.current) {
-      clearTimeout(resumeTimerRef.current);
-      resumeTimerRef.current = null;
-    }
+    if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null; }
     onImageClick(src);
   };
 
@@ -580,22 +577,22 @@ const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
   const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
-  const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
+  const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYV9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
 
-  // onImageClick we will open modal with that strip's images and starting index
+  // combined gallery across all rows
+  const combined = [...row1, ...row2, ...row3];
+  const middleSet = new Set(row2);
+
+  // onImageClick open gallery with all images, start at clicked index
   const onOpenFromStrip = (src) => {
-    // find which row contains it
-    const all = [...row1, ...row2, ...row3];
-    const idx = all.indexOf(src);
+    const idx = combined.indexOf(src);
     if (idx !== -1) {
-      // create gallery from entire 'all' or better: only the strip that contains src
-      let strip = row1.includes(src) ? row1 : row2.includes(src) ? row2 : row3;
-      setGalleryImages(strip);
-      setZoomSrc(src);
+      setGalleryImages(combined);
+      setZoomSrc({ start: idx });
     } else {
       setGalleryImages([src]);
-      setZoomSrc(src);
+      setZoomSrc({ start: 0 });
     }
   };
 
@@ -606,7 +603,7 @@ const MultiStripBanners = () => {
       <BannerStrip images={row3} reverse={false} onImageClick={onOpenFromStrip} />
       <AnimatePresence>
         {zoomSrc && (
-          <GalleryModal images={galleryImages} startIndex={galleryImages.indexOf(zoomSrc)} onClose={() => { setZoomSrc(null); setGalleryImages([]); }} />
+          <GalleryModal images={galleryImages} startIndex={zoomSrc.start} onClose={() => { setZoomSrc(null); setGalleryImages([]); }} middleSet={middleSet} />
         )}
       </AnimatePresence>
     </div>
@@ -752,3 +749,4 @@ function ScrollToTopButton() {
     </button>
   );
 }
+
