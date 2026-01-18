@@ -744,11 +744,38 @@ export default function Portfolio() {
       </main>
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
-        <div className="flex justify-center gap-6 mb-4">
-          <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
-          <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
-          <a href={personalInfo.tiktok} className="text-neutral-500 hover:text-pink-500 transition-colors"><SiTiktok /></a>
-        </div>
+<div className="flex justify-center gap-6 mb-4">
+  {/* LinkedIn */}
+  <a
+    href={personalInfo.linkedin}
+    className="w-10 h-10 flex items-center justify-center rounded-full
+               text-neutral-500 hover:text-teal-400
+               hover:bg-neutral-800 transition-all"
+  >
+    <Linkedin size={20} />
+  </a>
+
+  {/* WhatsApp */}
+  <a
+    href={personalInfo.whatsapp}
+    className="w-10 h-10 flex items-center justify-center rounded-full
+               text-neutral-500 hover:text-green-500
+               hover:bg-neutral-800 transition-all"
+  >
+    <Phone size={20} />
+  </a>
+
+  {/* TikTok (normalized) */}
+  <a
+    href={personalInfo.tiktok}
+    className="w-10 h-10 flex items-center justify-center rounded-full
+               text-neutral-500 hover:text-pink-500
+               hover:bg-neutral-800 transition-all"
+  >
+    <SiTiktok size={18} />
+  </a>
+</div>
+
         <p className="text-neutral-500 text-sm">
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
         </p>
