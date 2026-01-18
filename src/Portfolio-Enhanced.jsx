@@ -1,8 +1,5 @@
-// Portfolio.jsx (With Right-Click Protection & Abdullah Rashid Watermark)
-// FULL FILE — updated touch/scroll logic for RESULTS
-
+// Portfolio.jsx (With Fixed Mobile Scroll & Auto-Resume Logic)
 import React, { useState, useEffect, useRef } from 'react';
-
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
@@ -15,25 +12,21 @@ import {
   BarChart2,
   MoreHorizontal
 } from 'lucide-react';
-
 import { SiTiktok } from 'react-icons/si';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
-
-// Import SocialCircle component
 import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- Global Protection Styles ---
 const protectionStyles = {
   userSelect: 'none',
-  WebkitTouchCallout: 'none', // Disables long-press menu on iOS
+  WebkitTouchCallout: 'none',
   WebkitUserSelect: 'none',
 };
 
-// --- Watermark Component (Abdullah Rashid) ---
+// --- Watermark Component ---
 const WatermarkWrapper = ({ children }) => (
   <div className="relative overflow-hidden group">
     {children}
-    {/* Watermark Overlay */}
     <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
       {Array.from({ length: 12 }).map((_, i) => (
         <span 
@@ -53,18 +46,6 @@ const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
     {children}
   </button>
-);
-
-const Card = ({ children, className, ...props }) => (
-  <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
-    {children}
-  </div>
-);
-
-const CardContent = ({ children, className, ...props }) => (
-  <div className={`p-6 ${className}`} {...props}>
-    {children}
-  </div>
 );
 
 // --- Personal Info ---
@@ -262,7 +243,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
   );
 };
 
-// --- RESULTS LOGIC ---
+// --- UPDATED RESULTS LOGIC (With Pause & Resume) ---
 function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPaused = false }) {
   useEffect(() => {
     const el = containerRef.current;
@@ -293,185 +274,47 @@ function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPau
 const BannerStrip = ({ images, reverse, onImageClick }) => {
   const containerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
-  const [isPointerActive, setIsPointerActive] = useState(false);
-  const resumeTimerRef = useRef(null);
-
+  const timeoutRef = useRef(null);
   const duplicated = [...images, ...images];
-  useAutoScrollResults(containerRef, { speed: 100, reverse, isPaused });
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  useAutoScrollResults(containerRef, { speed: 80, reverse, isPaused });
 
-    // We'll use pointer events to detect direction and allow vertical page scroll
-    let pointerId = null;
-    let startX = 0;
-    let startY = 0;
-    let lastX = 0;
-    let directionDetermined = false;
-    let isHorizontal = false;
-    let isDragging = false;
-    let hasCapture = false;
-
-    const onPointerDown = (e) => {
-      // Only handle primary pointers
-      if (pointerId !== null) return;
-      pointerId = e.pointerId;
-      startX = e.clientX;
-      startY = e.clientY;
-      lastX = startX;
-      directionDetermined = false;
-      isHorizontal = false;
-      isDragging = true;
-      setIsPointerActive(true);
-
-      // Pause auto-scroll immediately when user touches
-      setIsPaused(true);
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
-        resumeTimerRef.current = null;
-      }
-
-      try {
-        el.setPointerCapture(pointerId);
-        hasCapture = true;
-      } catch (err) {
-        hasCapture = false;
-      }
-    };
-
-    const onPointerMove = (e) => {
-      if (!isDragging || e.pointerId !== pointerId) return;
-
-      const dxTotal = e.clientX - startX;
-      const dyTotal = e.clientY - startY;
-      const dx = e.clientX - lastX;
-
-      if (!directionDetermined) {
-        // small threshold to avoid noise
-        if (Math.abs(dxTotal) > 6 || Math.abs(dyTotal) > 6) {
-          directionDetermined = true;
-          isHorizontal = Math.abs(dxTotal) > Math.abs(dyTotal);
-        } else {
-          return; // not enough movement yet
-        }
-      }
-
-      if (isHorizontal) {
-        // user intends to swipe horizontally -> prevent default page move and scroll container
-        // NOTE: we attached listener with passive:false so this preventDefault will work
-        e.preventDefault();
-        // scroll the container manually (invert direction for natural feel)
-        el.scrollLeft -= dx;
-        lastX = e.clientX;
-      } else {
-        // vertical movement: let the browser handle page scroll.
-        // If we have capture, release so the page can scroll smoothly on some browsers
-        if (hasCapture) {
-          try {
-            el.releasePointerCapture(pointerId);
-          } catch (err) {}
-          hasCapture = false;
-        }
-        // stop treating as dragging horizontally
-        isDragging = false;
-        pointerId = null;
-        setIsPointerActive(false);
-        // keep auto-scroll paused until pointerup logic handles resume
-      }
-    };
-
-    const endInteraction = (e) => {
-      if (!isDragging && !isPointerActive) {
-        // ensure paused state is still handled
-      }
-      isDragging = false;
-      directionDetermined = false;
-      isHorizontal = false;
-      if (pointerId !== null && hasCapture) {
-        try {
-          el.releasePointerCapture(pointerId);
-        } catch (err) {}
-        hasCapture = false;
-      }
-      pointerId = null;
-      setIsPointerActive(false);
-
-      // Start 5s resume timer (if user touches again before timer ends, it will be cleared)
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
-      }
-      resumeTimerRef.current = setTimeout(() => {
-        setIsPaused(false);
-        resumeTimerRef.current = null;
-      }, 5000);
-    };
-
-    // Attach with passive:false for pointermove so we can preventDefault when needed
-    el.addEventListener('pointerdown', onPointerDown, { passive: true });
-    el.addEventListener('pointermove', onPointerMove, { passive: false });
-    el.addEventListener('pointerup', endInteraction, { passive: true });
-    el.addEventListener('pointercancel', endInteraction, { passive: true });
-    el.addEventListener('lostpointercapture', endInteraction, { passive: true });
-
-    // Also stop auto-scroll when mouse hovers (existing behavior)
-    const onMouseEnter = () => {
-      setIsPaused(true);
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
-        resumeTimerRef.current = null;
-      }
-    };
-    const onMouseLeave = () => {
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-      resumeTimerRef.current = setTimeout(() => setIsPaused(false), 5000);
-    };
-    el.addEventListener('mouseenter', onMouseEnter);
-    el.addEventListener('mouseleave', onMouseLeave);
-
-    return () => {
-      if (resumeTimerRef.current) {
-        clearTimeout(resumeTimerRef.current);
-        resumeTimerRef.current = null;
-      }
-      el.removeEventListener('pointerdown', onPointerDown);
-      el.removeEventListener('pointermove', onPointerMove);
-      el.removeEventListener('pointerup', endInteraction);
-      el.removeEventListener('pointercancel', endInteraction);
-      el.removeEventListener('lostpointercapture', endInteraction);
-      el.removeEventListener('mouseenter', onMouseEnter);
-      el.removeEventListener('mouseleave', onMouseLeave);
-    };
-  }, [setIsPaused, isPointerActive]);
-
-  // When user opens zoom via onImageClick, also pause the auto-scroll immediately
-  const handleImageClick = (src) => {
-    // pause and clear resume timer (so modal stays still)
+  const handleInteractionStart = () => {
     setIsPaused(true);
-    if (resumeTimerRef.current) {
-      clearTimeout(resumeTimerRef.current);
-      resumeTimerRef.current = null;
-    }
-    onImageClick(src);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+
+  const handleInteractionEnd = () => {
+    // Start 5 second countdown before resuming
+    timeoutRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, 5000);
   };
 
   return (
     <div 
       ref={containerRef}
-      className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-x select-none"
-      // allow vertical default scrolling; we handle horizontal in pointermove
-      style={{ scrollbarWidth: 'none', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
+      className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-y select-none cursor-grab active:cursor-grabbing"
+      onMouseEnter={handleInteractionStart}
+      onMouseLeave={handleInteractionEnd}
+      onTouchStart={handleInteractionStart}
+      onTouchEnd={handleInteractionEnd}
+      style={{ 
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        WebkitOverflowScrolling: 'touch',
+        touchAction: 'pan-y' // Crucial: Allows vertical page scrolling while finger is on images
+      }}
     >
       <div className="flex">
         {duplicated.map((src, i) => (
-          <div key={i} className="w-screen md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
+          <div key={i} className="w-[85vw] md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
             <motion.div 
               className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
-              onClick={() => handleImageClick(src)}
+              onClick={() => onImageClick(src)}
             >
-              {/* Added Watermark Wrapper here for Results Images */}
               <WatermarkWrapper>
                 <img 
                   src={src} 
@@ -491,13 +334,11 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
-
   const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
   const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
-
   return (
-    <div className="space-y-4 md:space-y-8">
+    <div className="space-y-4 md:space-y-8 overflow-hidden">
       <BannerStrip images={row1} reverse={false} onImageClick={setZoomSrc} />
       <BannerStrip images={row2} reverse={true} onImageClick={setZoomSrc} />
       <BannerStrip images={row3} reverse={false} onImageClick={setZoomSrc} />
@@ -616,7 +457,6 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
         
-        {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
         </SectionWrapper>
@@ -646,7 +486,7 @@ export default function Portfolio() {
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const toggle = () => setVisible(window.pageYOffset > 300);
+    const toggle = () => setVisible(window.scrollY > 300);
     window.addEventListener('scroll', toggle);
     return () => window.removeEventListener('scroll', toggle);
   }, []);
