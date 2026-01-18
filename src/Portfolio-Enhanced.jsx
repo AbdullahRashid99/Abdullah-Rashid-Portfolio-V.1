@@ -34,24 +34,37 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
-const WatermarkWrapper = ({ children }) => (
-  <div className="relative overflow-hidden group">
-    {children}
-    {/* Watermark Overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <span 
-          key={i} 
-          className="text-[16px] md:text-[20px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
-          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
-        >
-          Abdullah Rashid
-        </span>
-      ))}
-    </div>
-  </div>
-);
+const WatermarkWrapper = ({ children }) => {
+  // Function to generate random positions within the container
+  const generateRandomPosition = () => {
+    return {
+      top: `${Math.random() * 80}%`,
+      left: `${Math.random() * 80}%`,
+    };
+  };
 
+  return (
+    <div className="relative overflow-hidden group">
+      {children}
+      {/* Watermark Overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-40 overflow-hidden select-none">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <span
+            key={i}
+            className="text-[16px] md:text-[20px] font-bold text-white/50 -rotate-45 whitespace-nowrap uppercase tracking-widest"
+            style={{
+              textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+              position: 'absolute',
+              ...generateRandomPosition(),
+            }}
+          >
+            Abdullah Rashid
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
