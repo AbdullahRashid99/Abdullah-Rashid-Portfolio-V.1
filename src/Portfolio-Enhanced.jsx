@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+// Portfolio.jsx (With Right-Click Protection, Abdullah Rashid Watermark,
+// improved RESULTS touch/scroll behavior and in-modal gallery navigation
+// Updates per user: modal browses all images across 3 rows, arrows/X fixed for desktop,
+// auto-scroll resumes after 3s of inactivity, hold-for-3s resumes, row-specific modal sizing,
+// certificates modal supports swipe between certs.
+
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
@@ -28,24 +34,51 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
-// Adjusted: smaller text and increased spacing between watermark repeats
-const WatermarkWrapper = ({ children }) => (
-  <div className="relative overflow-hidden group">
-    {children}
-    {/* Watermark Overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-35 flex flex-wrap justify-center gap-8 overflow-hidden select-none">
-      {Array.from({ length: 8 }).map((_, i) => (
-        <span 
-          key={i} 
-          className="text-[9px] md:text-[12px] font-semibold text-white/45 -rotate-45 whitespace-nowrap m-2 uppercase tracking-wider"
-          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}
-        >
-          Abdullah Rashid
-        </span>
-      ))}
+const WatermarkWrapper = ({ children }) => {
+  // generate random but stable positions once per mount
+  const marks = useMemo(() => {
+    const count = 10;
+    return Array.from({ length: count }).map((_, i) => {
+      const size = 12 + Math.round((i % 3) * 4 + Math.random() * 8); // varied readable sizes
+      const top = Math.round(Math.random() * 80 + 5); // 5% - 85%
+      const left = Math.round(Math.random() * 80 + 5);
+      const opacity = 0.12 + Math.random() * 0.12; // subtle but readable
+      const rotate = -30 - Math.round(Math.random() * 30); // -30 to -60deg
+      return { id: i, size, top, left, opacity, rotate };
+    });
+  }, []);
+
+  return (
+    <div className="relative overflow-hidden group">
+      {children}
+      {/* Watermark Overlay - randomized positions, readable but subtle */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {marks.map(m => (
+          <span
+            key={m.id}
+            style={{
+              position: 'absolute',
+              top: `${m.top}%`,
+              left: `${m.left}%`,
+              transform: `rotate(${m.rotate}deg)`,
+              fontSize: `${m.size}px`,
+              opacity: m.opacity,
+              color: 'rgba(255,255,255,0.9)',
+              whiteSpace: 'nowrap',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              textShadow: '1px 1px 2px rgba(0,0,0,0.6)',
+              mixBlendMode: 'screen'
+            }}
+            className="uppercase select-none"
+          >
+            Abdullah Rashid
+          </span>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
@@ -157,7 +190,7 @@ const Navbar = ({ activeSection }) => {
       </AnimatePresence>
     </nav>
   );
-});
+};
 
 // --- Gallery Modal (supports swipe, arrows, keyboard) ---
 const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set(), certMode = false }) => {
@@ -642,7 +675,7 @@ function ServicesModal({ onClose }) {
 }
 
 // --- Main Portfolio ---
-function Portfolio() {
+export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
   const sectionRefs = { home: useRef(null), skills: useRef(null), projects: useRef(null) };
@@ -659,7 +692,7 @@ function Portfolio() {
   return (
     <div 
         className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-        onContextMenu={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()} 
         style={protectionStyles}
     >
       {/* RESTORED ORIGINAL STARRY BACKGROUND (old look) */}
@@ -682,17 +715,17 @@ function Portfolio() {
       </div>
 
       <Navbar activeSection={activeSection} />
-
+      
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-
+          
           <motion.img 
-            src={personalInfo.profileImage}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
+            src={personalInfo.profileImage} 
+            initial={{ opacity: 0, scale: 0.8 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" 
             draggable="false"
           />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
@@ -712,7 +745,7 @@ function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-
+        
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
@@ -754,5 +787,3 @@ function ScrollToTopButton() {
     </button>
   );
 }
-
-export default Portfolio;
