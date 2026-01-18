@@ -39,10 +39,10 @@ const WatermarkWrapper = ({ children }) => (
     {children}
     {/* Watermark Overlay */}
     <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
-      {Array.from({ length: 12 }).map((_, i) => (
+      {Array.from({ length: 6 }).map((_, i) => (
         <span 
           key={i} 
-          className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
+          className="text-[16px] md:text-[20px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
           style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
         >
           Abdullah Rashid
