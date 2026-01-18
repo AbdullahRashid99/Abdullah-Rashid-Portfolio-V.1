@@ -42,7 +42,7 @@ const WatermarkWrapper = ({ children }) => {
       {children}
 
       {/* Watermark Overlay */}
-      <div className="absolute inset-0 pointer-events-none select-none opacity-30">
+      <div className="absolute inset-0 pointer-events-none select-none opacity-50">
         <div
           className="absolute inset-[-50%]"
           style={{
