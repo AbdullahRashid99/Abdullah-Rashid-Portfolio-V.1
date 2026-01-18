@@ -686,12 +686,12 @@ export default function Portfolio() {
       </div>
 
       <Navbar activeSection={activeSection} />
-
+      
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-
+          
           <motion.img 
             src={personalInfo.profileImage} 
             initial={{ opacity: 0, scale: 0.8 }} 
@@ -716,7 +716,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-
+        
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
