@@ -1,12 +1,22 @@
-// Portfolio.jsx (With Full Gallery Logic & Back-Button Protection)
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  X, Menu, Linkedin, Phone, GraduationCap, ArrowUp, ChevronLeft, ChevronRight,
-  LineChart, BarChart2
+  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
+  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
+  Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
+  Instagram, Dribbble, Twitter, ArrowUp, ArrowLeft,
+  ShoppingCart as IconShopify,
+  HelpCircle,
+  Users,
+  Layers,
+  BarChart2,
+  MoreHorizontal
 } from 'lucide-react';
 import { SiTiktok } from 'react-icons/si';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 import SocialCircle from '../src/components/SocialCircle.jsx';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // --- Global Protection Styles ---
 const protectionStyles = {
@@ -21,8 +31,8 @@ const WatermarkWrapper = ({ children }) => (
     {children}
     <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
       {Array.from({ length: 12 }).map((_, i) => (
-        <span 
-          key={i} 
+        <span
+          key={i}
           className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
           style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
         >
@@ -55,94 +65,203 @@ const sections = [
   { id: "projects", title: "Results" },
 ];
 
-const skillsData = ["Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer"];
+const skillsData = [
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads",
+  "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
+];
 
-// --- Results Images Data ---
-const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
-const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
-const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
-const allResults = [...row1, ...row2, ...row3];
+// --- Animated Counter ---
+const AnimatedCounter = ({ value }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const motionValue = useSpring(0, { stiffness: 50, damping: 30 });
+  const [display, setDisplay] = useState('£0');
 
-// --- GALLERY MODAL (The New Logic) ---
-const GalleryModal = ({ images, currentIndex, onClose, onPrev, onNext }) => {
-  // Logic to handle phone back button
   useEffect(() => {
-    window.history.pushState(null, null, window.location.pathname);
-    const handlePopState = () => {
-      onClose();
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [onClose]);
+    const unsub = motionValue.on("change", (latest) => {
+      setDisplay(`£${Math.round(latest).toLocaleString()}+`);
+    });
+    if (isInView) motionValue.set(value);
+    return () => unsub();
+  }, [isInView, value, motionValue]);
 
-  return (
-    <motion.div 
-      className="fixed inset-0 bg-black/95 flex justify-center items-center z-[100] touch-none"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onContextMenu={(e) => e.preventDefault()}
-    >
-      {/* Close Button - Gray Circle over image */}
-      <button 
-        onClick={onClose} 
-        className="absolute top-6 right-6 z-[110] bg-neutral-800/80 text-white p-2 rounded-full hover:bg-neutral-700 transition shadow-lg"
-      >
-        <X size={24} />
-      </button>
-
-      {/* Navigation Buttons (Desktop) */}
-      <button onClick={onPrev} className="hidden md:flex absolute left-4 text-white/50 hover:text-white transition z-[110]">
-        <ChevronLeft size={48} />
-      </button>
-      <button onClick={onNext} className="hidden md:flex absolute right-4 text-white/50 hover:text-white transition z-[110]">
-        <ChevronRight size={48} />
-      </button>
-
-      {/* Image Display */}
-      <div className="relative w-full h-full flex items-center justify-center p-2">
-        <motion.div 
-          key={currentIndex}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          className="max-w-full max-h-full flex items-center justify-center"
-        >
-          <WatermarkWrapper>
-            <img 
-              src={images[currentIndex]} 
-              alt="Result" 
-              className="max-w-full max-h-[90vh] object-contain rounded-sm"
-              style={protectionStyles}
-            />
-          </WatermarkWrapper>
-        </motion.div>
-      </div>
-
-      {/* Swipe instructions for mobile */}
-      <div className="absolute bottom-10 text-white/30 text-xs uppercase tracking-widest pointer-events-none">
-        Swipe left/right to navigate
-      </div>
-    </motion.div>
-  );
+  return <span ref={ref}>{display}</span>;
 };
 
-// --- Banner Strip Component ---
-function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPaused = false }) {
+// --- Section Wrapper ---
+const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
+  <motion.section
+    ref={ref}
+    id={id}
+    className={`py-20 md:py-28 ${className}`}
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.1 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+  >
+    <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+      <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">{title}</span>
+    </h2>
+    {children}
+  </motion.section>
+));
+
+// --- Navbar ---
+const Navbar = ({ activeSection }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  return (
+    <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
+        <a href="#home" className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors">{personalInfo.name}</a>
+        <div className="hidden md:flex gap-8 items-center">
+          {sections.map((sec) => (
+            <a key={sec.id} href={`#${sec.id}`} className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
+              {sec.title}
+            </a>
+          ))}
+        </div>
+        <div className="md:hidden">
+          <Button onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-transparent text-white p-2">
+            {isMenuOpen ? <X /> : <Menu />}
+          </Button>
+        </div>
+      </div>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-neutral-900">
+            <div className="flex flex-col items-center gap-4 py-4">
+              {sections.map((sec) => (
+                <a key={sec.id} href={`#${sec.id}`} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
+                  {sec.title}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
+});
+
+// --- Modal Helpers ---
+const ModalBackdrop = ({ children, onClose }) => (
+  <motion.div
+    className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4 backdrop-blur-sm"
+    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+    onClick={onClose}
+    onContextMenu={(e) => e.preventDefault()}
+  >
+    <motion.div
+      className="relative max-w-5xl w-full flex justify-center"
+      initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+      onClick={e => e.stopPropagation()}
+    >
+      {children}
+    </motion.div>
+  </motion.div>
+);
+
+// --- CERTIFICATIONS SECTION ---
+const CERT_IMAGES = [
+  'https://i.postimg.cc/rsxncdPk/65952225.jpg',
+  'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
+  'https://i.postimg.cc/Znp7Z9Mt/7WWC9OROA2E2-page-0001.jpg',
+  'https://i.postimg.cc/0jDWx6Bv/CINQDM1IJMQR-page-0001.jpg',
+  'https://i.postimg.cc/WzgWjDH4/CJB4ROD8WKVL-page-0001.jpg',
+  'https://i.postimg.cc/9Mv8vP1d/3ZWC24LXWG87_page_0001.jpg',
+  'https://i.postimg.cc/BZKw2ynt/Google-Certification.png',
+];
+
+const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
+  const containerRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const duplicated = [...images, ...images];
+
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || isPaused) return;
+    if (!el) return;
     let lastTime = 0;
     let rafId;
     const step = (ts) => {
       if (!lastTime) lastTime = ts;
       const dt = (ts - lastTime) / 1000;
       lastTime = ts;
-      const move = speed * dt;
-      if (reverse) {
-        el.scrollLeft -= move;
-        if (el.scrollLeft <= 0) el.scrollLeft = el.scrollWidth / 2;
-      } else {
-        el.scrollLeft += move;
+      if (!isPaused) {
+        el.scrollLeft += speed * dt;
         if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
+      }
+      rafId = requestAnimationFrame(step);
+    };
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [speed, isPaused]);
+
+  return (
+    <div className="w-full py-12">
+      <div className="max-w-5xl mx-auto overflow-hidden">
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google Certifications</h3>
+        <div
+          ref={containerRef}
+          className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {duplicated.map((src, i) => (
+            <motion.div
+              key={i}
+              className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setZoomSrc(src)}
+            >
+              <img
+                src={src}
+                className="w-full h-full object-cover"
+                alt="Cert"
+                draggable="false"
+                style={protectionStyles}
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <AnimatePresence>
+        {zoomSrc && (
+          <ModalBackdrop onClose={() => setZoomSrc(null)}>
+            <img
+                src={zoomSrc}
+                className="w-full max-h-[80vh] object-contain rounded-lg"
+                alt="zoom"
+                draggable="false"
+                style={protectionStyles}
+            />
+          </ModalBackdrop>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// --- UPDATED RESULTS LOGIC (With Pause & Resume) ---
+function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPaused = false }) {
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let lastTime = 0;
+    let rafId;
+    const step = (ts) => {
+      if (!lastTime) lastTime = ts;
+      const dt = (ts - lastTime) / 1000;
+      lastTime = ts;
+      if (!isPaused) {
+        const move = speed * dt;
+        if (reverse) {
+          el.scrollLeft -= move;
+          if (el.scrollLeft <= 0) el.scrollLeft = el.scrollWidth / 2;
+        } else {
+          el.scrollLeft += move;
+          if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0;
+        }
       }
       rafId = requestAnimationFrame(step);
     };
@@ -165,28 +284,44 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   };
 
   const handleInteractionEnd = () => {
-    timeoutRef.current = setTimeout(() => setIsPaused(false), 5000);
+    // Start 5 second countdown before resuming
+    timeoutRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, 5000);
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-y select-none"
+      className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-y select-none cursor-grab active:cursor-grabbing"
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
       onTouchStart={handleInteractionStart}
       onTouchEnd={handleInteractionEnd}
-      style={{ touchAction: 'pan-y' }}
+      style={{
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        WebkitOverflowScrolling: 'touch',
+        touchAction: 'pan-y' // Crucial: Allows vertical page scrolling while finger is on images
+      }}
     >
       <div className="flex">
         {duplicated.map((src, i) => (
           <div key={i} className="w-[85vw] md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
-            <motion.div 
+            <motion.div
               className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
               onClick={() => onImageClick(src)}
             >
               <WatermarkWrapper>
-                <img src={src} className="w-full h-full object-cover md:object-contain" style={protectionStyles} alt="Result" />
+                <img
+                  src={src}
+                  alt="Result"
+                  className="w-full h-full object-cover md:object-contain"
+                  draggable="false"
+                  style={protectionStyles}
+                />
               </WatermarkWrapper>
             </motion.div>
           </div>
@@ -196,85 +331,93 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   );
 };
 
-// --- MultiStripBanners ---
-const MultiStripBanners = () => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
-
-  const openGallery = (src) => {
-    const index = allResults.indexOf(src);
-    setSelectedIndex(index);
+// --- Image Slider Modal ---
+const ImageSliderModal = ({ images, currentIndex, onClose }) => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: currentIndex,
   };
 
-  const nextImage = useCallback(() => setSelectedIndex((prev) => (prev + 1) % allResults.length), []);
-  const prevImage = useCallback(() => setSelectedIndex((prev) => (prev - 1 + allResults.length) % allResults.length), []);
+  return (
+    <ModalBackdrop onClose={onClose}>
+      <div className="w-full max-w-5xl">
+        <Slider {...settings}>
+          {images.map((src, index) => (
+            <div key={index}>
+              <WatermarkWrapper>
+                <img
+                  src={src}
+                  alt="Zoomed"
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg mx-auto"
+                  draggable="false"
+                  style={protectionStyles}
+                />
+              </WatermarkWrapper>
+            </div>
+          ))}
+        </Slider>
+      </div>
+    </ModalBackdrop>
+  );
+};
+
+const MultiStripBanners = () => {
+  const [zoomSrc, setZoomSrc] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
+  const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYVJ9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
+  const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
+  const allImages = [...row1, ...row2, ...row3];
+
+  const handleImageClick = (src) => {
+    const index = allImages.indexOf(src);
+    setCurrentIndex(index);
+    setZoomSrc(src);
+  };
 
   return (
     <div className="space-y-4 md:space-y-8 overflow-hidden">
-      <BannerStrip images={row1} reverse={false} onImageClick={openGallery} />
-      <BannerStrip images={row2} reverse={true} onImageClick={openGallery} />
-      <BannerStrip images={row3} reverse={false} onImageClick={openGallery} />
-      
+      <BannerStrip images={row1} reverse={false} onImageClick={handleImageClick} />
+      <BannerStrip images={row2} reverse={true} onImageClick={handleImageClick} />
+      <BannerStrip images={row3} reverse={false} onImageClick={handleImageClick} />
       <AnimatePresence>
-        {selectedIndex !== null && (
-          <GalleryModal 
-            images={allResults} 
-            currentIndex={selectedIndex} 
-            onClose={() => setSelectedIndex(null)}
-            onNext={nextImage}
-            onPrev={prevImage}
-          />
+        {zoomSrc && (
+          <ImageSliderModal images={allImages} currentIndex={currentIndex} onClose={() => setZoomSrc(null)} />
         )}
       </AnimatePresence>
     </div>
   );
 };
 
-// --- Navbar & Sections ---
-const Navbar = ({ activeSection }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    return (
-      <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
-        <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-          <a href="#home" className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors">{personalInfo.name}</a>
-          <div className="hidden md:flex gap-8 items-center">
-            {sections.map((sec) => (
-              <a key={sec.id} href={`#${sec.id}`} className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
-                {sec.title}
+// --- Services Modal ---
+function ServicesModal({ onClose }) {
+  const servicesList = [
+    { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform' },
+    { title: 'Scale', icon: <LineChart size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfpnHDVpZeI_7Q5srnURXlnPzfLUhuyiPzptUeqj77uyeeRVg/viewform' },
+  ];
+  return (
+    <ModalBackdrop onClose={onClose}>
+      <div className="bg-neutral-900 p-8 rounded-2xl w-full">
+        <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">For E-Commerce</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          {servicesList.map(({ title, icon, link }, index) => (
+            <motion.div key={index} className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer" whileHover={{ y: -5 }}>
+              <div className="text-teal-400 mb-4">{icon}</div>
+              <h3 className="text-xl font-semibold mb-4">{title}</h3>
+              <a href={link} target="_blank" rel="noopener noreferrer" className="w-full">
+                <Button className="bg-teal-500 w-full text-white hover:bg-teal-600">Start</Button>
               </a>
-            ))}
-          </div>
-          <div className="md:hidden">
-            <Button onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-transparent text-white p-2">
-              {isMenuOpen ? <X /> : <Menu />}
-            </Button>
-          </div>
-        </div>
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-neutral-900">
-              <div className="flex flex-col items-center gap-4 py-4">
-                {sections.map((sec) => (
-                  <a key={sec.id} href={`#${sec.id}`} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
-                    {sec.title}
-                  </a>
-                ))}
-              </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    );
-  };
-
-const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
-  <motion.section
-    ref={ref} id={id} className={`py-20 md:py-28 ${className}`}
-    initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }}
-  >
-    <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-white">{title}</h2>
-    {children}
-  </motion.section>
-));
+          ))}
+        </div>
+      </div>
+    </ModalBackdrop>
+  );
+}
 
 // --- Main Portfolio ---
 export default function Portfolio() {
@@ -292,38 +435,99 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div className="bg-neutral-950 text-white min-h-screen relative overflow-x-hidden" onContextMenu={(e) => e.preventDefault()} style={protectionStyles}>
+    <div
+        className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
+        onContextMenu={(e) => e.preventDefault()}
+        style={protectionStyles}
+    >
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage: `
+              radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+              radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+              radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+              radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))
+            `,
+            backgroundSize: '200px 200px'
+          }}
+        ></div>
+      </div>
       <Navbar activeSection={activeSection} />
+
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
-        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center">
-          <motion.img src={personalInfo.profileImage} className="w-32 h-32 rounded-full border-4 border-neutral-700 mb-6" alt="Profile" />
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-4">Abdullah Rashid</h1>
-          <p className="text-xl text-neutral-300 mb-8 max-w-2xl">{personalInfo.title}</p>
-          <Button className="bg-teal-500 text-white" onClick={() => setShowServices(true)}>Start Here</Button>
+        {/* Hero */}
+        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
+
+          <motion.img
+            src={personalInfo.profileImage}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
+            draggable="false"
+          />
+          <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
+            Abdullah Rashid<br /> Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
+          </motion.h1>
+          <p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</p>
+          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
         </section>
 
         <SocialCircle />
+        <ImageSlider />
+
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3">
             {skillsData.map((skill, i) => (
-              <div key={i} className="bg-neutral-800 px-4 py-2 rounded-full border border-neutral-700">{skill}</div>
+              <motion.div key={i} className="bg-neutral-800/60 backdrop-blur-md text-neutral-300 px-4 py-2 rounded-full text-sm font-medium border border-neutral-700">{skill}</motion.div>
             ))}
           </div>
         </SectionWrapper>
 
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <MultiStripBanners />
+          <div className="w-full">
+            <MultiStripBanners />
+          </div>
         </SectionWrapper>
+
+        <div className="text-center mt-20">
+          <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
+          <p className="text-neutral-300">Bachelor of Business Administration from Ain Shams University.</p>
+        </div>
       </main>
 
-      <footer className="text-center py-12 border-t border-neutral-800">
+      <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
         <div className="flex justify-center gap-6 mb-4">
-          <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-white"><Linkedin /></a>
-          <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-white"><Phone /></a>
-          <a href={personalInfo.tiktok} className="text-neutral-500 hover:text-white"><SiTiktok /></a>
+          <a href={personalInfo.linkedin} className="text-neutral-500 hover:text-teal-400 transition-colors"><Linkedin /></a>
+          <a href={personalInfo.whatsapp} className="text-neutral-500 hover:text-green-500 transition-colors"><Phone /></a>
+          <a href={personalInfo.tiktok} className="text-neutral-500 hover:text-pink-500 transition-colors"><SiTiktok /></a>
         </div>
-        <p className="text-neutral-500">© {new Date().getFullYear()} {personalInfo.name}</p>
+        <p className="text-neutral-500 text-sm">
+          © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
+        </p>
       </footer>
+      <ScrollToTopButton />
+      <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
     </div>
+  );
+}
+
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const toggle = () => setVisible(window.scrollY > 300);
+    window.addEventListener('scroll', toggle);
+    return () => window.removeEventListener('scroll', toggle);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors">
+      <ArrowUp size={24} />
+    </button>
   );
 }
