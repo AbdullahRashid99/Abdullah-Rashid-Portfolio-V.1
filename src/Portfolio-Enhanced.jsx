@@ -1,5 +1,11 @@
-// Portfolio.jsx (With Enhanced Watermark, Right-Click Protection, and Gallery Features)
+// Portfolio.jsx (With Right-Click Protection, Abdullah Rashid Watermark,
+// improved RESULTS touch/scroll behavior and in-modal gallery navigation
+// Updates per user: modal browses all images across 3 rows, arrows/X fixed for desktop,
+// auto-scroll resumes after 3s of inactivity, hold-for-3s resumes, row-specific modal sizing,
+// certificates modal supports swipe between certs.
+
 import React, { useState, useEffect, useRef } from 'react';
+
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
@@ -23,26 +29,21 @@ import SocialCircle from '../src/components/SocialCircle.jsx';
 // --- Global Protection Styles ---
 const protectionStyles = {
   userSelect: 'none',
-  WebkitTouchCallout: 'none', 
+  WebkitTouchCallout: 'none', // Disables long-press menu on iOS
   WebkitUserSelect: 'none',
 };
 
-// --- UPDATED Watermark Component ---
-// Designed to match the dense, diagonal look in the reference photo
+// --- Watermark Component (Abdullah Rashid) ---
 const WatermarkWrapper = ({ children }) => (
-  <div className="relative overflow-hidden group w-full h-full">
+  <div className="relative overflow-hidden group">
     {children}
-    {/* High-Density Watermark Overlay */}
-    <div className="absolute inset-0 pointer-events-none overflow-hidden select-none flex flex-wrap justify-around content-around p-4">
-      {/* Increased count to 60 for full coverage; reduced opacity for better data visibility */}
-      {Array.from({ length: 60 }).map((_, i) => (
+    {/* Watermark Overlay */}
+    <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
+      {Array.from({ length: 12 }).map((_, i) => (
         <span 
           key={i} 
-          className="text-[12px] md:text-[18px] font-bold text-white/15 -rotate-[35deg] whitespace-nowrap uppercase tracking-[0.2em] py-8 px-4"
-          style={{ 
-            textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
-            flex: '0 0 auto'
-          }}
+          className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
+          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
         >
           Abdullah Rashid
         </span>
@@ -163,7 +164,7 @@ const Navbar = ({ activeSection }) => {
   );
 };
 
-// --- Gallery Modal ---
+// --- Gallery Modal (supports swipe, arrows, keyboard) ---
 const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set(), certMode = false }) => {
   const [index, setIndex] = useState(startIndex);
   const containerRef = useRef(null);
@@ -191,6 +192,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
     let pointerId = null;
 
     const down = (e) => {
+      // ignore clicks on buttons/icons so arrows/X stay clickable
       if (e.target.closest && e.target.closest('button')) return;
       pointerId = e.pointerId;
       draggingRef.current = false;
@@ -210,7 +212,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
       if (pointerId === null || e.pointerId !== pointerId) return;
       const totalDx = e.clientX - startXRef.current;
       if (!draggingRef.current && Math.abs(totalDx) < 8) {
-        // tap -> do nothing
+        // tap -> do nothing (keep modal open)
       } else {
         if (totalDx < -30) setIndex(i => (i + 1) % images.length);
         if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
@@ -236,51 +238,54 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
   if (!images.length) return null;
 
-  const inMiddle = middleSet.has(images[index]);
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  let imgStyle = {};
-  if (inMiddle) {
-    imgStyle = { maxWidth: '80vw', maxHeight: '80vh' };
-  } else if (isMobile) {
-    imgStyle = { width: '100vw', maxHeight: '90vh', objectFit: 'contain' };
-  } else {
-    imgStyle = { maxWidth: '95vw', maxHeight: '95vh' };
-  }
+  // determine sizing per current image: if in middleSet => 80%, else 100%
+  const isMiddle = middleSet.has(images[index]);
+  const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '95vw', maxHeight: '95vh' };
 
   return (
     <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="relative w-full flex items-center justify-center" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()} ref={containerRef}>
 
+        {/* Close X INSIDE image bounds */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onClose(); }}
+          aria-label="Close"
           className="absolute top-3 right-3 z-50 bg-black/60 hover:bg-black/70 p-2 rounded-md text-white"
+          style={{ pointerEvents: 'auto' }}
         >
           <X />
         </button>
 
+        {/* Left Arrow (desktop) */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); setIndex(i => (i - 1 + images.length) % images.length); }}
+          aria-label="Previous"
           className="hidden md:flex absolute left-3 z-50 items-center justify-center h-10 w-10 rounded-full bg-black/40 hover:bg-black/60 text-white"
+          style={{ pointerEvents: 'auto' }}
         >
           <ChevronLeft />
         </button>
 
+        {/* Right Arrow (desktop) */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); setIndex(i => (i + 1) % images.length); }}
+          aria-label="Next"
           className="hidden md:flex absolute right-3 z-50 items-center justify-center h-10 w-10 rounded-full bg-black/40 hover:bg-black/60 text-white"
+          style={{ pointerEvents: 'auto' }}
         >
           <ChevronRight />
         </button>
 
         <div className="max-w-full max-h-[90vh] flex items-center justify-center rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800 p-4">
           <WatermarkWrapper>
-            <img src={images[index]} alt={`zoom-${index}`} draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
+            <img src={images[index]} alt={`zoom-${index}`} className="object-contain" draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
           </WatermarkWrapper>
         </div>
 
+        {/* simple pager dots */}
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-2">
           {images.map((_, i) => (
             <button key={i} onClick={(e) => { e.stopPropagation(); setIndex(i); }} className={`h-2 w-8 rounded-full ${i === index ? 'bg-white' : 'bg-white/30'}`} type="button" />
@@ -433,6 +438,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
     };
 
     const onPointerDown = (e) => {
+      // if clicking buttons inside, ignore
       if (e.target.closest && e.target.closest('button')) return;
       if (pointerId !== null) return;
       pointerId = e.pointerId;
@@ -444,6 +450,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       isDragging = true;
       setIsPaused(true);
       clearResumeTimer();
+      // if user holds for 3s, resume auto-scroll even while still holding
       holdResumeRef.current = setTimeout(() => { setIsPaused(false); holdResumeRef.current = null; }, 3000);
       try { el.setPointerCapture(pointerId); hasCapture = true; } catch(err) { hasCapture = false; }
     };
@@ -458,7 +465,9 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
         if (Math.abs(dxTotal) > 6 || Math.abs(dyTotal) > 6) {
           directionDetermined = true;
           isHorizontal = Math.abs(dxTotal) > Math.abs(dyTotal);
-        } else { return; }
+        } else {
+          return;
+        }
       }
 
       if (isHorizontal) {
@@ -490,7 +499,9 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
           }
         }
       }
+
       startResumeTimer(3000);
+
       if (pointerId !== null && hasCapture) { try { el.releasePointerCapture(pointerId); } catch(err){} hasCapture = false; }
       pointerId = null;
       isDragging = false;
@@ -519,7 +530,14 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       el.removeEventListener('mouseenter', onMouseEnter);
       el.removeEventListener('mouseleave', onMouseLeave);
     };
+
   }, [onImageClick]);
+
+  const handleImageClick = (src) => {
+    setIsPaused(true);
+    if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null; }
+    onImageClick(src);
+  };
 
   return (
     <div 
@@ -535,8 +553,9 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
               className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl relative"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
-              onClick={() => onImageClick(src)}
+              onClick={() => handleImageClick(src)}
             >
+              {/* Watermark + image */}
               <WatermarkWrapper>
                 <img 
                   src={src} 
@@ -561,9 +580,11 @@ const MultiStripBanners = () => {
   const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/90dYV9W/3.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
 
+  // combined gallery across all rows
   const combined = [...row1, ...row2, ...row3];
   const middleSet = new Set(row2);
 
+  // onImageClick open gallery with all images, start at clicked index
   const onOpenFromStrip = (src) => {
     const idx = combined.indexOf(src);
     if (idx !== -1) {
@@ -636,6 +657,7 @@ export default function Portfolio() {
         onContextMenu={(e) => e.preventDefault()} 
         style={protectionStyles}
     >
+      {/* RESTORED ORIGINAL STARRY BACKGROUND (old look) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
         <div 
@@ -686,6 +708,7 @@ export default function Portfolio() {
           </div>
         </SectionWrapper>
         
+        {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
         </SectionWrapper>
