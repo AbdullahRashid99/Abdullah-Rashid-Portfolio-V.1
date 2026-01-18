@@ -34,16 +34,17 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
+// Adjusted: smaller text and increased spacing between watermark repeats
 const WatermarkWrapper = ({ children }) => (
   <div className="relative overflow-hidden group">
     {children}
     {/* Watermark Overlay */}
-    <div className="absolute inset-0 pointer-events-none opacity-40 flex flex-wrap justify-around items-around overflow-hidden select-none">
-      {Array.from({ length: 12 }).map((_, i) => (
+    <div className="absolute inset-0 pointer-events-none opacity-35 flex flex-wrap justify-center gap-8 overflow-hidden select-none">
+      {Array.from({ length: 8 }).map((_, i) => (
         <span 
           key={i} 
-          className="text-[10px] md:text-[14px] font-bold text-white/50 -rotate-45 whitespace-nowrap m-4 uppercase tracking-widest"
-          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}
+          className="text-[9px] md:text-[12px] font-semibold text-white/45 -rotate-45 whitespace-nowrap m-2 uppercase tracking-wider"
+          style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}
         >
           Abdullah Rashid
         </span>
@@ -238,9 +239,19 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
   if (!images.length) return null;
 
-  // determine sizing per current image: if in middleSet => 80%, else 100%
-  const isMiddle = middleSet.has(images[index]);
-  const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '95vw', maxHeight: '95vh' };
+  // determine sizing per current image:
+  // - if image is in middleSet -> show 80% (as before)
+  // - else -> on mobile (<768px) show full-width (100vw within viewport), on desktop keep ~95%
+  const inMiddle = middleSet.has(images[index]);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  let imgStyle = {};
+  if (inMiddle) {
+    imgStyle = { maxWidth: '80vw', maxHeight: '80vh' };
+  } else if (isMobile) {
+    imgStyle = { width: '100vw', maxHeight: '90vh', objectFit: 'contain' };
+  } else {
+    imgStyle = { maxWidth: '95vw', maxHeight: '95vh' };
+  }
 
   return (
     <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
@@ -281,7 +292,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
         <div className="max-w-full max-h-[90vh] flex items-center justify-center rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800 p-4">
           <WatermarkWrapper>
-            <img src={images[index]} alt={`zoom-${index}`} className="object-contain" draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
+            <img src={images[index]} alt={`zoom-${index}`} draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
           </WatermarkWrapper>
         </div>
 
@@ -749,4 +760,3 @@ function ScrollToTopButton() {
     </button>
   );
 }
-
