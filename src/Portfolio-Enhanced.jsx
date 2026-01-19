@@ -93,14 +93,19 @@ const WatermarkWrapper = ({ children }) => {
 </div>
 
 // --- UI Components ---
-const Button = ({ children, className, ...props }) => (
-  <button
-    className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`}
-    {...props}
-  >
-    {children}
-  </button>
-);
+cconst Button = (props) => {
+  const { children, className, ...rest } = props;
+
+  return (
+    <button
+      className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`}
+      {...rest}
+    >
+      {children}
+    </button>
+  );
+};
+
 
 const Card = ({ children, className, ...props }) => (
   <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
