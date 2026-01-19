@@ -63,16 +63,12 @@ const WatermarkWrapper = ({ children }) => {
           {Array.from({ length: 20 }).map((_, i) => (
             <span
               key={i}
-              className="text-[14px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase"
-              style={{
-                textShadow: '0 0 2px rgba(0,0,0,0.4)',
-              }}
+              className="text-[14px] md:text-[22px] font-normal text-white/40"
             >
               Abdullah Rashid
             </span>
           ))}
         </div>
-      </div>
     </div>
   );
 };
