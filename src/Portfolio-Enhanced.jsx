@@ -34,38 +34,52 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
-// --- Premium Watermark Component (Abdullah Rashid) ---
-
+// --- Responsive Premium Watermark Component (Abdullah Rashid) ---
 const WatermarkWrapper = ({ children }) => {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden w-full h-full">
       {children}
 
       {/* Watermark Overlay */}
-      <div className="absolute inset-0 pointer-events-none select-none opacity-50">
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        
+        {/* Subtle Pattern Layer - Lighter on mobile */}
         <div
-          className="absolute inset-[-50%]"
+          className="absolute inset-[-100%] opacity-[0.04] md:opacity-[0.08]"
           style={{
             backgroundImage: `
               repeating-linear-gradient(
                 -45deg,
-                rgba(255,255,255,0.08) 0px,
-                rgba(255,255,255,0.08) 120px,
-                transparent 120px,
-                transparent 240px
+                #fff 0px,
+                #fff 1px,
+                transparent 1px,
+                transparent 100px
               )
             `,
           }}
         />
 
-        {/* Text Layer */}
-        <div className="absolute inset-[-50%] rotate-[-45deg] flex flex-wrap gap-[120px]">
-          {Array.from({ length: 40 }).map((_, i) => (
+        {/* Text Layer: Dynamic Grid */}
+        <div className="absolute inset-[-100%] flex flex-wrap content-start justify-center 
+                        gap-8 md:gap-32 lg:gap-40 
+                        rotate-[-20deg] md:rotate-[-45deg] 
+                        pt-10 md:pt-20">
+          
+          {/* We use a larger array to ensure coverage on all screen heights */}
+          {Array.from({ length: 80 }).map((_, i) => (
             <span
               key={i}
-              className="text-[18px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase"
+              className="
+                /* Font size: small on mobile, large on PC */
+                text-[10px] sm:text-[14px] md:text-[22px] 
+                /* Weight & Opacity */
+                font-bold text-white/20 md:text-white/30 
+                /* Spacing */
+                tracking-[0.15em] md:tracking-[0.4em] 
+                uppercase whitespace-nowrap
+              "
               style={{
-                textShadow: '0 0 2px rgba(0,0,0,0.4)',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
               }}
             >
               Abdullah Rashid
@@ -76,25 +90,6 @@ const WatermarkWrapper = ({ children }) => {
     </div>
   );
 };
-// --- UI Components ---
-const Button = ({ children, className, ...props }) => (
-  <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
-    {children}
-  </button>
-);
-
-const Card = ({ children, className, ...props }) => (
-  <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
-    {children}
-  </div>
-);
-
-const CardContent = ({ children, className, ...props }) => (
-  <div className={`p-6 ${className}`} {...props}>
-    {children}
-  </div>
-);
-
 // --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
