@@ -265,7 +265,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
   // determine sizing per current image: if in middleSet => 80%, else 100%
   const isMiddle = middleSet.has(images[index]);
-  const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '95vw', maxHeight: '95vh' };
+  const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '100vw', maxHeight: '100vh' };
 
   return (
     <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
