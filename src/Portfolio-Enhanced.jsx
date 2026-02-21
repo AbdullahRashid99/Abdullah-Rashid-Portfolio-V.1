@@ -1,66 +1,44 @@
-// Portfolio.jsx (With Right-Click Protection, Abdullah Rashid Watermark,
-// improved RESULTS touch/scroll behavior and in-modal gallery navigation
-// Updates per user: modal browses all images across 3 rows, arrows/X fixed for desktop,
-// auto-scroll resumes after 3s of inactivity, hold-for-3s resumes, row-specific modal sizing,
-// certificates modal supports swipe between certs.
+// Portfolio.jsx — Fixed & Clean
+// Fixes: WatermarkWrapper duplicate removed, raw HTML timer converted to React component,
+// footer fixed, all JSX valid for GitHub/Vite/CRA without errors.
 
 import React, { useState, useEffect, useRef } from 'react';
 
 import {
-  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
-  Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-  Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
-  HelpCircle,
-  Users,
-  Layers,
+  Menu, X, Linkedin, Phone,
+  LineChart,
+  GraduationCap, ArrowUp,
   BarChart2,
-  MoreHorizontal,
   ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 import { SiTiktok } from 'react-icons/si';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 
-// Import SocialCircle component (keep your path)
 import SocialCircle from '../src/components/SocialCircle.jsx';
 
 // --- Global Protection Styles ---
 const protectionStyles = {
   userSelect: 'none',
-  WebkitTouchCallout: 'none', // Disables long-press menu on iOS
+  WebkitTouchCallout: 'none',
   WebkitUserSelect: 'none',
 };
 
-// --- Watermark Component (Abdullah Rashid) ---
-// --- Premium Watermark Component (Abdullah Rashid) ---
-
-const WatermarkWrapper = ({ children }) => {
-  return (
-    <div className="relative overflow-hidden">
-      {children}
-
-      // --- Watermark Component (Abdullah Rashid) - MODIFIED ---
+// --- Watermark Component ---
 const WatermarkWrapper = ({ children }) => {
   const RenderName = () => (
     <span className="inline-flex items-baseline gap-1 select-none pointer-events-none leading-none">
-      {/* First name: A + bdullah */}
       <span className="text-[18px] md:text-[24px] font-semibold leading-none">A</span>
       <span className="text-[12px] md:text-[14px] font-normal leading-none">bdullah</span>
-      {/* small gap between names */}
       <span className="w-1 md:w-2" />
-      {/* Last name: R + ashid */}
       <span className="text-[18px] md:text-[24px] font-semibold leading-none">R</span>
       <span className="text-[12px] md:text-[14px] font-normal leading-none">ashid</span>
     </span>
   );
 
   return (
-    <div className="relative overflow-hidden pointer-events-none select-none">
+    <div className="relative overflow-hidden">
       {children}
-
-      {/* Subtle diagonal stripe overlay (kept but very light) */}
       <div className="absolute inset-0 pointer-events-none select-none opacity-20">
         <div
           className="absolute inset-[-40%]"
@@ -76,15 +54,9 @@ const WatermarkWrapper = ({ children }) => {
             `,
           }}
         />
-
-        {/* Text Layer - lighter, no shadow, not uppercase, first-letter larger */}
         <div className="absolute inset-[-25%] md:inset-[-40%] rotate-[-45deg] flex flex-wrap gap-[24px] md:gap-[48px] items-center justify-center">
           {Array.from({ length: 12 }).map((_, i) => (
-            <span
-              key={i}
-              className="text-white/25 leading-none"
-              aria-hidden="true"
-            >
+            <span key={i} className="text-white/25 leading-none" aria-hidden="true">
               <RenderName />
             </span>
           ))}
@@ -94,23 +66,124 @@ const WatermarkWrapper = ({ children }) => {
   );
 };
 
+// --- Promo Banner (Timer + Coupon) — pure React, no raw HTML ---
+const PromoBanner = () => {
+  const DURATION_MS = 48 * 60 * 60 * 1000;
+  const endTimeRef = useRef(Date.now() + DURATION_MS);
+  const [timeLeft, setTimeLeft] = useState(DURATION_MS);
+  const [copied, setCopied] = useState(false);
+  const expired = timeLeft <= 0;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const remaining = endTimeRef.current - Date.now();
+      if (remaining <= 0) {
+        setTimeLeft(0);
+        clearInterval(interval);
+      } else {
+        setTimeLeft(remaining);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const totalSeconds = Math.floor(timeLeft / 1000);
+  const hours   = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('SA22').then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div
+      dir="rtl"
+      className="w-full flex flex-wrap justify-between items-center gap-5 px-[5%] py-4 border-b-4"
+      style={{
+        backgroundColor: '#623697',
+        borderBottomColor: '#fbb03b',
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        color: '#fff',
+      }}
+    >
+      {/* Text + Coupon */}
+      <div className="flex flex-wrap items-center gap-4 flex-1 min-w-[280px] justify-center md:justify-start">
+        <p className="m-0 text-[1.05rem]">
+          بمناسبة يوم التأسيس استخدم الكود وخد خصم 22% إضافي
+        </p>
+        <div
+          className="flex items-center gap-3 px-4 py-1 rounded-lg"
+          style={{
+            background: 'rgba(255,255,255,0.1)',
+            border: '2px dashed #fbb03b',
+          }}
+        >
+          <span className="font-bold text-xl tracking-widest" style={{ color: '#fbb03b' }}>
+            SA22
+          </span>
+          <button
+            onClick={handleCopy}
+            className="text-sm font-bold px-3 py-1 rounded-md transition-all"
+            style={{
+              background: copied ? '#4CAF50' : '#fbb03b',
+              color: copied ? '#fff' : '#623697',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            {copied ? 'تم!' : 'نسخ'}
+          </button>
+        </div>
+      </div>
+
+      {/* Timer */}
+      {expired ? (
+        <p className="font-bold text-lg" style={{ color: '#fbb03b' }}>انتهى العرض!</p>
+      ) : (
+        <div className="flex items-center gap-2 justify-center">
+          {[
+            { val: pad(hours),   label: 'ساعة'  },
+            { val: pad(minutes), label: 'دقيقة' },
+            { val: pad(seconds), label: 'ثانية' },
+          ].map((unit, i, arr) => (
+            <React.Fragment key={i}>
+              <div
+                className="flex flex-col items-center justify-center rounded-lg"
+                style={{
+                  background: '#fff',
+                  color: '#623697',
+                  width: 55,
+                  height: 55,
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                }}
+              >
+                <span className="text-[1.4rem] font-black leading-none">{unit.val}</span>
+                <span className="text-[0.6rem] font-bold uppercase">{unit.label}</span>
+              </div>
+              {i < arr.length - 1 && (
+                <span className="text-[1.5rem] font-bold" style={{ color: '#fbb03b' }}>:</span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // --- UI Components ---
 const Button = ({ children, className, ...props }) => (
-  <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
+  <button
+    className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`}
+    {...props}
+  >
     {children}
   </button>
-);
-
-const Card = ({ children, className, ...props }) => (
-  <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
-    {children}
-  </div>
-);
-
-const CardContent = ({ children, className, ...props }) => (
-  <div className={`p-6 ${className}`} {...props}>
-    {children}
-  </div>
 );
 
 // --- Personal Info ---
@@ -124,12 +197,12 @@ const personalInfo = {
 };
 
 const sections = [
-  { id: "skills", title: "Skills" },
-  { id: "projects", title: "Results" },
+  { id: "skills",   title: "Skills"   },
+  { id: "projects", title: "Results"  },
 ];
 
 const skillsData = [
-  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", 
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads",
   "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
@@ -163,7 +236,9 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref
     transition={{ duration: 0.3, ease: "easeOut" }}
   >
     <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-      <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">{title}</span>
+      <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-400">
+        {title}
+      </span>
     </h2>
     {children}
   </motion.section>
@@ -175,26 +250,56 @@ const Navbar = ({ activeSection }) => {
   return (
     <nav className="fixed top-0 left-0 w-full bg-neutral-950/70 backdrop-blur-lg z-50 border-b border-neutral-800/50">
       <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-        <a href="#home" className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors">{personalInfo.name}</a>
+        <a
+          href="#home"
+          className="text-2xl font-bold tracking-tight text-white hover:text-teal-400 transition-colors"
+        >
+          {personalInfo.name}
+        </a>
         <div className="hidden md:flex gap-8 items-center">
           {sections.map((sec) => (
-            <a key={sec.id} href={`#${sec.id}`} className={`font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
+            <a
+              key={sec.id}
+              href={`#${sec.id}`}
+              className={`font-medium transition-colors ${
+                activeSection === sec.id
+                  ? 'text-teal-400'
+                  : 'text-neutral-300 hover:text-teal-400'
+              }`}
+            >
               {sec.title}
             </a>
           ))}
         </div>
         <div className="md:hidden">
-          <Button onClick={() => setIsMenuOpen(!isMenuOpen)} className="bg-transparent text-white p-2">
+          <Button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="bg-transparent text-white p-2"
+          >
             {isMenuOpen ? <X /> : <Menu />}
           </Button>
         </div>
       </div>
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden bg-neutral-900">
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-neutral-900"
+          >
             <div className="flex flex-col items-center gap-4 py-4">
               {sections.map((sec) => (
-                <a key={sec.id} href={`#${sec.id}`} onClick={() => setIsMenuOpen(false)} className={`text-lg font-medium transition-colors ${activeSection === sec.id ? 'text-teal-400' : 'text-neutral-300 hover:text-teal-400'}`}>
+                <a
+                  key={sec.id}
+                  href={`#${sec.id}`}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-lg font-medium transition-colors ${
+                    activeSection === sec.id
+                      ? 'text-teal-400'
+                      : 'text-neutral-300 hover:text-teal-400'
+                  }`}
+                >
                   {sec.title}
                 </a>
               ))}
@@ -206,13 +311,12 @@ const Navbar = ({ activeSection }) => {
   );
 };
 
-// --- Gallery Modal (supports swipe, arrows, keyboard) ---
-const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set(), certMode = false }) => {
+// --- Gallery Modal ---
+const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set() }) => {
   const [index, setIndex] = useState(startIndex);
   const containerRef = useRef(null);
   const draggingRef = useRef(false);
   const startXRef = useRef(0);
-  const lastXRef = useRef(0);
   const pointerCaptureRef = useRef(null);
 
   useEffect(() => { setIndex(startIndex); }, [startIndex]);
@@ -220,8 +324,8 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'ArrowRight') setIndex(i => (i + 1) % images.length);
-      if (e.key === 'ArrowLeft') setIndex(i => (i - 1 + images.length) % images.length);
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft')  setIndex(i => (i - 1 + images.length) % images.length);
+      if (e.key === 'Escape')     onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -230,65 +334,64 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
     let pointerId = null;
 
     const down = (e) => {
-      // ignore clicks on buttons/icons so arrows/X stay clickable
       if (e.target.closest && e.target.closest('button')) return;
       pointerId = e.pointerId;
       draggingRef.current = false;
       startXRef.current = e.clientX;
-      lastXRef.current = e.clientX;
-      try { el.setPointerCapture(pointerId); pointerCaptureRef.current = pointerId; } catch(err){ pointerCaptureRef.current = null; }
+      try { el.setPointerCapture(pointerId); pointerCaptureRef.current = pointerId; } catch (err) { pointerCaptureRef.current = null; }
     };
-
     const move = (e) => {
       if (pointerId === null || e.pointerId !== pointerId) return;
-      const dx = e.clientX - startXRef.current;
-      if (Math.abs(dx) > 10) draggingRef.current = true;
-      lastXRef.current = e.clientX;
+      if (Math.abs(e.clientX - startXRef.current) > 10) draggingRef.current = true;
     };
-
     const up = (e) => {
       if (pointerId === null || e.pointerId !== pointerId) return;
-      const totalDx = e.clientX - startXRef.current;
-      if (!draggingRef.current && Math.abs(totalDx) < 8) {
-        // tap -> do nothing (keep modal open)
-      } else {
-        if (totalDx < -30) setIndex(i => (i + 1) % images.length);
-        if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
+      const dx = e.clientX - startXRef.current;
+      if (draggingRef.current) {
+        if (dx < -30) setIndex(i => (i + 1) % images.length);
+        if (dx >  30) setIndex(i => (i - 1 + images.length) % images.length);
       }
-      try { if (pointerCaptureRef.current) el.releasePointerCapture(pointerCaptureRef.current); } catch(err){}
+      try { if (pointerCaptureRef.current) el.releasePointerCapture(pointerCaptureRef.current); } catch (err) {}
       pointerCaptureRef.current = null;
       pointerId = null;
       draggingRef.current = false;
     };
 
-    el.addEventListener('pointerdown', down, { passive: true });
-    el.addEventListener('pointermove', move, { passive: true });
-    el.addEventListener('pointerup', up, { passive: true });
-    el.addEventListener('pointercancel', up, { passive: true });
-
+    el.addEventListener('pointerdown',  down, { passive: true });
+    el.addEventListener('pointermove',  move, { passive: true });
+    el.addEventListener('pointerup',    up,   { passive: true });
+    el.addEventListener('pointercancel',up,   { passive: true });
     return () => {
-      el.removeEventListener('pointerdown', down);
-      el.removeEventListener('pointermove', move);
-      el.removeEventListener('pointerup', up);
-      el.removeEventListener('pointercancel', up);
+      el.removeEventListener('pointerdown',  down);
+      el.removeEventListener('pointermove',  move);
+      el.removeEventListener('pointerup',    up);
+      el.removeEventListener('pointercancel',up);
     };
   }, [images.length]);
 
   if (!images.length) return null;
 
-  // determine sizing per current image: if in middleSet => 80%, else 100%
   const isMiddle = middleSet.has(images[index]);
-  const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '100vw', maxHeight: '100vh' };
+  const imgStyle = isMiddle
+    ? { maxWidth: '80vw', maxHeight: '80vh' }
+    : { maxWidth: '100vw', maxHeight: '100vh' };
 
   return (
-    <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className="relative w-full flex items-center justify-center" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()} ref={containerRef}>
-
-        {/* Close X INSIDE image bounds */}
+    <motion.div
+      className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="relative w-full flex items-center justify-center"
+        initial={{ scale: 0.95 }} animate={{ scale: 1 }}
+        onClick={(e) => e.stopPropagation()}
+        ref={containerRef}
+      >
+        {/* Close */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onClose(); }}
@@ -299,7 +402,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
           <X />
         </button>
 
-        {/* Left Arrow (desktop) */}
+        {/* Left Arrow */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); setIndex(i => (i - 1 + images.length) % images.length); }}
@@ -310,7 +413,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
           <ChevronLeft />
         </button>
 
-        {/* Right Arrow (desktop) */}
+        {/* Right Arrow */}
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); setIndex(i => (i + 1) % images.length); }}
@@ -323,14 +426,25 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
         <div className="max-w-full max-h-[90vh] flex items-center justify-center rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800 p-4">
           <WatermarkWrapper>
-            <img src={images[index]} alt={`zoom-${index}`} className="object-contain" draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
+            <img
+              src={images[index]}
+              alt={`zoom-${index}`}
+              className="object-contain"
+              draggable={false}
+              style={{ ...protectionStyles, ...imgStyle }}
+            />
           </WatermarkWrapper>
         </div>
 
-        {/* simple pager dots */}
+        {/* Dots */}
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-2">
           {images.map((_, i) => (
-            <button key={i} onClick={(e) => { e.stopPropagation(); setIndex(i); }} className={`h-2 w-8 rounded-full ${i === index ? 'bg-white' : 'bg-white/30'}`} type="button" />
+            <button
+              key={i}
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setIndex(i); }}
+              className={`h-2 w-8 rounded-full ${i === index ? 'bg-white' : 'bg-white/30'}`}
+            />
           ))}
         </div>
       </motion.div>
@@ -338,7 +452,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
   );
 };
 
-// --- CERTIFICATIONS SECTION ---
+// --- Certifications ---
 const CERT_IMAGES = [
   'https://i.postimg.cc/rsxncdPk/65952225.jpg',
   'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
@@ -374,34 +488,36 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
     return () => cancelAnimationFrame(rafId);
   }, [speed, isPaused]);
 
-  const openGalleryForCerts = (src) => {
+  const openGallery = (src) => {
     const idx = images.indexOf(src);
-    setZoomSrc({ start: idx });
+    setZoomSrc({ start: idx >= 0 ? idx : 0 });
   };
 
   return (
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto overflow-hidden">
-        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google Certifications</h3>
-        <div 
+        <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">
+          Google Certifications
+        </h3>
+        <div
           ref={containerRef}
           className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {duplicated.map((src, i) => (
-            <motion.div 
-              key={i} 
+            <motion.div
+              key={i}
               className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
               whileHover={{ scale: 1.05 }}
-              onClick={() => openGalleryForCerts(src)}
+              onClick={() => openGallery(src)}
             >
-              <img 
-                src={src} 
-                className="w-full h-full object-cover" 
-                alt="Cert" 
+              <img
+                src={src}
+                className="w-full h-full object-cover"
+                alt="Cert"
                 draggable={false}
-                style={protectionStyles} 
+                style={protectionStyles}
               />
             </motion.div>
           ))}
@@ -409,14 +525,19 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
       </div>
       <AnimatePresence>
         {zoomSrc && (
-          <GalleryModal images={images} startIndex={zoomSrc.start} onClose={() => setZoomSrc(null)} middleSet={new Set()} certMode={true} />
+          <GalleryModal
+            images={images}
+            startIndex={zoomSrc.start}
+            onClose={() => setZoomSrc(null)}
+            middleSet={new Set()}
+          />
         )}
       </AnimatePresence>
     </div>
   );
 };
 
-// --- RESULTS LOGIC ---
+// --- Results Logic ---
 function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPaused = false }) {
   useEffect(() => {
     const el = containerRef.current;
@@ -448,9 +569,9 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   const containerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
   const resumeTimerRef = useRef(null);
-  const holdResumeRef = useRef(null);
-
+  const holdResumeRef  = useRef(null);
   const duplicated = [...images, ...images];
+
   useAutoScrollResults(containerRef, { speed: 100, reverse, isPaused });
 
   useEffect(() => {
@@ -458,121 +579,87 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
     if (!el) return;
 
     let pointerId = null;
-    let startX = 0;
-    let startY = 0;
-    let lastX = 0;
-    let directionDetermined = false;
-    let isHorizontal = false;
-    let isDragging = false;
-    let hasCapture = false;
+    let startX = 0, startY = 0, lastX = 0;
+    let directionDetermined = false, isHorizontal = false, isDragging = false, hasCapture = false;
 
-    const clearResumeTimer = () => {
+    const clearTimers = () => {
       if (resumeTimerRef.current) { clearTimeout(resumeTimerRef.current); resumeTimerRef.current = null; }
-      if (holdResumeRef.current) { clearTimeout(holdResumeRef.current); holdResumeRef.current = null; }
+      if (holdResumeRef.current)  { clearTimeout(holdResumeRef.current);  holdResumeRef.current  = null; }
     };
-
-    const startResumeTimer = (ms = 3000) => {
-      clearResumeTimer();
-      resumeTimerRef.current = setTimeout(() => {
-        setIsPaused(false);
-        resumeTimerRef.current = null;
-      }, ms);
+    const startResume = (ms = 3000) => {
+      clearTimers();
+      resumeTimerRef.current = setTimeout(() => { setIsPaused(false); resumeTimerRef.current = null; }, ms);
     };
 
     const onPointerDown = (e) => {
-      // if clicking buttons inside, ignore
       if (e.target.closest && e.target.closest('button')) return;
       if (pointerId !== null) return;
       pointerId = e.pointerId;
-      startX = e.clientX;
-      startY = e.clientY;
-      lastX = startX;
-      directionDetermined = false;
-      isHorizontal = false;
-      isDragging = true;
+      startX = e.clientX; startY = e.clientY; lastX = startX;
+      directionDetermined = false; isHorizontal = false; isDragging = true;
       setIsPaused(true);
-      clearResumeTimer();
-      // if user holds for 3s, resume auto-scroll even while still holding
+      clearTimers();
       holdResumeRef.current = setTimeout(() => { setIsPaused(false); holdResumeRef.current = null; }, 3000);
-      try { el.setPointerCapture(pointerId); hasCapture = true; } catch(err) { hasCapture = false; }
+      try { el.setPointerCapture(pointerId); hasCapture = true; } catch (err) { hasCapture = false; }
     };
 
     const onPointerMove = (e) => {
       if (!isDragging || e.pointerId !== pointerId) return;
-      const dxTotal = e.clientX - startX;
-      const dyTotal = e.clientY - startY;
+      const dxTotal = e.clientX - startX, dyTotal = e.clientY - startY;
       const dx = e.clientX - lastX;
-
       if (!directionDetermined) {
         if (Math.abs(dxTotal) > 6 || Math.abs(dyTotal) > 6) {
           directionDetermined = true;
           isHorizontal = Math.abs(dxTotal) > Math.abs(dyTotal);
-        } else {
-          return;
-        }
+        } else return;
       }
-
       if (isHorizontal) {
         e.preventDefault();
         el.scrollLeft -= dx;
         lastX = e.clientX;
       } else {
-        if (hasCapture) { try { el.releasePointerCapture(pointerId); } catch(err){} hasCapture = false; }
-        isDragging = false;
-        pointerId = null;
+        if (hasCapture) { try { el.releasePointerCapture(pointerId); } catch (err) {} hasCapture = false; }
+        isDragging = false; pointerId = null;
       }
     };
 
     const onPointerUp = (e) => {
-      if (pointerId !== e.pointerId && pointerId !== null) return;
-      const totalDx = e.clientX - startX;
-      const totalDy = e.clientY - startY;
-      const isTap = Math.abs(totalDx) < 10 && Math.abs(totalDy) < 10;
-
-      if (isTap) {
+      if (pointerId !== null && e.pointerId !== pointerId) return;
+      const totalDx = Math.abs(e.clientX - startX), totalDy = Math.abs(e.clientY - startY);
+      if (totalDx < 10 && totalDy < 10) {
         const elAt = document.elementFromPoint(e.clientX, e.clientY);
         const card = elAt ? elAt.closest('[data-result-src]') : null;
         if (card) {
           const src = card.getAttribute('data-result-src');
-          if (src) {
-            setIsPaused(true);
-            clearResumeTimer();
-            onImageClick(src);
-          }
+          if (src) { setIsPaused(true); clearTimers(); onImageClick(src); }
         }
       }
-
-      startResumeTimer(3000);
-
-      if (pointerId !== null && hasCapture) { try { el.releasePointerCapture(pointerId); } catch(err){} hasCapture = false; }
-      pointerId = null;
-      isDragging = false;
-      directionDetermined = false;
-      isHorizontal = false;
+      startResume(3000);
+      if (pointerId !== null && hasCapture) { try { el.releasePointerCapture(pointerId); } catch (err) {} hasCapture = false; }
+      pointerId = null; isDragging = false; directionDetermined = false; isHorizontal = false;
     };
 
-    const onMouseEnter = () => { setIsPaused(true); clearResumeTimer(); };
-    const onMouseLeave = () => { startResumeTimer(3000); };
+    const onMouseEnter = () => { setIsPaused(true); clearTimers(); };
+    const onMouseLeave = () => { startResume(3000); };
 
-    el.addEventListener('pointerdown', onPointerDown, { passive: true });
-    el.addEventListener('pointermove', onPointerMove, { passive: false });
-    el.addEventListener('pointerup', onPointerUp, { passive: true });
-    el.addEventListener('pointercancel', onPointerUp, { passive: true });
-    el.addEventListener('lostpointercapture', onPointerUp, { passive: true });
-    el.addEventListener('mouseenter', onMouseEnter);
-    el.addEventListener('mouseleave', onMouseLeave);
+    el.addEventListener('pointerdown',       onPointerDown,  { passive: true });
+    el.addEventListener('pointermove',       onPointerMove,  { passive: false });
+    el.addEventListener('pointerup',         onPointerUp,    { passive: true });
+    el.addEventListener('pointercancel',     onPointerUp,    { passive: true });
+    el.addEventListener('lostpointercapture',onPointerUp,    { passive: true });
+    el.addEventListener('mouseenter',        onMouseEnter);
+    el.addEventListener('mouseleave',        onMouseLeave);
 
     return () => {
-      clearResumeTimer();
-      el.removeEventListener('pointerdown', onPointerDown);
-      el.removeEventListener('pointermove', onPointerMove);
-      el.removeEventListener('pointerup', onPointerUp);
-      el.removeEventListener('pointercancel', onPointerUp);
-      el.removeEventListener('lostpointercapture', onPointerUp);
-      el.removeEventListener('mouseenter', onMouseEnter);
-      el.removeEventListener('mouseleave', onMouseLeave);
+      clearTimers();
+      el.removeEventListener('pointerdown',       onPointerDown);
+      el.removeEventListener('pointermove',       onPointerMove);
+      el.removeEventListener('pointerup',         onPointerUp);
+      el.removeEventListener('pointercancel',     onPointerUp);
+      el.removeEventListener('lostpointercapture',onPointerUp);
+      el.removeEventListener('mouseenter',        onMouseEnter);
+      el.removeEventListener('mouseleave',        onMouseLeave);
     };
-
   }, [onImageClick]);
 
   const handleImageClick = (src) => {
@@ -582,7 +669,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-x select-none"
       style={{ scrollbarWidth: 'none', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
@@ -590,20 +677,19 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       <div className="flex">
         {duplicated.map((src, i) => (
           <div key={i} className="w-screen md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
-            <motion.div 
+            <motion.div
               data-result-src={src}
               className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl relative"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => handleImageClick(src)}
             >
-              {/* Watermark + image */}
               <WatermarkWrapper>
-                <img 
-                  src={src} 
-                  alt="Result" 
-                  className="w-full h-full object-cover md:object-contain" 
-                  draggable={false} 
+                <img
+                  src={src}
+                  alt="Result"
+                  className="w-full h-full object-cover md:object-contain"
+                  draggable={false}
                   style={protectionStyles}
                 />
               </WatermarkWrapper>
@@ -616,36 +702,48 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
 };
 
 const MultiStripBanners = () => {
-  const [zoomSrc, setZoomSrc] = useState(null);
+  const [zoomSrc, setZoomSrc]       = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
-  const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
-  const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
-  const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
 
-  // combined gallery across all rows
-  const combined = [...row1, ...row2, ...row3];
+  const row1 = [
+    "https://i.postimg.cc/C5GsYm88/11.png",
+    "https://i.postimg.cc/wMXQH0N1/8.png",
+    "https://i.postimg.cc/qqsx0jK6/10.png",
+  ];
+  const row2 = [
+    "https://i.postimg.cc/L5t3RNPm/1.png",
+    "https://i.postimg.cc/D0rPFBGm/5.png",
+    "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png",
+    "https://i.postimg.cc/cCRBZX34/2.png",
+    "https://i.postimg.cc/7h3nDmzH/4.png",
+  ];
+  const row3 = [
+    "https://i.postimg.cc/Zn8xZVNp/12.png",
+    "https://i.postimg.cc/Xqfk3Q5G/9.png",
+  ];
+
+  const combined  = [...row1, ...row2, ...row3];
   const middleSet = new Set(row2);
 
-  // onImageClick open gallery with all images, start at clicked index
   const onOpenFromStrip = (src) => {
     const idx = combined.indexOf(src);
-    if (idx !== -1) {
-      setGalleryImages(combined);
-      setZoomSrc({ start: idx });
-    } else {
-      setGalleryImages([src]);
-      setZoomSrc({ start: 0 });
-    }
+    setGalleryImages(combined);
+    setZoomSrc({ start: idx >= 0 ? idx : 0 });
   };
 
   return (
     <div className="space-y-4 md:space-y-8">
       <BannerStrip images={row1} reverse={false} onImageClick={onOpenFromStrip} />
-      <BannerStrip images={row2} reverse={true} onImageClick={onOpenFromStrip} />
+      <BannerStrip images={row2} reverse={true}  onImageClick={onOpenFromStrip} />
       <BannerStrip images={row3} reverse={false} onImageClick={onOpenFromStrip} />
       <AnimatePresence>
         {zoomSrc && (
-          <GalleryModal images={galleryImages} startIndex={zoomSrc.start} onClose={() => { setZoomSrc(null); setGalleryImages([]); }} middleSet={middleSet} />
+          <GalleryModal
+            images={galleryImages}
+            startIndex={zoomSrc.start}
+            onClose={() => { setZoomSrc(null); setGalleryImages([]); }}
+            middleSet={middleSet}
+          />
         )}
       </AnimatePresence>
     </div>
@@ -655,16 +753,37 @@ const MultiStripBanners = () => {
 // --- Services Modal ---
 function ServicesModal({ onClose }) {
   const servicesList = [
-    { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform' },
-    { title: 'Scale', icon: <LineChart size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfpnHDVpZeI_7Q5srnURXlnPzfLUhuyiPzptUeqj77uyeeRVg/viewform' },
+    {
+      title: 'Startup',
+      icon: <BarChart2 size={48} />,
+      link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform',
+    },
+    {
+      title: 'Scale',
+      icon: <LineChart size={48} />,
+      link: 'https://docs.google.com/forms/d/e/1FAIpQLSfpnHDVpZeI_7Q5srnURXlnPzfLUhuyiPzptUeqj77uyeeRVg/viewform',
+    },
   ];
+
   return (
-    <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className="bg-neutral-900 p-8 rounded-2xl w-full max-w-4xl" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()}>
+    <motion.div
+      className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="bg-neutral-900 p-8 rounded-2xl w-full max-w-4xl"
+        initial={{ scale: 0.95 }} animate={{ scale: 1 }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">For E-Commerce</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {servicesList.map(({ title, icon, link }, index) => (
-            <motion.div key={index} className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer" whileHover={{ y: -5 }}>
+          {servicesList.map(({ title, icon, link }, i) => (
+            <motion.div
+              key={i}
+              className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer"
+              whileHover={{ y: -5 }}
+            >
               <div className="text-teal-400 mb-4">{icon}</div>
               <h3 className="text-xl font-semibold mb-4">{title}</h3>
               <a href={link} target="_blank" rel="noopener noreferrer" className="w-full">
@@ -678,11 +797,35 @@ function ServicesModal({ onClose }) {
   );
 }
 
+// --- Scroll To Top ---
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const toggle = () => setVisible(window.pageYOffset > 300);
+    window.addEventListener('scroll', toggle);
+    return () => window.removeEventListener('scroll', toggle);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors"
+    >
+      <ArrowUp size={24} />
+    </button>
+  );
+}
+
 // --- Main Portfolio ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
-  const [showServices, setShowServices] = useState(false);
-  const sectionRefs = { home: useRef(null), skills: useRef(null), projects: useRef(null) };
+  const [showServices,  setShowServices]  = useState(false);
+
+  const sectionRefs = {
+    home:     useRef(null),
+    skills:   useRef(null),
+    projects: useRef(null),
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -694,15 +837,18 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div 
-        className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-        onContextMenu={(e) => e.preventDefault()} 
-        style={protectionStyles}
+    <div
+      className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
+      onContextMenu={(e) => e.preventDefault()}
+      style={protectionStyles}
     >
-      {/* RESTORED ORIGINAL STARRY BACKGROUND (old look) */}
+      {/* Promo Banner — أول حاجة فوق الصفحة */}
+      <PromoBanner />
+
+      {/* Starry Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
-        <div 
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60" />
+        <div
           className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `
@@ -713,30 +859,44 @@ export default function Portfolio() {
               radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
               radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))
             `,
-            backgroundSize: '200px 200px'
+            backgroundSize: '200px 200px',
           }}
-        ></div>
+        />
       </div>
 
       <Navbar activeSection={activeSection} />
-      
+
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
-        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
+        <section
+          ref={sectionRefs.home}
+          id="home"
+          className="min-h-screen flex flex-col justify-center items-center text-center relative"
+        >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-          
-          <motion.img 
-            src={personalInfo.profileImage} 
-            initial={{ opacity: 0, scale: 0.8 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" 
+          <motion.img
+            src={personalInfo.profileImage}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
             draggable="false"
+            alt="Profile"
           />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
-            Abdullah Rashid<br /> Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
+            Abdullah Rashid<br />
+            Your{' '}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">
+              Growth
+            </span>{' '}
+            Partner.
           </motion.h1>
           <p className="text-lg md:text-xl text-neutral-300 mb-8">{personalInfo.title}</p>
-          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
+          <Button
+            className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]"
+            onClick={() => setShowServices(true)}
+          >
+            Start Here
+          </Button>
         </section>
 
         <SocialCircle />
@@ -745,12 +905,16 @@ export default function Portfolio() {
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
           <div className="flex flex-wrap justify-center gap-3">
             {skillsData.map((skill, i) => (
-              <motion.div key={i} className="bg-neutral-800/60 backdrop-blur-md text-neutral-300 px-4 py-2 rounded-full text-sm font-medium border border-neutral-700">{skill}</motion.div>
+              <motion.div
+                key={i}
+                className="bg-neutral-800/60 backdrop-blur-md text-neutral-300 px-4 py-2 rounded-full text-sm font-medium border border-neutral-700"
+              >
+                {skill}
+              </motion.div>
             ))}
           </div>
         </SectionWrapper>
-        
-        {/* Results Section with Watermark applied */}
+
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
         </SectionWrapper>
@@ -761,262 +925,47 @@ export default function Portfolio() {
         </div>
       </main>
 
+      {/* Footer */}
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
-<div className="flex justify-center gap-6 mb-4">
-
-  <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --primary-purple: #623697;
-            --accent-yellow: #fbb03b;
-            --white: #ffffff;
-        }
-
-        .promo-banner {
-            background-color: var(--primary-purple);
-            color: var(--white);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            border-bottom: 3px solid var(--accent-yellow);
-        }
-
-        /* الجزء الخاص بالنص والكود */
-        .promo-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .promo-text {
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        .code-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px dashed var(--accent-yellow);
-            padding: 5px 15px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .code-text {
-            font-weight: bold;
-            color: var(--accent-yellow);
-            letter-spacing: 1px;
-            font-size: 1.2rem;
-        }
-
-        .copy-btn {
-            background: var(--accent-yellow);
-            color: var(--primary-purple);
-            border: none;
-            padding: 4px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .copy-btn:hover {
-            transform: scale(1.05);
-            background: #fff;
-        }
-
-        /* الجزء الخاص بالتايمر */
-        .timer-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .timer-unit {
-            background: var(--white);
-            color: var(--primary-purple);
-            width: 55px;
-            height: 55px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .timer-val {
-            font-size: 1.4rem;
-            font-weight: 900;
-            line-height: 1;
-        }
-
-        .timer-label {
-            font-size: 0.6rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .timer-separator {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-yellow);
-        }
-
-        /* تعديلات الموبايل */
-        @media (max-width: 768px) {
-            .promo-banner {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-            .promo-content {
-                flex-direction: column;
-                justify-content: center;
-            }
-            .timer-container {
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="promo-banner">
-    <div class="promo-content">
-        <p class="promo-text">بمناسبة يوم التأسيس استخدم الكود وخد خصم 22% إضافي</p>
-        <div class="code-box">
-            <span class="code-text" id="couponCode">SA22</span>
-            <button class="copy-btn" onclick="copyCode()">نسخ</button>
+        <div className="flex justify-center gap-6 mb-4">
+          {/* LinkedIn */}
+          <a
+            href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-teal-400 hover:bg-neutral-800 transition-all"
+          >
+            <Linkedin size={20} />
+          </a>
+          {/* WhatsApp */}
+          <a
+            href={personalInfo.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-green-500 hover:bg-neutral-800 transition-all"
+          >
+            <Phone size={20} />
+          </a>
+          {/* TikTok */}
+          <a
+            href={personalInfo.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-pink-500 hover:bg-neutral-800 transition-all"
+          >
+            <SiTiktok size={18} />
+          </a>
         </div>
-    </div>
-
-    <div class="timer-container">
-        <div class="timer-unit">
-            <span class="timer-val" id="hours">48</span>
-            <span class="timer-label">ساعة</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-unit">
-            <span class="timer-val" id="minutes">00</span>
-            <span class="timer-label">دقيقة</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-unit">
-            <span class="timer-val" id="seconds">00</span>
-            <span class="timer-label">ثانية</span>
-        </div>
-    </div>
-</div>
-
-<script>
-    // وظيفة النسخ
-    function copyCode() {
-        const code = document.getElementById('couponCode').innerText;
-        navigator.clipboard.writeText(code).then(() => {
-            const btn = document.querySelector('.copy-btn');
-            btn.innerText = 'تم!';
-            btn.style.background = '#4CAF50';
-            btn.style.color = '#fff';
-            setTimeout(() => {
-                btn.innerText = 'نسخ';
-                btn.style.background = 'var(--accent-yellow)';
-                btn.style.color = 'var(--primary-purple)';
-            }, 2000);
-        });
-    }
-
-    // وظيفة التايمر (48 ساعة من الآن)
-    let countdownDate = new Date().getTime() + (48 * 60 * 60 * 1000);
-
-    const timer = setInterval(function() {
-        let now = new Date().getTime();
-        let distance = countdownDate - now;
-
-        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        // إضافة الـ 24 ساعة المتبقية للأيام في حالة الـ 48 ساعة
-        if (distance > (1000 * 60 * 60 * 24)) {
-            hours += 24;
-        }
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
-        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
-        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
-
-        if (distance < 0) {
-            clearInterval(timer);
-            document.querySelector(".timer-container").innerHTML = "انتهى العرض!";
-        }
-    }, 1000);
-</script>
-
-</body>
-</html>
-  {/* LinkedIn */}
-  <a
-    href={personalInfo.linkedin}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-teal-400
-               hover:bg-neutral-800 transition-all"
-  >
-    <Linkedin size={20} />
-  </a>
-
-  {/* WhatsApp */}
-  <a
-    href={personalInfo.whatsapp}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-green-500
-               hover:bg-neutral-800 transition-all"
-  >
-    <Phone size={20} />
-  </a>
-
-  {/* TikTok (normalized) */}
-  <a
-    href={personalInfo.tiktok}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-pink-500
-               hover:bg-neutral-800 transition-all"
-  >
-    <SiTiktok size={18} />
-  </a>
-</div>
-
         <p className="text-neutral-500 text-sm">
-          © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
+          © 2022 – {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
         </p>
       </footer>
-      <ScrollToTopButton />
-      <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
-    </div>
-  );
-}
 
-function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const toggle = () => setVisible(window.pageYOffset > 300);
-    window.addEventListener('scroll', toggle);
-    return () => window.removeEventListener('scroll', toggle);
-  }, []);
-  if (!visible) return null;
-  return (
-    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors">
-      <ArrowUp size={24} />
-    </button>
+      <ScrollToTopButton />
+
+      <AnimatePresence>
+        {showServices && <ServicesModal onClose={() => setShowServices(false)} />}
+      </AnimatePresence>
+    </div>
   );
 }
