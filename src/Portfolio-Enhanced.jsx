@@ -763,6 +763,208 @@ export default function Portfolio() {
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
 <div className="flex justify-center gap-6 mb-4">
+
+  <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-purple: #623697;
+            --accent-yellow: #fbb03b;
+            --white: #ffffff;
+        }
+
+        .promo-banner {
+            background-color: var(--primary-purple);
+            color: var(--white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border-bottom: 3px solid var(--accent-yellow);
+        }
+
+        /* الجزء الخاص بالنص والكود */
+        .promo-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .promo-text {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .code-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed var(--accent-yellow);
+            padding: 5px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-text {
+            font-weight: bold;
+            color: var(--accent-yellow);
+            letter-spacing: 1px;
+            font-size: 1.2rem;
+        }
+
+        .copy-btn {
+            background: var(--accent-yellow);
+            color: var(--primary-purple);
+            border: none;
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+
+        /* الجزء الخاص بالتايمر */
+        .timer-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .timer-unit {
+            background: var(--white);
+            color: var(--primary-purple);
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .timer-val {
+            font-size: 1.4rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .timer-separator {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        /* تعديلات الموبايل */
+        @media (max-width: 768px) {
+            .promo-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            .promo-content {
+                flex-direction: column;
+                justify-content: center;
+            }
+            .timer-container {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="promo-banner">
+    <div class="promo-content">
+        <p class="promo-text">بمناسبة يوم التأسيس استخدم الكود وخد خصم 22% إضافي</p>
+        <div class="code-box">
+            <span class="code-text" id="couponCode">SA22</span>
+            <button class="copy-btn" onclick="copyCode()">نسخ</button>
+        </div>
+    </div>
+
+    <div class="timer-container">
+        <div class="timer-unit">
+            <span class="timer-val" id="hours">48</span>
+            <span class="timer-label">ساعة</span>
+        </div>
+        <div class="timer-separator">:</div>
+        <div class="timer-unit">
+            <span class="timer-val" id="minutes">00</span>
+            <span class="timer-label">دقيقة</span>
+        </div>
+        <div class="timer-separator">:</div>
+        <div class="timer-unit">
+            <span class="timer-val" id="seconds">00</span>
+            <span class="timer-label">ثانية</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // وظيفة النسخ
+    function copyCode() {
+        const code = document.getElementById('couponCode').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = 'تم!';
+            btn.style.background = '#4CAF50';
+            btn.style.color = '#fff';
+            setTimeout(() => {
+                btn.innerText = 'نسخ';
+                btn.style.background = 'var(--accent-yellow)';
+                btn.style.color = 'var(--primary-purple)';
+            }, 2000);
+        });
+    }
+
+    // وظيفة التايمر (48 ساعة من الآن)
+    let countdownDate = new Date().getTime() + (48 * 60 * 60 * 1000);
+
+    const timer = setInterval(function() {
+        let now = new Date().getTime();
+        let distance = countdownDate - now;
+
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        // إضافة الـ 24 ساعة المتبقية للأيام في حالة الـ 48 ساعة
+        if (distance > (1000 * 60 * 60 * 24)) {
+            hours += 24;
+        }
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+
+        if (distance < 0) {
+            clearInterval(timer);
+            document.querySelector(".timer-container").innerHTML = "انتهى العرض!";
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>
   {/* LinkedIn */}
   <a
     href={personalInfo.linkedin}
