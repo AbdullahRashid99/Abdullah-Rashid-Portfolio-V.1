@@ -763,16 +763,6 @@ export default function Portfolio() {
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
 <div className="flex justify-center gap-6 mb-4">
-  {/* LinkedIn */}
-  <a
-    href={personalInfo.linkedin}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-teal-400
-               hover:bg-neutral-800 transition-all"
-  >
-    <Linkedin size={20} />
-  </a>
-
   {/* WhatsApp */}
   <a
     href={personalInfo.whatsapp}
