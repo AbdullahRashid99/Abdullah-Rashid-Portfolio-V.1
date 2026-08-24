@@ -33,6 +33,7 @@ const protectionStyles = {
   WebkitUserSelect: 'none',
 };
 
+// --- Watermark Component (Abdullah Rashid) ---
 // --- Premium Watermark Component (Abdullah Rashid) ---
 
 const WatermarkWrapper = ({ children }) => {
@@ -40,34 +41,51 @@ const WatermarkWrapper = ({ children }) => {
     <div className="relative overflow-hidden">
       {children}
 
-      {/* Watermark Overlay */}
-      <div className="absolute inset-0 pointer-events-none select-none opacity-50">
+      // --- Watermark Component (Abdullah Rashid) - MODIFIED ---
+const WatermarkWrapper = ({ children }) => {
+  const RenderName = () => (
+    <span className="inline-flex items-baseline gap-1 select-none pointer-events-none leading-none">
+      {/* First name: A + bdullah */}
+      <span className="text-[18px] md:text-[24px] font-semibold leading-none">A</span>
+      <span className="text-[12px] md:text-[14px] font-normal leading-none">bdullah</span>
+      {/* small gap between names */}
+      <span className="w-1 md:w-2" />
+      {/* Last name: R + ashid */}
+      <span className="text-[18px] md:text-[24px] font-semibold leading-none">R</span>
+      <span className="text-[12px] md:text-[14px] font-normal leading-none">ashid</span>
+    </span>
+  );
+
+  return (
+    <div className="relative overflow-hidden pointer-events-none select-none">
+      {children}
+
+      {/* Subtle diagonal stripe overlay (kept but very light) */}
+      <div className="absolute inset-0 pointer-events-none select-none opacity-20">
         <div
-          className="absolute inset-[-50%] md:inset-[-50%]"
+          className="absolute inset-[-40%]"
           style={{
             backgroundImage: `
               repeating-linear-gradient(
                 -45deg,
-                rgba(255,255,255,0.08) 0px,
-                rgba(255,255,255,0.08) 120px,
-                transparent 120px,
-                transparent 240px
+                rgba(255,255,255,0.02) 0px,
+                rgba(255,255,255,0.02) 160px,
+                transparent 160px,
+                transparent 320px
               )
             `,
           }}
         />
 
-        {/* Text Layer */}
-        <div className="absolute inset-[-30%] md:inset-[-50%] rotate-[-45deg] flex flex-wrap gap-[60px] md:gap-[120px]">
-          {Array.from({ length: 20 }).map((_, i) => (
+        {/* Text Layer - lighter, no shadow, not uppercase, first-letter larger */}
+        <div className="absolute inset-[-25%] md:inset-[-40%] rotate-[-45deg] flex flex-wrap gap-[24px] md:gap-[48px] items-center justify-center">
+          {Array.from({ length: 12 }).map((_, i) => (
             <span
               key={i}
-              className="text-[14px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase"
-              style={{
-                textShadow: '0 0 2px rgba(0,0,0,0.4)',
-              }}
+              className="text-white/25 leading-none"
+              aria-hidden="true"
             >
-              Abdullah Rashid
+              <RenderName />
             </span>
           ))}
         </div>
@@ -701,12 +719,12 @@ export default function Portfolio() {
       </div>
 
       <Navbar activeSection={activeSection} />
-
+      
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-
+          
           <motion.img 
             src={personalInfo.profileImage} 
             initial={{ opacity: 0, scale: 0.8 }} 
@@ -731,7 +749,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-
+        
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
@@ -744,31 +762,37 @@ export default function Portfolio() {
       </main>
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
-        <div className="flex justify-center gap-6 mb-4">
-          {/* LinkedIn */}
-          <a
-            href={personalInfo.linkedin}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-teal-400 hover:bg-neutral-800 transition-all"
-          >
-            <Linkedin size={20} />
-          </a>
+<div className="flex justify-center gap-6 mb-4">
+  {/* LinkedIn */}
+  <a
+    href={personalInfo.linkedin}
+    className="w-10 h-10 flex items-center justify-center rounded-full
+               text-neutral-500 hover:text-teal-400
+               hover:bg-neutral-800 transition-all"
+  >
+    <Linkedin size={20} />
+  </a>
 
-          {/* WhatsApp */}
-          <a
-            href={personalInfo.whatsapp}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-green-500 hover:bg-neutral-800 transition-all"
-          >
-            <Phone size={20} />
-          </a>
+  {/* WhatsApp */}
+  <a
+    href={personalInfo.whatsapp}
+    className="w-10 h-10 flex items-center justify-center rounded-full
+               text-neutral-500 hover:text-green-500
+               hover:bg-neutral-800 transition-all"
+  >
+    <Phone size={20} />
+  </a>
 
-          {/* TikTok (normalized) */}
-          <a
-            href={personalInfo.tiktok}
-            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-pink-500 hover:bg-neutral-800 transition-all"
-          >
-            <SiTiktok size={18} />
-          </a>
-        </div>
+  {/* TikTok (normalized) */}
+  <a
+    href={personalInfo.tiktok}
+    className="w-10 h-10 flex items-center justify-center rounded-full
+               text-neutral-500 hover:text-pink-500
+               hover:bg-neutral-800 transition-all"
+  >
+    <SiTiktok size={18} />
+  </a>
+</div>
 
         <p className="text-neutral-500 text-sm">
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
