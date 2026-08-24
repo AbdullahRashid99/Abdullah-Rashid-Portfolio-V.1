@@ -67,7 +67,6 @@ const WatermarkWrapper = ({ children }) => {
               style={{
                 textShadow: '0 0 2px rgba(0,0,0,0.4)',
               }}
-              className="text-[14px] md:text-[22px] font-normal text-white/40"
             >
               Abdullah Rashid
             </span>
@@ -383,7 +382,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
               <img 
                 src={src} 
                 className="w-full h-full object-cover" 
-                alt="Cert" 
+                alt="Cert"
                 draggable={false}
                 style={protectionStyles} 
               />
