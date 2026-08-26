@@ -41,51 +41,35 @@ const WatermarkWrapper = ({ children }) => {
     <div className="relative overflow-hidden">
       {children}
 
-      // --- Watermark Component (Abdullah Rashid) - MODIFIED ---
-const WatermarkWrapper = ({ children }) => {
-  const RenderName = () => (
-    <span className="inline-flex items-baseline gap-1 select-none pointer-events-none leading-none">
-      {/* First name: A + bdullah */}
-      <span className="text-[18px] md:text-[24px] font-semibold leading-none">A</span>
-      <span className="text-[12px] md:text-[14px] font-normal leading-none">bdullah</span>
-      {/* small gap between names */}
-      <span className="w-1 md:w-2" />
-      {/* Last name: R + ashid */}
-      <span className="text-[18px] md:text-[24px] font-semibold leading-none">R</span>
-      <span className="text-[12px] md:text-[14px] font-normal leading-none">ashid</span>
-    </span>
-  );
-
-  return (
-    <div className="relative overflow-hidden pointer-events-none select-none">
-      {children}
-
-      {/* Subtle diagonal stripe overlay (kept but very light) */}
-      <div className="absolute inset-0 pointer-events-none select-none opacity-20">
+      {/* Watermark Overlay */}
+      <div className="absolute inset-0 pointer-events-none select-none opacity-50">
         <div
-          className="absolute inset-[-40%]"
+          className="absolute inset-[-50%] md:inset-[-50%]"
           style={{
             backgroundImage: `
               repeating-linear-gradient(
                 -45deg,
-                rgba(255,255,255,0.02) 0px,
-                rgba(255,255,255,0.02) 160px,
-                transparent 160px,
-                transparent 320px
+                rgba(255,255,255,0.08) 0px,
+                rgba(255,255,255,0.08) 120px,
+                transparent 120px,
+                transparent 240px
               )
             `,
           }}
         />
 
-        {/* Text Layer - lighter, no shadow, not uppercase, first-letter larger */}
-        <div className="absolute inset-[-25%] md:inset-[-40%] rotate-[-45deg] flex flex-wrap gap-[24px] md:gap-[48px] items-center justify-center">
-          {Array.from({ length: 12 }).map((_, i) => (
+        {/* Text Layer */}
+        <div className="absolute inset-[-30%] md:inset-[-50%] rotate-[-45deg] flex flex-wrap gap-[60px] md:gap-[120px]">
+          {Array.from({ length: 20 }).map((_, i) => (
             <span
               key={i}
-              className="text-white/25 leading-none"
-              aria-hidden="true"
+              className="text-[14px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase"
+              style={{
+                textShadow: '0 0 2px rgba(0,0,0,0.4)',
+              }}
+              className="text-[14px] md:text-[22px] font-normal text-white/40"
             >
-              <RenderName />
+              Abdullah Rashid
             </span>
           ))}
         </div>
@@ -719,12 +703,12 @@ export default function Portfolio() {
       </div>
 
       <Navbar activeSection={activeSection} />
-      
+
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
         {/* Hero */}
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-          
+
           <motion.img 
             src={personalInfo.profileImage} 
             initial={{ opacity: 0, scale: 0.8 }} 
@@ -749,7 +733,7 @@ export default function Portfolio() {
             ))}
           </div>
         </SectionWrapper>
-        
+
         {/* Results Section with Watermark applied */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
@@ -763,208 +747,6 @@ export default function Portfolio() {
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
 <div className="flex justify-center gap-6 mb-4">
-
-  <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --primary-purple: #623697;
-            --accent-yellow: #fbb03b;
-            --white: #ffffff;
-        }
-
-        .promo-banner {
-            background-color: var(--primary-purple);
-            color: var(--white);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            border-bottom: 3px solid var(--accent-yellow);
-        }
-
-        /* الجزء الخاص بالنص والكود */
-        .promo-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .promo-text {
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        .code-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px dashed var(--accent-yellow);
-            padding: 5px 15px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .code-text {
-            font-weight: bold;
-            color: var(--accent-yellow);
-            letter-spacing: 1px;
-            font-size: 1.2rem;
-        }
-
-        .copy-btn {
-            background: var(--accent-yellow);
-            color: var(--primary-purple);
-            border: none;
-            padding: 4px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .copy-btn:hover {
-            transform: scale(1.05);
-            background: #fff;
-        }
-
-        /* الجزء الخاص بالتايمر */
-        .timer-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .timer-unit {
-            background: var(--white);
-            color: var(--primary-purple);
-            width: 55px;
-            height: 55px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .timer-val {
-            font-size: 1.4rem;
-            font-weight: 900;
-            line-height: 1;
-        }
-
-        .timer-label {
-            font-size: 0.6rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .timer-separator {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-yellow);
-        }
-
-        /* تعديلات الموبايل */
-        @media (max-width: 768px) {
-            .promo-banner {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-            .promo-content {
-                flex-direction: column;
-                justify-content: center;
-            }
-            .timer-container {
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="promo-banner">
-    <div class="promo-content">
-        <p class="promo-text">بمناسبة يوم التأسيس استخدم الكود وخد خصم 22% إضافي</p>
-        <div class="code-box">
-            <span class="code-text" id="couponCode">SA22</span>
-            <button class="copy-btn" onclick="copyCode()">نسخ</button>
-        </div>
-    </div>
-
-    <div class="timer-container">
-        <div class="timer-unit">
-            <span class="timer-val" id="hours">48</span>
-            <span class="timer-label">ساعة</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-unit">
-            <span class="timer-val" id="minutes">00</span>
-            <span class="timer-label">دقيقة</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-unit">
-            <span class="timer-val" id="seconds">00</span>
-            <span class="timer-label">ثانية</span>
-        </div>
-    </div>
-</div>
-
-<script>
-    // وظيفة النسخ
-    function copyCode() {
-        const code = document.getElementById('couponCode').innerText;
-        navigator.clipboard.writeText(code).then(() => {
-            const btn = document.querySelector('.copy-btn');
-            btn.innerText = 'تم!';
-            btn.style.background = '#4CAF50';
-            btn.style.color = '#fff';
-            setTimeout(() => {
-                btn.innerText = 'نسخ';
-                btn.style.background = 'var(--accent-yellow)';
-                btn.style.color = 'var(--primary-purple)';
-            }, 2000);
-        });
-    }
-
-    // وظيفة التايمر (48 ساعة من الآن)
-    let countdownDate = new Date().getTime() + (48 * 60 * 60 * 1000);
-
-    const timer = setInterval(function() {
-        let now = new Date().getTime();
-        let distance = countdownDate - now;
-
-        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        // إضافة الـ 24 ساعة المتبقية للأيام في حالة الـ 48 ساعة
-        if (distance > (1000 * 60 * 60 * 24)) {
-            hours += 24;
-        }
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
-        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
-        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
-
-        if (distance < 0) {
-            clearInterval(timer);
-            document.querySelector(".timer-container").innerHTML = "انتهى العرض!";
-        }
-    }, 1000);
-</script>
-
-</body>
-</html>
   {/* LinkedIn */}
   <a
     href={personalInfo.linkedin}
