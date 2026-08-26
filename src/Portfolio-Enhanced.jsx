@@ -34,8 +34,6 @@ const protectionStyles = {
 };
 
 // --- Watermark Component (Abdullah Rashid) ---
-// --- Premium Watermark Component (Abdullah Rashid) ---
-
 const WatermarkWrapper = ({ children }) => {
   return (
     <div className="relative overflow-hidden">
@@ -67,7 +65,6 @@ const WatermarkWrapper = ({ children }) => {
               style={{
                 textShadow: '0 0 2px rgba(0,0,0,0.4)',
               }}
-              className="text-[14px] md:text-[22px] font-normal text-white/40"
             >
               Abdullah Rashid
             </span>
@@ -113,7 +110,7 @@ const sections = [
 ];
 
 const skillsData = [
-  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", 
+  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads",
   "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
 ];
 
@@ -218,7 +215,6 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
     let pointerId = null;
 
     const down = (e) => {
-      // ignore clicks on buttons/icons so arrows/X stay clickable
       if (e.target.closest && e.target.closest('button')) return;
       pointerId = e.pointerId;
       draggingRef.current = false;
@@ -238,7 +234,6 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
       if (pointerId === null || e.pointerId !== pointerId) return;
       const totalDx = e.clientX - startXRef.current;
       if (!draggingRef.current && Math.abs(totalDx) < 8) {
-        // tap -> do nothing (keep modal open)
       } else {
         if (totalDx < -30) setIndex(i => (i + 1) % images.length);
         if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
@@ -264,7 +259,6 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
   if (!images.length) return null;
 
-  // determine sizing per current image: if in middleSet => 80%, else 100%
   const isMiddle = middleSet.has(images[index]);
   const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '100vw', maxHeight: '100vh' };
 
@@ -367,25 +361,25 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
     <div className="w-full py-12">
       <div className="max-w-5xl mx-auto overflow-hidden">
         <h3 className="text-xl md:text-2xl font-bold mb-6 text-center text-amber-400">Google Certifications</h3>
-        <div 
+        <div
           ref={containerRef}
           className="flex overflow-x-hidden gap-4 py-4 no-scrollbar"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {duplicated.map((src, i) => (
-            <motion.div 
-              key={i} 
+            <motion.div
+              key={i}
               className="flex-shrink-0 w-48 h-32 md:w-64 md:h-40 bg-neutral-800 rounded-xl overflow-hidden cursor-pointer border border-neutral-700"
               whileHover={{ scale: 1.05 }}
               onClick={() => openGalleryForCerts(src)}
             >
-              <img 
-                src={src} 
-                className="w-full h-full object-cover" 
-                alt="Cert" 
+              <img
+                src={src}
+                className="w-full h-full object-cover"
+                alt="Cert"
                 draggable={false}
-                style={protectionStyles} 
+                style={protectionStyles}
               />
             </motion.div>
           ))}
@@ -464,7 +458,6 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
     };
 
     const onPointerDown = (e) => {
-      // if clicking buttons inside, ignore
       if (e.target.closest && e.target.closest('button')) return;
       if (pointerId !== null) return;
       pointerId = e.pointerId;
@@ -476,7 +469,6 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       isDragging = true;
       setIsPaused(true);
       clearResumeTimer();
-      // if user holds for 3s, resume auto-scroll even while still holding
       holdResumeRef.current = setTimeout(() => { setIsPaused(false); holdResumeRef.current = null; }, 3000);
       try { el.setPointerCapture(pointerId); hasCapture = true; } catch(err) { hasCapture = false; }
     };
@@ -566,7 +558,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-x-auto no-scrollbar flex touch-pan-x select-none"
       style={{ scrollbarWidth: 'none', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
@@ -574,20 +566,19 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       <div className="flex">
         {duplicated.map((src, i) => (
           <div key={i} className="w-screen md:w-[60vw] lg:w-[40vw] flex-shrink-0 px-2 md:px-4 py-4">
-            <motion.div 
+            <motion.div
               data-result-src={src}
               className="w-full h-[250px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 cursor-pointer shadow-2xl relative"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => handleImageClick(src)}
             >
-              {/* Watermark + image */}
               <WatermarkWrapper>
-                <img 
-                  src={src} 
-                  alt="Result" 
-                  className="w-full h-full object-cover md:object-contain" 
-                  draggable={false} 
+                <img
+                  src={src}
+                  alt="Result"
+                  className="w-full h-full object-cover md:object-contain"
+                  draggable={false}
                   style={protectionStyles}
                 />
               </WatermarkWrapper>
@@ -606,11 +597,9 @@ const MultiStripBanners = () => {
   const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
 
-  // combined gallery across all rows
   const combined = [...row1, ...row2, ...row3];
   const middleSet = new Set(row2);
 
-  // onImageClick open gallery with all images, start at clicked index
   const onOpenFromStrip = (src) => {
     const idx = combined.indexOf(src);
     if (idx !== -1) {
@@ -678,15 +667,16 @@ export default function Portfolio() {
   }, []);
 
   return (
-    <div 
+    <div
         className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-        onContextMenu={(e) => e.preventDefault()} 
+        onContextMenu={(e) => e.preventDefault()
+        }
         style={protectionStyles}
     >
       {/* RESTORED ORIGINAL STARRY BACKGROUND (old look) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
-        <div 
+        <div
           className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `
@@ -709,11 +699,11 @@ export default function Portfolio() {
         <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
 
-          <motion.img 
-            src={personalInfo.profileImage} 
-            initial={{ opacity: 0, scale: 0.8 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" 
+          <motion.img
+            src={personalInfo.profileImage}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
             draggable="false"
           />
           <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
@@ -746,38 +736,17 @@ export default function Portfolio() {
       </main>
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
-<div className="flex justify-center gap-6 mb-4">
-  {/* LinkedIn */}
-  <a
-    href={personalInfo.linkedin}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-teal-400
-               hover:bg-neutral-800 transition-all"
-  >
-    <Linkedin size={20} />
-  </a>
-
-  {/* WhatsApp */}
-  <a
-    href={personalInfo.whatsapp}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-green-500
-               hover:bg-neutral-800 transition-all"
-  >
-    <Phone size={20} />
-  </a>
-
-  {/* TikTok (normalized) */}
-  <a
-    href={personalInfo.tiktok}
-    className="w-10 h-10 flex items-center justify-center rounded-full
-               text-neutral-500 hover:text-pink-500
-               hover:bg-neutral-800 transition-all"
-  >
-    <SiTiktok size={18} />
-  </a>
-</div>
-
+        <div className="flex justify-center gap-6 mb-4">
+          <a href={personalInfo.linkedin} className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-teal-400 hover:bg-neutral-800 transition-all">
+            <Linkedin size={20} />
+          </a>
+          <a href={personalInfo.whatsapp} className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-green-500 hover:bg-neutral-800 transition-all">
+            <Phone size={20} />
+          </a>
+          <a href={personalInfo.tiktok} className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-pink-500 hover:bg-neutral-800 transition-all">
+            <SiTiktok size={18} />
+          </a>
+        </div>
         <p className="text-neutral-500 text-sm">
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
         </p>
