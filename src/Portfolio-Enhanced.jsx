@@ -1,8 +1,7 @@
 // Portfolio.jsx (With Right-Click Protection, Abdullah Rashid Watermark,
 // improved RESULTS touch/scroll behavior and in-modal gallery navigation
-// Updates per user: modal browses all images across 3 rows, arrows/X fixed for desktop,
-// auto-scroll resumes after 3s of inactivity, hold-for-3s resumes, row-specific modal sizing,
-// certificates modal supports swipe between certs.
+// FIXED: removed duplicate WatermarkWrapper declaration and stray raw HTML block
+// that was breaking the JSX build.
 
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -35,38 +34,49 @@ const protectionStyles = {
 
 // --- Watermark Component (Abdullah Rashid) ---
 const WatermarkWrapper = ({ children }) => {
+  const RenderName = () => (
+    <span className="inline-flex items-baseline gap-1 select-none pointer-events-none leading-none">
+      {/* First name: A + bdullah */}
+      <span className="text-[18px] md:text-[24px] font-semibold leading-none">A</span>
+      <span className="text-[12px] md:text-[14px] font-normal leading-none">bdullah</span>
+      {/* small gap between names */}
+      <span className="w-1 md:w-2" />
+      {/* Last name: R + ashid */}
+      <span className="text-[18px] md:text-[24px] font-semibold leading-none">R</span>
+      <span className="text-[12px] md:text-[14px] font-normal leading-none">ashid</span>
+    </span>
+  );
+
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden pointer-events-none select-none">
       {children}
 
-      {/* Watermark Overlay */}
-      <div className="absolute inset-0 pointer-events-none select-none opacity-50">
+      {/* Subtle diagonal stripe overlay (kept but very light) */}
+      <div className="absolute inset-0 pointer-events-none select-none opacity-20">
         <div
-          className="absolute inset-[-50%] md:inset-[-50%]"
+          className="absolute inset-[-40%]"
           style={{
             backgroundImage: `
               repeating-linear-gradient(
                 -45deg,
-                rgba(255,255,255,0.08) 0px,
-                rgba(255,255,255,0.08) 120px,
-                transparent 120px,
-                transparent 240px
+                rgba(255,255,255,0.02) 0px,
+                rgba(255,255,255,0.02) 160px,
+                transparent 160px,
+                transparent 320px
               )
             `,
           }}
         />
 
-        {/* Text Layer */}
-        <div className="absolute inset-[-30%] md:inset-[-50%] rotate-[-45deg] flex flex-wrap gap-[60px] md:gap-[120px]">
-          {Array.from({ length: 20 }).map((_, i) => (
+        {/* Text Layer - lighter, no shadow, not uppercase, first-letter larger */}
+        <div className="absolute inset-[-25%] md:inset-[-40%] rotate-[-45deg] flex flex-wrap gap-[24px] md:gap-[48px] items-center justify-center">
+          {Array.from({ length: 12 }).map((_, i) => (
             <span
               key={i}
-              className="text-[14px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase"
-              style={{
-                textShadow: '0 0 2px rgba(0,0,0,0.4)',
-              }}
+              className="text-white/25 leading-none"
+              aria-hidden="true"
             >
-              Abdullah Rashid
+              <RenderName />
             </span>
           ))}
         </div>
@@ -215,6 +225,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
     let pointerId = null;
 
     const down = (e) => {
+      // ignore clicks on buttons/icons so arrows/X stay clickable
       if (e.target.closest && e.target.closest('button')) return;
       pointerId = e.pointerId;
       draggingRef.current = false;
@@ -234,6 +245,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
       if (pointerId === null || e.pointerId !== pointerId) return;
       const totalDx = e.clientX - startXRef.current;
       if (!draggingRef.current && Math.abs(totalDx) < 8) {
+        // tap -> do nothing (keep modal open)
       } else {
         if (totalDx < -30) setIndex(i => (i + 1) % images.length);
         if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
@@ -259,6 +271,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
 
   if (!images.length) return null;
 
+  // determine sizing per current image: if in middleSet => 80%, else 100%
   const isMiddle = middleSet.has(images[index]);
   const imgStyle = isMiddle ? { maxWidth: '80vw', maxHeight: '80vh' } : { maxWidth: '100vw', maxHeight: '100vh' };
 
@@ -458,6 +471,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
     };
 
     const onPointerDown = (e) => {
+      // if clicking buttons inside, ignore
       if (e.target.closest && e.target.closest('button')) return;
       if (pointerId !== null) return;
       pointerId = e.pointerId;
@@ -469,6 +483,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
       isDragging = true;
       setIsPaused(true);
       clearResumeTimer();
+      // if user holds for 3s, resume auto-scroll even while still holding
       holdResumeRef.current = setTimeout(() => { setIsPaused(false); holdResumeRef.current = null; }, 3000);
       try { el.setPointerCapture(pointerId); hasCapture = true; } catch(err) { hasCapture = false; }
     };
@@ -573,6 +588,7 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => handleImageClick(src)}
             >
+              {/* Watermark + image */}
               <WatermarkWrapper>
                 <img
                   src={src}
@@ -597,9 +613,11 @@ const MultiStripBanners = () => {
   const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
   const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
 
+  // combined gallery across all rows
   const combined = [...row1, ...row2, ...row3];
   const middleSet = new Set(row2);
 
+  // onImageClick open gallery with all images, start at clicked index
   const onOpenFromStrip = (src) => {
     const idx = combined.indexOf(src);
     if (idx !== -1) {
@@ -669,8 +687,7 @@ export default function Portfolio() {
   return (
     <div
         className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-        onContextMenu={(e) => e.preventDefault()
-        }
+        onContextMenu={(e) => e.preventDefault()}
         style={protectionStyles}
     >
       {/* RESTORED ORIGINAL STARRY BACKGROUND (old look) */}
@@ -737,16 +754,37 @@ export default function Portfolio() {
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
         <div className="flex justify-center gap-6 mb-4">
-          <a href={personalInfo.linkedin} className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-teal-400 hover:bg-neutral-800 transition-all">
+          {/* LinkedIn */}
+          <a
+            href={personalInfo.linkedin}
+            className="w-10 h-10 flex items-center justify-center rounded-full
+                       text-neutral-500 hover:text-teal-400
+                       hover:bg-neutral-800 transition-all"
+          >
             <Linkedin size={20} />
           </a>
-          <a href={personalInfo.whatsapp} className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-green-500 hover:bg-neutral-800 transition-all">
+
+          {/* WhatsApp */}
+          <a
+            href={personalInfo.whatsapp}
+            className="w-10 h-10 flex items-center justify-center rounded-full
+                       text-neutral-500 hover:text-green-500
+                       hover:bg-neutral-800 transition-all"
+          >
             <Phone size={20} />
           </a>
-          <a href={personalInfo.tiktok} className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-pink-500 hover:bg-neutral-800 transition-all">
+
+          {/* TikTok (normalized) */}
+          <a
+            href={personalInfo.tiktok}
+            className="w-10 h-10 flex items-center justify-center rounded-full
+                       text-neutral-500 hover:text-pink-500
+                       hover:bg-neutral-800 transition-all"
+          >
             <SiTiktok size={18} />
           </a>
         </div>
+
         <p className="text-neutral-500 text-sm">
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
         </p>
