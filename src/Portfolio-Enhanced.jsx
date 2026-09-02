@@ -1,4 +1,6 @@
+// Portfolio-Enhanced.jsx
 import React, { useState, useEffect, useRef } from 'react';
+
 import {
   Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
@@ -10,60 +12,380 @@ import {
   Layers,
   BarChart2,
   MoreHorizontal,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight,
+  ArrowLeftRight, CheckCircle2, TrendingUp, Info
 } from 'lucide-react';
 
 import { SiTiktok } from 'react-icons/si';
 import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
 
-// Global Protection Styles
+// Import SocialCircle component
+import SocialCircle from '../src/components/SocialCircle.jsx';
+
+// --- Global Protection Styles ---
 const protectionStyles = {
   userSelect: 'none',
   WebkitTouchCallout: 'none',
   WebkitUserSelect: 'none',
 };
 
-// UI Components
-const Button = ({ children, className = '', ...props }) => (
+// --- Watermark Sub-component (Updated to "Rashid") ---
+const RenderName = () => (
+  <span
+    className="text-[14px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase leading-none select-none pointer-events-none"
+    style={{ textShadow: '0 0 2px rgba(0,0,0,0.4)' }}
+  >
+    Rashid
+  </span>
+);
+
+// --- Watermark Component ---
+const WatermarkWrapper = ({ children }) => {
+  return (
+    <div className="relative overflow-hidden w-full h-full">
+      {children}
+
+      <div className="absolute inset-0 pointer-events-none select-none opacity-50 z-10">
+        <div
+          className="absolute inset-[-50%] md:inset-[-50%]"
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                -45deg,
+                rgba(255,255,255,0.08) 0px,
+                rgba(255,255,255,0.08) 120px,
+                transparent 120px,
+                transparent 240px
+              )
+            `,
+          }}
+        />
+
+        <div className="absolute inset-[-30%] md:inset-[-50%] rotate-[-45deg] flex flex-wrap gap-[60px] md:gap-[120px]">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <RenderName key={i} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- UI Components ---
+const Button = ({ children, className, ...props }) => (
   <button className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 ease-in-out ${className}`} {...props}>
     {children}
   </button>
 );
 
-const Card = ({ children, className = '', ...props }) => (
+const Card = ({ children, className, ...props }) => (
   <div className={`bg-neutral-900/80 border border-neutral-800 rounded-xl shadow-lg ${className}`} {...props}>
     {children}
   </div>
 );
 
-const CardContent = ({ children, className = '', ...props }) => (
+const CardContent = ({ children, className, ...props }) => (
   <div className={`p-6 ${className}`} {...props}>
     {children}
   </div>
 );
 
-// Personal Info
+// --- Personal Info ---
 const personalInfo = {
   name: "Abdullah Rashid",
   title: "E-Com Media Buyer | Shopify Developer | Google Certificated Digital Marketer & E-commerce expert",
-  linkedin: "https://www.linkedin.com/in/abdullah-rashid4444/",
+  linkedin: "https://www.linkedin.com/in/abdullah-rash-id/",
   whatsapp: "http://wa.me/+201025030220",
   profileImage: "https://i.postimg.cc/2574Ss9d/9c10a25ab53cc9bdf0a8fc20082d0868-tplv-tiktokx-cropcenter-1080-1080.jpg",
-  tiktok: "https://www.tiktok.com/@abdallah_rashidx",
 };
 
 const sections = [
   { id: "skills", title: "Skills" },
+  { id: "before-after", title: "Before & After" },
   { id: "projects", title: "Results" },
 ];
 
+// --- Skills Data ---
 const skillsData = [
-  "Problems-Solver", "Meta Ads", "TikTok Ads", "Google Ads", 
-  "Conversion Rate Optimization", "Business Consultant", "Copywriting", "Shopify Developer",
+  "Analytical Mindset",
+  "Problem-Solver",
+  "E-commerce Expert",
+  "Master, Optimize & Scale",
+  "Strong interpersonal skills",
+  "All Social Platforms Ads",
+  "Content Strategys",
+  "Business & Pricing Strategys",
+  "Financial & Data Analyst",
+  "Data-Driven Decision Making",
+  "Shopify Developer",
+  "Websites CRO"
 ];
 
-// Section Wrapper
-const SectionWrapper = React.forwardRef(({ id, title, children, className = '' }, ref) => (
+// --- 10 Customizable Before & After Case Studies Data ---
+const caseStudiesData = [
+  {
+    id: 1,
+    title: "Fashion Brand - Scaling ROAS & Revenue",
+    note: "Overhauled ad creatives, optimized conversion funnel, and scaled Meta prospecting campaigns.",
+    beforeImage: "https://i.postimg.cc/C5GsYm88/11.png",
+    afterImage: "https://i.postimg.cc/wMXQH0N1/8.png",
+    metrics: [
+      { label: "ROAS Growth", value: "4.2x" },
+      { label: "Revenue Increase", value: "+280%" },
+      { label: "CPA Reduction", value: "-35%" }
+    ]
+  },
+  {
+    id: 2,
+    title: "Electronics Store - Conversion Rate Optimization",
+    note: "Full Shopify theme customization & checkout speed optimization for seamless customer flow.",
+    beforeImage: "https://i.postimg.cc/qqsx0jK6/10.png",
+    afterImage: "https://i.postimg.cc/L5t3RNPm/1.png",
+    metrics: [
+      { label: "Total Revenue", value: "£45,000+" },
+      { label: "Conversion Rate", value: "3.8%" },
+      { label: "AOV Boost", value: "+22%" }
+    ]
+  },
+  {
+    id: 3,
+    title: "Beauty & Cosmetics - TikTok & Meta UGC Scaling",
+    note: "Implemented high-converting user-generated content (UGC) ad strategy and offer restructuring.",
+    beforeImage: "https://i.postimg.cc/D0rPFBGm/5.png",
+    afterImage: "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png",
+    metrics: [
+      { label: "Monthly Sales", value: "£32,000" },
+      { label: "Average ROAS", value: "3.9x" }
+    ]
+  },
+  {
+    id: 4,
+    title: "Home Decor - Multi-Channel Retargeting Funnel",
+    note: "Deployed tailored email automation with Klaviyo alongside dynamic catalog retargeting.",
+    beforeImage: "https://i.postimg.cc/cCRBZX34/2.png",
+    afterImage: "https://i.postimg.cc/7h3nDmzH/4.png",
+    metrics: [
+      { label: "Email Revenue", value: "34%" },
+      { label: "Repeat Purchase Rate", value: "+18%" }
+    ]
+  },
+  {
+    id: 5,
+    title: "Fitness & Supplement Brand - Scaling Paid Media",
+    note: "Built custom landing pages with high urgency elements & subscription model options.",
+    beforeImage: "https://i.postimg.cc/Zn8xZVNp/12.png",
+    afterImage: "https://i.postimg.cc/Xqfk3Q5G/9.png",
+    metrics: [
+      { label: "Ad Spend Scaled", value: "5x" },
+      { label: "Customer LTV Boost", value: "+40%" }
+    ]
+  },
+  {
+    id: 6,
+    title: "Jewelry Store - High-AOV Scaling Strategy",
+    note: "Leveraged Google Shopping Ads & high-intent Meta search audiences.",
+    beforeImage: "https://i.postimg.cc/C5GsYm88/11.png",
+    afterImage: "https://i.postimg.cc/L5t3RNPm/1.png",
+    metrics: [
+      { label: "Average Order Value", value: "£120" },
+      { label: "Overall ROAS", value: "5.1x" }
+    ]
+  },
+  {
+    id: 7,
+    title: "Luxury Apparel - Creative Testing & Optimization",
+    note: "Tested over 30 visual ad variations to find winning high-converting hooks.",
+    beforeImage: "https://i.postimg.cc/qqsx0jK6/10.png",
+    afterImage: "https://i.postimg.cc/wMXQH0N1/8.png",
+    metrics: [
+      { label: "Sales Multiplier", value: "3.5x" },
+      { label: "CTR Increase", value: "+2.4%" }
+    ]
+  },
+  {
+    id: 8,
+    title: "Gadgets & Accessories - Q4 Holiday Scaling Blitz",
+    note: "Executed rapid scaling during Black Friday / Cyber Monday weekend.",
+    beforeImage: "https://i.postimg.cc/D0rPFBGm/5.png",
+    afterImage: "https://i.postimg.cc/cCRBZX34/2.png",
+    metrics: [
+      { label: "BFCM Revenue", value: "£68,000" },
+      { label: "ROAS Peak", value: "4.8x" }
+    ]
+  },
+  {
+    id: 9,
+    title: "Pet Accessories - Omnichannel Growth Strategy",
+    note: "Combined Google Search Ads with Meta prospecting campaigns for maximum reach.",
+    beforeImage: "https://i.postimg.cc/Zn8xZVNp/12.png",
+    afterImage: "https://i.postimg.cc/7h3nDmzH/4.png",
+    metrics: [
+      { label: "ROAS Growth", value: "3.2x" },
+      { label: "New Customers", value: "+1,400" }
+    ]
+  },
+  {
+    id: 10,
+    title: "Skincare Line - CRO & A/B Offer Testing",
+    note: "Split-tested bundle packages vs single product checkout pages to boost basket size.",
+    beforeImage: "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png",
+    afterImage: "https://i.postimg.cc/Xqfk3Q5G/9.png",
+    metrics: [
+      { label: "Conversion Rate", value: "4.1%" },
+      { label: "CPA Reduction", value: "-42%" }
+    ]
+  }
+];
+
+// --- Interactive Before/After Comparison Component ---
+const BeforeAfterSlider = ({ beforeImage, afterImage, title, note, metrics }) => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef(null);
+
+  const handleMove = (clientX) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    let percentage = (x / rect.width) * 100;
+    if (percentage < 0) percentage = 0;
+    if (percentage > 100) percentage = 100;
+    setSliderPosition(percentage);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    handleMove(e.touches[0].clientX);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    handleMove(e.clientX);
+  };
+
+  useEffect(() => {
+    const handleUp = () => setIsDragging(false);
+    window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchend', handleUp);
+    return () => {
+      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchend', handleUp);
+    };
+  }, []);
+
+  return (
+    <div className="w-full max-w-4xl mx-auto my-6 bg-neutral-900 border border-neutral-800 rounded-2xl p-4 md:p-6 shadow-2xl">
+      {/* Title & Metrics Header */}
+      <div className="mb-6 border-b border-neutral-800 pb-4">
+        {title && (
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-3">
+            <h3 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+              <TrendingUp className="text-teal-400" size={24} />
+              {title}
+            </h3>
+            {metrics && metrics.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {metrics.map((m, idx) => (
+                  <div key={idx} className="bg-teal-950/60 border border-teal-500/30 text-teal-300 px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold flex items-center gap-1.5">
+                    <CheckCircle2 size={14} className="text-teal-400" />
+                    <span>{m.label}:</span>
+                    <span className="text-white font-bold">{m.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {note && (
+          <div className="flex items-center gap-2 text-neutral-400 text-xs md:text-sm bg-neutral-950/50 p-3 rounded-lg border border-neutral-800">
+            <Info size={16} className="text-amber-400 flex-shrink-0" />
+            <span>{note}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Interactive Slider Canvas */}
+      <div 
+        ref={containerRef}
+        className="relative w-full h-[280px] sm:h-[380px] md:h-[480px] rounded-xl overflow-hidden select-none cursor-ew-resize touch-pan-y"
+        onMouseDown={() => setIsDragging(true)}
+        onTouchStart={() => setIsDragging(true)}
+        onMouseMove={handleMouseMove}
+        onTouchMove={handleTouchMove}
+      >
+        {/* AFTER IMAGE (Background Layer) */}
+        <div className="absolute inset-0 w-full h-full">
+          <WatermarkWrapper>
+            <img 
+              src={afterImage} 
+              alt="After" 
+              className="w-full h-full object-cover md:object-contain bg-neutral-950" 
+              draggable={false}
+              style={protectionStyles}
+            />
+          </WatermarkWrapper>
+          <span className="absolute bottom-4 right-4 z-20 bg-teal-500/90 text-black font-extrabold text-xs md:text-sm px-3 py-1 rounded-md shadow-lg backdrop-blur-md pointer-events-none">
+            After
+          </span>
+        </div>
+
+        {/* BEFORE IMAGE (Clipped Foreground Layer) */}
+        <div 
+          className="absolute inset-0 h-full overflow-hidden z-10"
+          style={{ width: `${sliderPosition}%` }}
+        >
+          <div className="relative w-full h-full" style={{ width: containerRef.current ? `${containerRef.current.offsetWidth}px` : '100%' }}>
+            <WatermarkWrapper>
+              <img 
+                src={beforeImage} 
+                alt="Before" 
+                className="w-full h-full object-cover md:object-contain bg-neutral-950 grayscale-[25%]" 
+                draggable={false}
+                style={protectionStyles}
+              />
+            </WatermarkWrapper>
+            <span className="absolute bottom-4 left-4 z-20 bg-neutral-800/90 text-neutral-200 font-extrabold text-xs md:text-sm px-3 py-1 rounded-md shadow-lg backdrop-blur-md pointer-events-none">
+              Before
+            </span>
+          </div>
+        </div>
+
+        {/* SLIDER HANDLE LINE */}
+        <div 
+          className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-teal-400 via-sky-400 to-amber-400 shadow-[0_0_12px_rgba(20,184,166,0.8)] z-30 pointer-events-none"
+          style={{ left: `${sliderPosition}%` }}
+        >
+          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-9 h-9 md:w-11 md:h-11 bg-neutral-950 border-2 border-teal-400 rounded-full flex items-center justify-center text-teal-400 shadow-xl">
+            <ArrowLeftRight size={18} />
+          </div>
+        </div>
+      </div>
+      <p className="text-center text-neutral-500 text-xs mt-3">Drag or swipe slider to compare Before & After</p>
+    </div>
+  );
+};
+
+// --- Animated Counter ---
+const AnimatedCounter = ({ value }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const motionValue = useSpring(0, { stiffness: 50, damping: 30 });
+  const [display, setDisplay] = useState('£0');
+
+  useEffect(() => {
+    const unsub = motionValue.on("change", (latest) => {
+      setDisplay(`£${Math.round(latest).toLocaleString()}+`);
+    });
+    if (isInView) motionValue.set(value);
+    return () => unsub();
+  }, [isInView, value, motionValue]);
+
+  return <span ref={ref}>{display}</span>;
+};
+
+// --- Section Wrapper ---
+const SectionWrapper = React.forwardRef(({ id, title, children, className }, ref) => (
   <motion.section
     ref={ref}
     id={id}
@@ -80,7 +402,7 @@ const SectionWrapper = React.forwardRef(({ id, title, children, className = '' }
   </motion.section>
 ));
 
-// Navbar
+// --- Navbar ---
 const Navbar = ({ activeSection }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
@@ -117,7 +439,7 @@ const Navbar = ({ activeSection }) => {
   );
 };
 
-// Gallery Modal
+// --- Gallery Modal ---
 const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Set(), certMode = false }) => {
   const [index, setIndex] = useState(startIndex);
   const containerRef = useRef(null);
@@ -164,7 +486,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
       if (pointerId === null || e.pointerId !== pointerId) return;
       const totalDx = e.clientX - startXRef.current;
       if (!draggingRef.current && Math.abs(totalDx) < 8) {
-        // tap -> do nothing
+        // tap -> keep modal open
       } else {
         if (totalDx < -30) setIndex(i => (i + 1) % images.length);
         if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
@@ -196,6 +518,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
   return (
     <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
       <motion.div className="relative w-full flex items-center justify-center" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()} ref={containerRef}>
+
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onClose(); }}
@@ -227,7 +550,9 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
         </button>
 
         <div className="max-w-full max-h-[90vh] flex items-center justify-center rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800 p-4">
-          <img src={images[index]} alt={`zoom-${index}`} className="object-contain" draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
+          <WatermarkWrapper>
+            <img src={images[index]} alt={`zoom-${index}`} className="object-contain" draggable={false} style={{ ...protectionStyles, ...imgStyle }} />
+          </WatermarkWrapper>
         </div>
 
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 flex gap-2">
@@ -240,7 +565,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
   );
 };
 
-// Certifications Section
+// --- CERTIFICATIONS SECTION ---
 const CERT_IMAGES = [
   'https://i.postimg.cc/rsxncdPk/65952225.jpg',
   'https://i.postimg.cc/B6dYd5MJ/6NXTTFXQ7B77-page-0001.jpg',
@@ -318,7 +643,7 @@ const ImageSlider = ({ images = CERT_IMAGES, speed = 60 }) => {
   );
 };
 
-// Results Auto Scroll
+// --- RESULTS STRIP LOGIC ---
 function useAutoScrollResults(containerRef, { speed = 80, reverse = false, isPaused = false }) {
   useEffect(() => {
     const el = containerRef.current;
@@ -497,13 +822,15 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => handleImageClick(src)}
             >
-              <img 
-                src={src} 
-                alt="Result" 
-                className="w-full h-full object-cover md:object-contain" 
-                draggable={false} 
-                style={protectionStyles}
-              />
+              <WatermarkWrapper>
+                <img 
+                  src={src} 
+                  alt="Result" 
+                  className="w-full h-full object-cover md:object-contain" 
+                  draggable={false} 
+                  style={protectionStyles}
+                />
+              </WatermarkWrapper>
             </motion.div>
           </div>
         ))}
@@ -512,20 +839,26 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   );
 };
 
+// --- MultiStripBanners (Updated to keep ROW 2 ONLY) ---
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
-  const row1 = ["https://i.postimg.cc/C5GsYm88/11.png", "https://i.postimg.cc/wMXQH0N1/8.png", "https://i.postimg.cc/qqsx0jK6/10.png"];
-  const row2 = ["https://i.postimg.cc/L5t3RNPm/1.png", "https://i.postimg.cc/D0rPFBGm/5.png", "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", "https://i.postimg.cc/cCRBZX34/2.png", "https://i.postimg.cc/7h3nDmzH/4.png"];
-  const row3 = ["https://i.postimg.cc/Zn8xZVNp/12.png", "https://i.postimg.cc/Xqfk3Q5G/9.png"];
+  
+  // Row 2 Images kept intact
+  const row2 = [
+    "https://i.postimg.cc/L5t3RNPm/1.png", 
+    "https://i.postimg.cc/D0rPFBGm/5.png", 
+    "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", 
+    "https://i.postimg.cc/cCRBZX34/2.png", 
+    "https://i.postimg.cc/7h3nDmzH/4.png"
+  ];
 
-  const combined = [...row1, ...row2, ...row3];
   const middleSet = new Set(row2);
 
   const onOpenFromStrip = (src) => {
-    const idx = combined.indexOf(src);
+    const idx = row2.indexOf(src);
     if (idx !== -1) {
-      setGalleryImages(combined);
+      setGalleryImages(row2);
       setZoomSrc({ start: idx });
     } else {
       setGalleryImages([src]);
@@ -535,9 +868,8 @@ const MultiStripBanners = () => {
 
   return (
     <div className="space-y-4 md:space-y-8">
-      <BannerStrip images={row1} reverse={false} onImageClick={onOpenFromStrip} />
+      {/* Kept Row 2 only as requested */}
       <BannerStrip images={row2} reverse={true} onImageClick={onOpenFromStrip} />
-      <BannerStrip images={row3} reverse={false} onImageClick={onOpenFromStrip} />
       <AnimatePresence>
         {zoomSrc && (
           <GalleryModal images={galleryImages} startIndex={zoomSrc.start} onClose={() => { setZoomSrc(null); setGalleryImages([]); }} middleSet={middleSet} />
@@ -547,7 +879,7 @@ const MultiStripBanners = () => {
   );
 };
 
-// Services Modal
+// --- Services Modal ---
 function ServicesModal({ onClose }) {
   const servicesList = [
     { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform' },
@@ -555,11 +887,11 @@ function ServicesModal({ onClose }) {
   ];
   return (
     <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className="bg-neutral-900 p-8 rounded-2xl w-full max-w-4xl" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()}>
+      <motion.div className="bg-neutral-900 p-8 rounded-2xl w-full max-w-4xl border border-neutral-800" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()}>
         <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">For E-Commerce</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {servicesList.map(({ title, icon, link }, index) => (
-            <motion.div key={index} className="bg-neutral-800 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer" whileHover={{ y: -5 }}>
+            <motion.div key={index} className="bg-neutral-800/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer border border-neutral-700" whileHover={{ y: -5 }}>
               <div className="text-teal-400 mb-4">{icon}</div>
               <h3 className="text-xl font-semibold mb-4">{title}</h3>
               <a href={link} target="_blank" rel="noopener noreferrer" className="w-full">
@@ -573,27 +905,18 @@ function ServicesModal({ onClose }) {
   );
 }
 
-// Scroll To Top Button
-function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const toggle = () => setVisible(window.pageYOffset > 300);
-    window.addEventListener('scroll', toggle);
-    return () => window.removeEventListener('scroll', toggle);
-  }, []);
-  if (!visible) return null;
-  return (
-    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors">
-      <ArrowUp size={24} />
-    </button>
-  );
-}
-
-// Main Portfolio Component
+// --- Main Portfolio ---
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState('home');
   const [showServices, setShowServices] = useState(false);
-  const sectionRefs = { home: useRef(null), skills: useRef(null), projects: useRef(null) };
+  const [selectedCase, setSelectedCase] = useState(0);
+
+  const sectionRefs = { 
+    home: useRef(null), 
+    skills: useRef(null), 
+    beforeAfter: useRef(null),
+    projects: useRef(null) 
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -610,7 +933,7 @@ export default function Portfolio() {
       onContextMenu={(e) => e.preventDefault()} 
       style={protectionStyles}
     >
-      {/* Background stars animation */}
+      {/* Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
         <div 
@@ -630,12 +953,12 @@ export default function Portfolio() {
       </div>
 
       <Navbar activeSection={activeSection} />
-      
+
       <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
-        {/* Hero Section */}
-        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative pt-20">
+        {/* Hero */}
+        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
-          
+
           <motion.img 
             src={personalInfo.profileImage} 
             initial={{ opacity: 0, scale: 0.8 }} 
@@ -650,30 +973,94 @@ export default function Portfolio() {
           <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
         </section>
 
+        <SocialCircle />
         <ImageSlider />
 
+        {/* Skills Section */}
         <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {skillsData.map((skill, i) => (
-              <motion.div key={i} className="bg-neutral-800/60 backdrop-blur-md text-neutral-300 px-4 py-2 rounded-full text-sm font-medium border border-neutral-700">{skill}</motion.div>
+              <motion.div 
+                key={i} 
+                className="bg-neutral-800/60 backdrop-blur-md text-neutral-200 px-5 py-2.5 rounded-full text-sm font-medium border border-neutral-700 hover:border-teal-400 transition-colors"
+                whileHover={{ scale: 1.05 }}
+              >
+                {skill}
+              </motion.div>
             ))}
           </div>
         </SectionWrapper>
-        
-        {/* Results Section */}
+
+        {/* New Before & After Interactive Section */}
+        <SectionWrapper ref={sectionRefs.beforeAfter} id="before-after" title="Before & After">
+          {/* Case Selector Buttons / Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
+            {caseStudiesData.map((cs, idx) => (
+              <button
+                key={cs.id}
+                onClick={() => setSelectedCase(idx)}
+                className={`px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold transition-all ${
+                  selectedCase === idx 
+                    ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/25 scale-105' 
+                    : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800'
+                }`}
+              >
+                Case #{idx + 1}
+              </button>
+            ))}
+          </div>
+
+          {/* Interactive Before & After Comparison Component */}
+          <BeforeAfterSlider 
+            beforeImage={caseStudiesData[selectedCase].beforeImage}
+            afterImage={caseStudiesData[selectedCase].afterImage}
+            title={caseStudiesData[selectedCase].title}
+            note={caseStudiesData[selectedCase].note}
+            metrics={caseStudiesData[selectedCase].metrics}
+          />
+        </SectionWrapper>
+
+        {/* Results Section (Single Row Banner Strip) */}
         <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
           <MultiStripBanners />
         </SectionWrapper>
 
-        <div className="text-center mt-20">
-          <GraduationCap className="mx-auto text-amber-400 mb-4" size={40} />
-          <p className="text-neutral-300">Bachelor of Business Administration from Ain Shams University.</p>
+        {/* Yellow Cards Container */}
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="bg-neutral-900/90 border-2 border-amber-400/80 rounded-2xl p-6 flex flex-col items-center text-center shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_25px_rgba(251,191,36,0.3)] transition-all"
+          >
+            <GraduationCap className="text-amber-400 mb-4" size={38} />
+            <p className="text-neutral-200 font-semibold text-base">
+              Bachelor of Business Administration from Ain Shams University.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="bg-neutral-900/90 border-2 border-amber-400/80 rounded-2xl p-6 flex flex-col items-center text-center shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_25px_rgba(251,191,36,0.3)] transition-all"
+          >
+            <LineChart className="text-amber-400 mb-4" size={38} />
+            <p className="text-neutral-200 font-semibold text-base">
+              Financial Analyst with over 4 years of experience in financial markets.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            whileHover={{ y: -5 }}
+            className="bg-neutral-900/90 border-2 border-amber-400/80 rounded-2xl p-6 flex flex-col items-center text-center shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_25px_rgba(251,191,36,0.3)] transition-all"
+          >
+            <Code className="text-amber-400 mb-4" size={38} />
+            <p className="text-neutral-200 font-semibold text-base">
+              Web Developer & E-commerce Solutions.⭐
+            </p>
+          </motion.div>
         </div>
       </main>
 
       <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
         <div className="flex justify-center gap-6 mb-4">
-          {/* LinkedIn */}
           <a
             href={personalInfo.linkedin}
             target="_blank"
@@ -683,7 +1070,6 @@ export default function Portfolio() {
             <Linkedin size={20} />
           </a>
 
-          {/* WhatsApp */}
           <a
             href={personalInfo.whatsapp}
             target="_blank"
@@ -693,7 +1079,6 @@ export default function Portfolio() {
             <Phone size={20} />
           </a>
 
-          {/* TikTok */}
           <a
             href={personalInfo.tiktok}
             target="_blank"
@@ -708,8 +1093,24 @@ export default function Portfolio() {
           © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
         </p>
       </footer>
+      
       <ScrollToTopButton />
       <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
     </div>
+  );
+}
+
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const toggle = () => setVisible(window.pageYOffset > 300);
+    window.addEventListener('scroll', toggle);
+    return () => window.removeEventListener('scroll', toggle);
+  }, []);
+  if (!visible) return null;
+  return (
+    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors">
+      <ArrowUp size={24} />
+    </button>
   );
 }
