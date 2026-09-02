@@ -6,14 +6,13 @@ import {
   Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
   Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
   Instagram, Dribbble, Twitter, ArrowUp,
-  ShoppingCart as IconShopify,
   HelpCircle,
   Users,
   Layers,
   BarChart2,
   MoreHorizontal,
   ChevronLeft, ChevronRight,
-  ArrowLeftRight, CheckCircle2, TrendingUp, Info
+  ArrowLeftRight, CheckCircle2, TrendingUp, Info, Zap
 } from 'lucide-react';
 
 import { SiTiktok } from 'react-icons/si';
@@ -29,7 +28,7 @@ const protectionStyles = {
   WebkitUserSelect: 'none',
 };
 
-// --- Watermark Sub-component (Updated to "Rashid") ---
+// --- Watermark Sub-component ---
 const RenderName = () => (
   <span
     className="text-[14px] md:text-[22px] font-semibold text-white/40 tracking-[0.3em] uppercase leading-none select-none pointer-events-none"
@@ -101,6 +100,7 @@ const personalInfo = {
 
 const sections = [
   { id: "skills", title: "Skills" },
+  { id: "highlights", title: "Highlights & Wins" },
   { id: "before-after", title: "Before & After" },
   { id: "projects", title: "Results" },
 ];
@@ -119,6 +119,40 @@ const skillsData = [
   "Data-Driven Decision Making",
   "Shopify Developer",
   "Websites CRO"
+];
+
+// --- 30 Random Highlights & Marketing Wins Data ---
+const highlightsData = [
+  { id: 1, title: "ROAS Scale", metric: "+20% ROAS Growth", desc: "Scaled prospecting ad sets while maintaining high profitability.", img: "https://i.postimg.cc/C5GsYm88/11.png", tag: "Meta Ads" },
+  { id: 2, title: "Target ROAS Upgrade", metric: "5.0 ROAS (from 2.0)", desc: "Optimized creative hooks and bid strategies.", img: "https://i.postimg.cc/wMXQH0N1/8.png", tag: "Scaling" },
+  { id: 3, title: "CPA Reduction", metric: "-45% Lower CPA", desc: "Refined audience targeting and funnel friction points.", img: "https://i.postimg.cc/qqsx0jK6/10.png", tag: "CRO" },
+  { id: 4, title: "CTR Boost", metric: "+3.2% Click-Through", desc: "A/B tested high-converting video hooks & thumbnail variations.", img: "https://i.postimg.cc/L5t3RNPm/1.png", tag: "Creatives" },
+  { id: 5, title: "Monthly Revenue", metric: "£120,000+ Scaled", desc: "Omnichannel scaling across Meta, Google & TikTok Ads.", img: "https://i.postimg.cc/D0rPFBGm/5.png", tag: "Revenue" },
+  { id: 6, title: "AOV Expansion", metric: "+28% Order Value", desc: "Introduced post-purchase upsells and threshold bundles.", img: "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", tag: "Shopify" },
+  { id: 7, title: "Thumb-Stop Rate", metric: "+40% Retention", desc: "First 3-second hook optimization for TikTok & Reels.", img: "https://i.postimg.cc/cCRBZX34/2.png", tag: "UGC" },
+  { id: 8, title: "Store Conversion", metric: "4.2% CVR", desc: "Shopify theme speed optimization and streamlined checkout.", img: "https://i.postimg.cc/7h3nDmzH/4.png", tag: "CRO" },
+  { id: 9, title: "Email Revenue", metric: "35% Total Sales", desc: "Automated Klaviyo flows for abandoned cart & win-back.", img: "https://i.postimg.cc/Zn8xZVNp/12.png", tag: "Klaviyo" },
+  { id: 10, title: "Blended ROAS", metric: "4.5x Constant", desc: "Balanced brand search ads with cold acquisition campaigns.", img: "https://i.postimg.cc/Xqfk3Q5G/9.png", tag: "Google Ads" },
+  { id: 11, title: "TikTok UGC Scale", metric: "$12 CPA Target", desc: "Whitelisting creator accounts & Spark Ads strategy.", img: "https://i.postimg.cc/C5GsYm88/11.png", tag: "TikTok" },
+  { id: 12, title: "Dynamic Retargeting", metric: "8.5x Campaign ROI", desc: "DPA catalog ads targeted at 30-day view content users.", img: "https://i.postimg.cc/wMXQH0N1/8.png", tag: "Retargeting" },
+  { id: 13, title: "BFCM Blitz", metric: "£68K in 48 Hours", desc: "High urgency offer stacking & VIP early access strategy.", img: "https://i.postimg.cc/qqsx0jK6/10.png", tag: "Q4 Scale" },
+  { id: 14, title: "Google PMax", metric: "6.2x ROAS Peak", desc: "Feed optimization & high-intent audience signals.", img: "https://i.postimg.cc/L5t3RNPm/1.png", tag: "PMax" },
+  { id: 15, title: "90-Day LTV Boost", metric: "+50% Customer LTV", desc: "Subscription model integration & loyalty incentives.", img: "https://i.postimg.cc/D0rPFBGm/5.png", tag: "Retention" },
+  { id: 16, title: "Cart Abandonment", metric: "-22% Drop-off", desc: "Simplified 1-click checkout experience.", img: "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", tag: "Checkout" },
+  { id: 17, title: "Daily Spend Scale", metric: "£5,000/Day Scaled", desc: "Horizontal & vertical ad set scaling frameworks.", img: "https://i.postimg.cc/cCRBZX34/2.png", tag: "Scaling" },
+  { id: 18, title: "Landing Page CRO", metric: "+3.8% Conversion", desc: "Custom Shopify page builder landing pages.", img: "https://i.postimg.cc/7h3nDmzH/4.png", tag: "PageBuilder" },
+  { id: 19, title: "CPM Reduction", metric: "-30% Lower CPM", desc: "Broad targeting paired with engaging organic-style creatives.", img: "https://i.postimg.cc/Zn8xZVNp/12.png", tag: "Media Buying" },
+  { id: 20, title: "Repeat Purchase", metric: "32% Return Rate", desc: "Post-purchase email sequences & SMS marketing.", img: "https://i.postimg.cc/Xqfk3Q5G/9.png", tag: "Klaviyo" },
+  { id: 21, title: "MRR Growth", metric: "+65% Recurring Rev", desc: "Recharge subscription funnel implementation.", img: "https://i.postimg.cc/C5GsYm88/11.png", tag: "E-Com" },
+  { id: 22, title: "Outbound CTR", metric: "2.8% Average CTR", desc: "Direct response copy with clear call-to-action overlays.", img: "https://i.postimg.cc/wMXQH0N1/8.png", tag: "Copywriting" },
+  { id: 23, title: "Dynamic Catalog", metric: "+140% DPA Sales", desc: "Custom styled product feeds for Meta & Google.", img: "https://i.postimg.cc/qqsx0jK6/10.png", tag: "Meta" },
+  { id: 24, title: "Search Share", metric: "85% Impression Share", desc: "Dominated high-intent branded search keywords.", img: "https://i.postimg.cc/L5t3RNPm/1.png", tag: "Google Search" },
+  { id: 25, title: "Influencer Pipeline", metric: "$45K Sales Generated", desc: "Micro-influencer UGC content seeding strategy.", img: "https://i.postimg.cc/D0rPFBGm/5.png", tag: "Influencers" },
+  { id: 26, title: "Add-To-Cart Rate", metric: "11.5% ATC Rate", desc: "Sticky add-to-cart buttons & prominent trust badges.", img: "https://i.postimg.cc/mkfy00Pg/Untitled-design-(1).png", tag: "CRO" },
+  { id: 27, title: "Checkout Finish", metric: "+18% Completion", desc: "Local payment options (Shop Pay, Apple Pay, Klarna).", img: "https://i.postimg.cc/cCRBZX34/2.png", tag: "Shopify" },
+  { id: 28, title: "Ad Account Scale", metric: "12+ Accounts Scaled", desc: "Cross-niche experience in Fashion, Tech, & Supplements.", img: "https://i.postimg.cc/7h3nDmzH/4.png", tag: "Strategy" },
+  { id: 29, title: "3-Sec Video Hook", metric: "+55% Hook Rate", desc: "Fast-paced visual edits and curiosity-driven hooks.", img: "https://i.postimg.cc/Zn8xZVNp/12.png", tag: "Creatives" },
+  { id: 30, title: "Bundle Boost", metric: "+$35 AOV Lift", desc: "Buy-2-Get-1 & Tiered discount pricing tables.", img: "https://i.postimg.cc/Xqfk3Q5G/9.png", tag: "Pricing" },
 ];
 
 // --- 10 Customizable Before & After Case Studies Data ---
@@ -275,7 +309,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, title, note, metrics }) =>
 
   return (
     <div className="w-full max-w-4xl mx-auto my-6 bg-neutral-900 border border-neutral-800 rounded-2xl p-4 md:p-6 shadow-2xl">
-      {/* Title & Metrics Header */}
       <div className="mb-6 border-b border-neutral-800 pb-4">
         {title && (
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-3">
@@ -305,7 +338,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, title, note, metrics }) =>
         )}
       </div>
 
-      {/* Interactive Slider Canvas */}
       <div 
         ref={containerRef}
         className="relative w-full h-[280px] sm:h-[380px] md:h-[480px] rounded-xl overflow-hidden select-none cursor-ew-resize touch-pan-y"
@@ -314,7 +346,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, title, note, metrics }) =>
         onMouseMove={handleMouseMove}
         onTouchMove={handleTouchMove}
       >
-        {/* AFTER IMAGE (Background Layer) */}
         <div className="absolute inset-0 w-full h-full">
           <WatermarkWrapper>
             <img 
@@ -330,7 +361,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, title, note, metrics }) =>
           </span>
         </div>
 
-        {/* BEFORE IMAGE (Clipped Foreground Layer) */}
         <div 
           className="absolute inset-0 h-full overflow-hidden z-10"
           style={{ width: `${sliderPosition}%` }}
@@ -351,7 +381,6 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, title, note, metrics }) =>
           </div>
         </div>
 
-        {/* SLIDER HANDLE LINE */}
         <div 
           className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-teal-400 via-sky-400 to-amber-400 shadow-[0_0_12px_rgba(20,184,166,0.8)] z-30 pointer-events-none"
           style={{ left: `${sliderPosition}%` }}
@@ -486,7 +515,7 @@ const GalleryModal = ({ images = [], startIndex = 0, onClose, middleSet = new Se
       if (pointerId === null || e.pointerId !== pointerId) return;
       const totalDx = e.clientX - startXRef.current;
       if (!draggingRef.current && Math.abs(totalDx) < 8) {
-        // tap -> keep modal open
+        // tap
       } else {
         if (totalDx < -30) setIndex(i => (i + 1) % images.length);
         if (totalDx > 30) setIndex(i => (i - 1 + images.length) % images.length);
@@ -839,12 +868,11 @@ const BannerStrip = ({ images, reverse, onImageClick }) => {
   );
 };
 
-// --- MultiStripBanners (Updated to keep ROW 2 ONLY) ---
+// --- MultiStripBanners FIXED ---
 const MultiStripBanners = () => {
   const [zoomSrc, setZoomSrc] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
-  
-  // Row 2 Images kept intact
+
   const row2 = [
     "https://i.postimg.cc/L5t3RNPm/1.png", 
     "https://i.postimg.cc/D0rPFBGm/5.png", 
@@ -860,257 +888,149 @@ const MultiStripBanners = () => {
     if (idx !== -1) {
       setGalleryImages(row2);
       setZoomSrc({ start: idx });
-    } else {
-      setGalleryImages([src]);
-      setZoomSrc({ start: 0 });
     }
   };
 
   return (
-    <div className="space-y-4 md:space-y-8">
-      {/* Kept Row 2 only as requested */}
-      <BannerStrip images={row2} reverse={true} onImageClick={onOpenFromStrip} />
+    <div className="py-8">
+      <BannerStrip images={row2} reverse={false} onImageClick={onOpenFromStrip} />
       <AnimatePresence>
         {zoomSrc && (
-          <GalleryModal images={galleryImages} startIndex={zoomSrc.start} onClose={() => { setZoomSrc(null); setGalleryImages([]); }} middleSet={middleSet} />
+          <GalleryModal images={galleryImages} startIndex={zoomSrc.start} onClose={() => setZoomSrc(null)} middleSet={middleSet} />
         )}
       </AnimatePresence>
     </div>
   );
 };
 
-// --- Services Modal ---
-function ServicesModal({ onClose }) {
-  const servicesList = [
-    { title: 'Startup', icon: <BarChart2 size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSdEBwP65M40klTsS3_3eez_y8Sjj5lbLI276pYZ1omnuF2ZVQ/viewform' },
-    { title: 'Scale', icon: <LineChart size={48} />, link: 'https://docs.google.com/forms/d/e/1FAIpQLSfpnHDVpZeI_7Q5srnURXlnPzfLUhuyiPzptUeqj77uyeeRVg/viewform' },
-  ];
-  return (
-    <motion.div className="fixed inset-0 bg-black/90 flex justify-center items-center z-[100] p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className="bg-neutral-900 p-8 rounded-2xl w-full max-w-4xl border border-neutral-800" initial={{ scale: 0.95 }} animate={{ scale: 1 }} onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-teal-400">For E-Commerce</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {servicesList.map(({ title, icon, link }, index) => (
-            <motion.div key={index} className="bg-neutral-800/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg hover:shadow-teal-500/20 transition-all cursor-pointer border border-neutral-700" whileHover={{ y: -5 }}>
-              <div className="text-teal-400 mb-4">{icon}</div>
-              <h3 className="text-xl font-semibold mb-4">{title}</h3>
-              <a href={link} target="_blank" rel="noopener noreferrer" className="w-full">
-                <Button className="bg-teal-500 w-full text-white hover:bg-teal-600">Start</Button>
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// --- Main Portfolio ---
+// --- Main Portfolio Component ---
 export default function Portfolio() {
-  const [activeSection, setActiveSection] = useState('home');
-  const [showServices, setShowServices] = useState(false);
-  const [selectedCase, setSelectedCase] = useState(0);
-
-  const sectionRefs = { 
-    home: useRef(null), 
-    skills: useRef(null), 
-    beforeAfter: useRef(null),
-    projects: useRef(null) 
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => entry.isIntersecting && setActiveSection(entry.target.id)),
-      { rootMargin: '-30% 0px -70% 0px' }
-    );
-    Object.values(sectionRefs).forEach(ref => ref.current && observer.observe(ref.current));
-    return () => observer.disconnect();
-  }, []);
+  const [activeSection, setActiveSection] = useState("skills");
+  const [selectedHighlightImg, setSelectedHighlightImg] = useState(null);
 
   return (
-    <div 
-      className="bg-neutral-950 text-white min-h-screen font-sans antialiased relative overflow-x-hidden"
-      onContextMenu={(e) => e.preventDefault()} 
-      style={protectionStyles}
-    >
-      {/* Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_black_100%)] opacity-60"></div>
-        <div 
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: `
-              radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
-              radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
-              radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
-              radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
-              radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
-              radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0))
-            `,
-            backgroundSize: '200px 200px'
-          }}
-        ></div>
-      </div>
-
+    <div className="bg-neutral-950 text-white min-h-screen font-sans selection:bg-teal-500 selection:text-black">
       <Navbar activeSection={activeSection} />
 
-      <main className="relative z-10 max-w-5xl mx-auto px-4 pb-24">
-        {/* Hero */}
-        <section ref={sectionRefs.home} id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/10 blur-[120px] rounded-full -z-10" />
+      {/* Hero Section */}
+      <header id="home" className="pt-32 pb-20 px-4 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="flex-1 space-y-6 text-center md:text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-950/80 border border-teal-500/30 text-teal-400 text-xs font-semibold">
+            <Zap size={14} /> E-Commerce Growth Specialist
+          </div>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+            Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-sky-400">{personalInfo.name}</span>
+          </h1>
+          <p className="text-neutral-400 text-base md:text-lg max-w-2xl leading-relaxed">
+            {personalInfo.title}
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
+            <a href={personalInfo.whatsapp} target="_blank" rel="noreferrer">
+              <Button className="bg-gradient-to-r from-teal-500 to-sky-500 text-black font-bold hover:opacity-90">
+                Let's Talk WhatsApp
+              </Button>
+            </a>
+            <a href={personalInfo.linkedin} target="_blank" rel="noreferrer">
+              <Button className="bg-neutral-900 border border-neutral-800 text-white hover:border-neutral-700">
+                LinkedIn Profile
+              </Button>
+            </a>
+          </div>
+        </div>
 
-          <motion.img 
+        <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full p-2 bg-gradient-to-tr from-teal-500 to-sky-500 shadow-2xl flex-shrink-0">
+          <img 
             src={personalInfo.profileImage} 
-            initial={{ opacity: 0, scale: 0.8 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            className="w-32 h-32 rounded-full object-cover border-4 border-neutral-700 mb-6 shadow-[0_0_20px_rgba(20,184,166,0.3)]" 
-            draggable="false"
+            alt={personalInfo.name} 
+            className="w-full h-full object-cover rounded-full border-4 border-neutral-950" 
           />
-          <motion.h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">
-            Abdullah Rashid<br /> Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">Growth</span> Partner.
-          </motion.h1>
-          <p className="text-lg md:text-xl text-neutral-300 mb-8 max-w-2xl">{personalInfo.title}</p>
-          <Button className="bg-teal-500 hover:bg-teal-600 text-white shadow-[0_0_15px_rgba(20,184,166,0.4)]" onClick={() => setShowServices(true)}>Start Here</Button>
-        </section>
+        </div>
+      </header>
 
-        <SocialCircle />
-        <ImageSlider />
-
-        {/* Skills Section */}
-        <SectionWrapper ref={sectionRefs.skills} id="skills" title="Skills">
-          <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-            {skillsData.map((skill, i) => (
-              <motion.div 
-                key={i} 
-                className="bg-neutral-800/60 backdrop-blur-md text-neutral-200 px-5 py-2.5 rounded-full text-sm font-medium border border-neutral-700 hover:border-teal-400 transition-colors"
-                whileHover={{ scale: 1.05 }}
-              >
+      {/* 1. Skills Section */}
+      <SectionWrapper id="skills" title="Skills & Core Expertise">
+        <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {skillsData.map((skill, index) => (
+            <Card key={index} className="hover:border-teal-500/40 transition-colors">
+              <CardContent className="p-4 text-center font-semibold text-neutral-200 text-sm md:text-base">
                 {skill}
-              </motion.div>
-            ))}
-          </div>
-        </SectionWrapper>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </SectionWrapper>
 
-        {/* New Before & After Interactive Section */}
-        <SectionWrapper ref={sectionRefs.beforeAfter} id="before-after" title="Before & After">
-          {/* Case Selector Buttons / Tabs */}
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
-            {caseStudiesData.map((cs, idx) => (
-              <button
-                key={cs.id}
-                onClick={() => setSelectedCase(idx)}
-                className={`px-3.5 py-2 rounded-xl text-xs md:text-sm font-semibold transition-all ${
-                  selectedCase === idx 
-                    ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/25 scale-105' 
-                    : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800'
-                }`}
+      {/* 2. Highlights & Wins Section (30 Random Marketing Items) */}
+      <SectionWrapper id="highlights" title="30 Highlights & Key Wins">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
+          {highlightsData.map((item) => (
+            <Card key={item.id} className="hover:border-teal-500/50 transition-all duration-300 flex flex-col overflow-hidden group">
+              <div 
+                className="relative h-48 w-full overflow-hidden bg-neutral-950 cursor-pointer" 
+                onClick={() => setSelectedHighlightImg(item.img)}
               >
-                Case #{idx + 1}
-              </button>
-            ))}
-          </div>
-
-          {/* Interactive Before & After Comparison Component */}
-          <BeforeAfterSlider 
-            beforeImage={caseStudiesData[selectedCase].beforeImage}
-            afterImage={caseStudiesData[selectedCase].afterImage}
-            title={caseStudiesData[selectedCase].title}
-            note={caseStudiesData[selectedCase].note}
-            metrics={caseStudiesData[selectedCase].metrics}
-          />
-        </SectionWrapper>
-
-        {/* Results Section (Single Row Banner Strip) */}
-        <SectionWrapper ref={sectionRefs.projects} id="projects" title="Results">
-          <MultiStripBanners />
-        </SectionWrapper>
-
-        {/* Yellow Cards Container */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="bg-neutral-900/90 border-2 border-amber-400/80 rounded-2xl p-6 flex flex-col items-center text-center shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_25px_rgba(251,191,36,0.3)] transition-all"
-          >
-            <GraduationCap className="text-amber-400 mb-4" size={38} />
-            <p className="text-neutral-200 font-semibold text-base">
-              Bachelor of Business Administration from Ain Shams University.
-            </p>
-          </motion.div>
-
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="bg-neutral-900/90 border-2 border-amber-400/80 rounded-2xl p-6 flex flex-col items-center text-center shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_25px_rgba(251,191,36,0.3)] transition-all"
-          >
-            <LineChart className="text-amber-400 mb-4" size={38} />
-            <p className="text-neutral-200 font-semibold text-base">
-              Financial Analyst with over 4 years of experience in financial markets.
-            </p>
-          </motion.div>
-
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="bg-neutral-900/90 border-2 border-amber-400/80 rounded-2xl p-6 flex flex-col items-center text-center shadow-[0_0_15px_rgba(251,191,36,0.15)] hover:shadow-[0_0_25px_rgba(251,191,36,0.3)] transition-all"
-          >
-            <Code className="text-amber-400 mb-4" size={38} />
-            <p className="text-neutral-200 font-semibold text-base">
-              Web Developer & E-commerce Solutions.⭐
-            </p>
-          </motion.div>
+                <WatermarkWrapper>
+                  <img 
+                    src={item.img} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    draggable={false} 
+                    style={protectionStyles} 
+                  />
+                </WatermarkWrapper>
+                <span className="absolute top-3 right-3 bg-teal-500/90 text-black text-xs font-bold px-2.5 py-1 rounded-full shadow-md z-20">
+                  {item.tag}
+                </span>
+              </div>
+              <CardContent className="flex-1 flex flex-col justify-between p-5">
+                <div>
+                  <div className="text-2xl font-black text-teal-400 mb-1">{item.metric}</div>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-xs text-neutral-400 leading-relaxed">{item.desc}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      </main>
+      </SectionWrapper>
 
-      <footer className="relative z-10 text-center py-12 border-t border-neutral-800/50 bg-neutral-950/50 backdrop-blur-sm">
-        <div className="flex justify-center gap-6 mb-4">
-          <a
-            href={personalInfo.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-teal-400 hover:bg-neutral-800 transition-all"
-          >
-            <Linkedin size={20} />
-          </a>
-
-          <a
-            href={personalInfo.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-green-500 hover:bg-neutral-800 transition-all"
-          >
-            <Phone size={20} />
-          </a>
-
-          <a
-            href={personalInfo.tiktok}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-pink-500 hover:bg-neutral-800 transition-all"
-          >
-            <SiTiktok size={18} />
-          </a>
+      {/* 3. Before & After Case Studies */}
+      <SectionWrapper id="before-after" title="Before & After Case Studies">
+        <div className="max-w-6xl mx-auto px-4 space-y-12">
+          {caseStudiesData.map((study) => (
+            <BeforeAfterSlider 
+              key={study.id}
+              title={study.title}
+              note={study.note}
+              beforeImage={study.beforeImage}
+              afterImage={study.afterImage}
+              metrics={study.metrics}
+            />
+          ))}
         </div>
+      </SectionWrapper>
 
-        <p className="text-neutral-500 text-sm">
-          © 2022 - {new Date().getFullYear()} {personalInfo.name}. All Rights Reserved.
-        </p>
+      {/* 4. Results Section */}
+      <SectionWrapper id="projects" title="Proven Ad Results & Google Certifications">
+        <MultiStripBanners />
+        <ImageSlider />
+      </SectionWrapper>
+
+      {/* Footer */}
+      <footer className="border-t border-neutral-800 py-8 text-center text-neutral-500 text-sm">
+        <p>© {new Date().getFullYear()} {personalInfo.name}. All rights reserved.</p>
       </footer>
-      
-      <ScrollToTopButton />
-      <AnimatePresence>{showServices && <ServicesModal onClose={() => setShowServices(false)} />}</AnimatePresence>
-    </div>
-  );
-}
 
-function ScrollToTopButton() {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const toggle = () => setVisible(window.pageYOffset > 300);
-    window.addEventListener('scroll', toggle);
-    return () => window.removeEventListener('scroll', toggle);
-  }, []);
-  if (!visible) return null;
-  return (
-    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-5 right-5 bg-teal-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-teal-400 transition-colors">
-      <ArrowUp size={24} />
-    </button>
+      {/* Highlight Zoom Modal */}
+      <AnimatePresence>
+        {selectedHighlightImg && (
+          <GalleryModal
+            images={[selectedHighlightImg]}
+            startIndex={0}
+            onClose={() => setSelectedHighlightImg(null)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
