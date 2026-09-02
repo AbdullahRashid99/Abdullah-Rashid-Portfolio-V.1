@@ -2,21 +2,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import {
-  Mail, User, Briefcase, Star, Folder, Menu, X, Send, Linkedin, Phone,
-  Award, Target, Megaphone, ShoppingCart, UserCheck, Building, LineChart,
-  Camera, GraduationCap, ArrowRight, Palette, Code, BarChart3,
-  Instagram, Dribbble, Twitter, ArrowUp, CheckCircle2,
-  ShoppingCart as IconShopify,
-  HelpCircle,
-  Users,
-  Layers,
-  BarChart2,
-  MoreHorizontal,
-  ChevronLeft, ChevronRight
+  Menu, X, Linkedin, Phone, LineChart,
+  GraduationCap, Code, BarChart2,
+  ArrowUp
 } from 'lucide-react';
 
 import { SiTiktok } from 'react-icons/si';
-import { motion, AnimatePresence, useInView, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Import SocialCircle component
 import SocialCircle from '../src/components/SocialCircle.jsx';
@@ -95,6 +87,7 @@ const personalInfo = {
   title: "E-Com Media Buyer | Shopify Developer | Google Certificated Digital Marketer & E-commerce expert",
   linkedin: "https://www.linkedin.com/in/abdullah-rash-id/",
   whatsapp: "http://wa.me/+201025030220",
+  tiktok: "https://www.tiktok.com/", // تم إضافة الخاصية المفقودة
   profileImage: "https://i.postimg.cc/2574Ss9d/9c10a25ab53cc9bdf0a8fc20082d0868-tplv-tiktokx-cropcenter-1080-1080.jpg",
 };
 
@@ -605,6 +598,8 @@ export default function Portfolio() {
         <div className="flex justify-center gap-6 mb-4">
           <a
             href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-teal-400 hover:bg-neutral-800 transition-all"
           >
             <Linkedin size={20} />
@@ -612,6 +607,8 @@ export default function Portfolio() {
 
           <a
             href={personalInfo.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-green-500 hover:bg-neutral-800 transition-all"
           >
             <Phone size={20} />
@@ -619,6 +616,8 @@ export default function Portfolio() {
 
           <a
             href={personalInfo.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 flex items-center justify-center rounded-full text-neutral-500 hover:text-pink-500 hover:bg-neutral-800 transition-all"
           >
             <SiTiktok size={18} />
@@ -638,7 +637,7 @@ export default function Portfolio() {
 function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const toggle = () => setVisible(window.pageYOffset > 300);
+    const toggle = () => setVisible(window.scrollY > 300);
     window.addEventListener('scroll', toggle);
     return () => window.removeEventListener('scroll', toggle);
   }, []);
